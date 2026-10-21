@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Boiler Room — Erick Wittmann</title>
+<meta name="description" content="Spec work: audio-reactive live concert visuals for Boiler Room, built in TouchDesigner and After Effects by Erick Wittmann.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<!-- Music for this page: set it in js/page-music.js (under 'boiler-room'). -->
+<body class="case">
+
+<nav class="nav" id="nav">
+  <ul>
+    <li class="nav-name"><a href="../index.html">Erick Wittmann</a></li>
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!--
+  Case study, built from the work/beyond-fashion.html template (see the notes there).
+  Media for this page lives in assets/work/boiler-room/. The videos are web versions of
+  "assets/Boiler Room *.mp4" (37 MB for all four instead of 75 MB). They keep their sound: hovering
+  a video plays it (data-hover-audio, js/hover-audio.js).
+-->
+
+<main>
+  <header class="cs-head">
+    <p class="eyebrow reveal">Case Study 03 — Live Visuals · Spec Work</p>
+    <h1 class="reveal">Boiler Room</h1>
+    <dl class="cs-facts reveal">
+      <div><dt>Role</dt><dd>Audio-reactive live visuals</dd></div>
+      <div><dt>Tools</dt><dd>TouchDesigner, After Effects</dd></div>
+      <div><dt>Type</dt><dd>Spec work — concert visuals</dd></div>
+      <div><dt>When</dt><dd>Spring 2026</dd></div>
+    </dl>
+  </header>
+
+  <figure class="cs-hero reveal" style="--ar:16 / 9" data-hover-audio>
+    <video src="../assets/work/boiler-room/br-title-sequence.mp4" muted loop playsinline preload="none" aria-label="Boiler Room main title sequence" onerror="this.remove()"></video>
+    <span class="ph-label">Main title sequence — 16 : 9</span>
+  </figure>
+
+  <section class="cs-row">
+    <figure class="cs-media reveal" style="--ar:1476 / 830">
+      <img src="../assets/work/boiler-room/br-still-wide.jpg" alt="A Boiler Room visual: the logo at the centre of a kaleidoscope of coloured tiles" loading="lazy" onerror="this.remove()">
+      <span class="ph-label">Still</span>
+    </figure>
+    <div class="cs-text reveal">
+      <span class="cs-num">01</span>
+      <h2>Overview</h2>
+      <p>This is a select few of the live concert visuals I created as spec work for Boiler Room, a live EDM venue with many artists and many different kinds of music.</p>
+      <p>I created these with TouchDesigner and After Effects to display the range of genres that Boiler Room encompasses.</p>
+    </div>
+  </section>
+
+  <!-- Formats: the same visuals cut for each screen shape. The arena banner runs full width; the
+       row under it keeps every piece the same height whatever its shape (--r = width / height). -->
+  <section class="fmt reveal" aria-labelledby="fmt-title">
+    <div class="fmt-head">
+      <span class="cs-num">02</span>
+      <h2 id="fmt-title">Formats</h2>
+      <p>One visual system, cut for different screen shapes. Click any of them to watch it larger, with sound.</p>
+    </div>
+    <figure class="cs-media fmt-item fmt-item--wide" style="--ar:1920 / 540" data-hover-audio>
+      <video src="../assets/work/boiler-room/br-arena.mp4" muted loop playsinline preload="none" aria-label="Arena-size Boiler Room visual" onerror="this.remove()"></video>
+      <figcaption class="fmt-cap"><b>01</b> Arena <span>1920 × 540 · 15 s loop</span></figcaption>
+    </figure>
+    <div class="fmt-row">
+      <figure class="cs-media fmt-item" style="--r:1080 / 1920; --ar:1080 / 1920" data-hover-audio>
+        <video src="../assets/work/boiler-room/br-vertical.mp4" muted loop playsinline preload="none" aria-label="Vertical Boiler Room visual" onerror="this.remove()"></video>
+        <figcaption class="fmt-cap"><b>02</b> Vertical <span>1080 × 1920 · 15 s</span></figcaption>
+      </figure>
+      <figure class="cs-media fmt-item" style="--r:1; --ar:1" data-hover-audio>
+        <video src="../assets/work/boiler-room/br-square.mp4" muted loop playsinline preload="none" aria-label="Square Boiler Room visual" onerror="this.remove()"></video>
+        <figcaption class="fmt-cap"><b>03</b> Square <span>1080 × 1080 · 15 s</span></figcaption>
+      </figure>
+      <!-- "Boiler Room Red.mp4" turned upright (it was rendered sideways) to fill a vertical slot. -->
+      <figure class="cs-media fmt-item" style="--r:608 / 1080; --ar:608 / 1080" data-hover-audio>
+        <video src="../assets/work/boiler-room/br-red.mp4" muted loop playsinline preload="none" aria-label="Red vertical Boiler Room visual" onerror="this.remove()"></video>
+        <figcaption class="fmt-cap"><b>04</b> Red <span>1080 × 1920 · 11 s</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Artists, scope & approach: a spec-sheet style breakdown. -->
+  <section class="cs-spec reveal" aria-labelledby="spec-title">
+    <div class="fmt-head">
+      <span class="cs-num">03</span>
+      <h2 id="spec-title">Artists, scope &amp; approach</h2>
+    </div>
+    <div class="cs-spec-grid">
+      <div>
+        <h3>Artists</h3>
+        <p>Boiler Room hosts many artists across many kinds of music, so the visuals were made to range across those genres rather than fit just one.</p>
+        <p>This was spec work, designed around the sound of artists who have played Boiler Room:</p>
+        <!-- Each name links to the artist's Spotify page. ¥ØU$UK€ ¥UK1MAT$U has no artist page on
+             Spotify, so his name isn't linked; to add a link, wrap it in <a href="..."> like the others. -->
+        <ul class="cs-list cs-list--links">
+          <li><a href="https://open.spotify.com/artist/6qgnBH6iDM91ipVXv28OMu" target="_blank" rel="noopener">Kaytranada <span>Spotify ↗</span></a></li>
+          <li><a href="https://open.spotify.com/artist/4oLeXFyACqeem2VImYeBFe" target="_blank" rel="noopener">Fred Again <span>Spotify ↗</span></a></li>
+          <li>¥ØU$UK€ ¥UK1MAT$U</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Scope</h3>
+        <ul class="cs-list">
+          <li>Main title sequence <span>1920 × 1080 · 30 s</span></li>
+          <li>Arena banner <span>1920 × 540 · 15 s loop</span></li>
+          <li>Square loop <span>1080 × 1080 · 15 s</span></li>
+          <li>Vertical loop <span>1080 × 1920 · 15 s</span></li>
+          <li>Red vertical loop <span>1080 × 1920 · 11 s</span></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Approach</h3>
+        <p>Audio-reactive motion graphics, built in TouchDesigner and finished in After Effects.</p>
+        <p>TouchDesigner captures live audio and converts it to a wave spectrum. A line of 3D shapes takes its values from each point, is rendered with a camera and light, then runs through a feedback loop, gets its colours, is reflected through mirrors and composited with rotations.</p>
+        <!-- Add how it was done: how the visuals react to the music, how each format was handled,
+             anything you solved along the way. -->
+      </div>
+    </div>
+    <!-- The TouchDesigner network, labelled by stage. Click to view it larger. -->
+    <figure class="cs-figure reveal">
+      <div class="cs-media" style="--ar:1920 / 1080">
+        <img src="../assets/work/boiler-room/br-program.png" alt="The TouchDesigner program, in stages: audio to wave spectrum, 3D rendering, feedback loop, colours, mirrors and composite" loading="lazy" onerror="this.remove()">
+      </div>
+      <figcaption>The program — TouchDesigner network, audio in to composite out</figcaption>
+    </figure>
+  </section>
+
+  <!-- Process (TouchDesigner screengrabs): put the images in assets/work/boiler-room/ and
+       remove the comment marks around this block. Two or more images become a carousel.
+  <section class="cs-row">
+    <figure class="cs-media reveal" style="--ar:16 / 9">
+      <img src="../assets/work/boiler-room/td-network-1.jpg" alt="The TouchDesigner network for the visuals" loading="lazy" onerror="this.remove()">
+      <img src="../assets/work/boiler-room/td-network-2.jpg" alt="The TouchDesigner network for the visuals" loading="lazy" onerror="this.remove()">
+    </figure>
+    <div class="cs-text reveal">
+      <span class="cs-num">04</span>
+      <h2>Process</h2>
+      <p>How the network was built.</p>
+    </div>
+  </section>
+  -->
+
+  <a class="next-case" href="beyond-fashion.html">
+    <span class="eyebrow">Next case study</span>
+    <span class="next-title">Beyond Fashion 2025 <span aria-hidden="true">→</span></span>
+  </a>
+</main>
+
+<footer id="contact">
+  <div class="col">
+    <div class="brand">Erick Wittmann</div>
+  </div>
+  <div class="col">
+    <h4>Contact</h4>
+    <a href="mailto:erickwittmann@gmail.com">erickwittmann@gmail.com</a>
+  </div>
+  <div class="col">
+    <h4>Elsewhere</h4>
+    <a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://www.behance.net/erickwittmann" target="_blank" rel="noopener">Behance</a>
+  </div>
+  <div class="col">
+    <h4>&nbsp;</h4>
+    <span>© 2026 Erick Wittmann. All rights reserved.</span>
+  </div>
+</footer>
+
+<script src="../js/page-music.js"></script>
+<script src="../js/page-audio.js"></script>
+<script src="../js/site.js"></script>
+<script src="../js/tilt.js"></script>
+<script src="../js/carousel.js"></script>
+<script src="../js/hover-audio.js"></script>
+<script src="../js/lightbox.js"></script>
+<script src="../js/chroma.js"></script>
+</body>
+</html>

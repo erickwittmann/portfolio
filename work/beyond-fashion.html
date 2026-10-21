@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Beyond Fashion 2025 — Erick Wittmann</title>
+<meta name="description" content="Live visuals and lighting for RIT's Beyond Fashion show, run in Resolume Arena by Erick Wittmann.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<!-- Music for this page: set it in js/page-music.js (under 'beyond-fashion'). -->
+<body class="case" data-music="">
+
+<nav class="nav" id="nav">
+  <ul>
+    <li class="nav-name"><a href="../index.html">Erick Wittmann</a></li>
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!--
+  Case study template. To make another one, copy this file and change:
+  - the title, intro and the four facts in .cs-facts
+  - each .cs-row: its media (image or looping video) and text
+  - the "Next" link at the bottom
+  Media: put files in assets/work/<project>/. This page sits in work/, so paths start with ../
+  (../assets/...). A video can't go in an <img> tag; use
+  <video src="../assets/..." muted loop playsinline preload="none"></video> instead (it plays
+  while on screen, via js/site.js). Set --ar on the figure to the media's aspect ratio
+  (width / height) so the page doesn't jump while it loads.
+  Carousel: put two or more <img> lines in one figure and they crossfade, with a thin bar at the
+  bottom counting down to the next image (js/carousel.js; change SECONDS there for the pace).
+  object-position on an <img> picks which part shows when its shape differs from the frame.
+-->
+
+<main>
+  <header class="cs-head">
+    <p class="eyebrow reveal">Case Study 01 — Live Visuals</p>
+    <h1 class="reveal">Beyond Fashion 2025</h1>
+    <dl class="cs-facts reveal">
+      <div><dt>Role</dt><dd>VJ — live graphics &amp; lighting</dd></div>
+      <div><dt>Tools</dt><dd>Resolume Arena, After Effects</dd></div>
+      <div><dt>Team</dt><dd>New Media Design students</dd></div>
+      <div><dt>When</dt><dd>Fall 2025</dd></div>
+    </dl>
+  </header>
+
+  <!-- data-gain="0.5": this reel's sound is mastered loud, so it plays at half to match the other videos. -->
+  <figure class="cs-hero reveal" style="--ar:2 / 1" data-audio data-gain="0.5">
+    <video src="../assets/Beyond Fashion Edit Reel.mp4" muted loop playsinline preload="none" aria-label="Beyond Fashion edit reel: show graphics and LED wall visuals" onerror="this.remove()"></video>
+    <span class="ph-label">Edit reel — 2 : 1</span>
+  </figure>
+
+  <section class="cs-row">
+    <figure class="cs-media reveal" style="--ar:4 / 3">
+      <img src="../assets/bf photo1.jpg" alt="Erick at the VJ station, Resolume running on two monitors" loading="lazy" onerror="this.remove()">
+      <img src="../assets/bf-pass.jpg" alt="All-access passes for Beyond Fashion, Erick Wittmann, Screen Operator" style="object-position:50% 42%" loading="lazy" onerror="this.remove()">
+      <img src="../assets/bf setup2.jpg" alt="The VJ setup for Beyond Fashion" loading="lazy" onerror="this.remove()">
+      <img src="../assets/bf setup3.jpg" alt="The VJ setup for Beyond Fashion" loading="lazy" onerror="this.remove()">
+      <span class="ph-label">vj-station.jpg — photo at the desk</span>
+    </figure>
+    <div class="cs-text reveal">
+      <span class="cs-num">01</span>
+      <h2>Overview</h2>
+      <p>Last year, in Fall 2025, I had the amazing opportunity to be a VJ for Beyond Fashion, an experimental fashion show at my university. I worked with a team of designers on the motion graphics and deliverables for a huge 32′ × 16′ LED wall at the show.</p>
+      <p>I was in charge of directing the live graphics and lights while the show was running, pairing them with each model's walkthrough, all in Resolume Arena and After Effects.</p>
+    </div>
+  </section>
+
+  <section class="cs-row">
+    <figure class="cs-media reveal" style="--ar:1920 / 952">
+      <!-- Web versions of "bf example1-5.mp4" (1280px, no sound): 5.6 MB for all five instead of 47.5 MB.
+           Each loop plays once, 5 seconds, then the next one comes in. -->
+      <video src="../assets/bf-example1-web.mp4" muted loop playsinline preload="none" aria-label="A looping graphic made for one of the fashion designers" onerror="this.remove()"></video>
+      <video src="../assets/bf-example2-web.mp4" muted loop playsinline preload="none" aria-label="A looping graphic made for one of the fashion designers" onerror="this.remove()"></video>
+      <video src="../assets/bf-example3-web.mp4" muted loop playsinline preload="none" aria-label="A looping graphic made for one of the fashion designers" onerror="this.remove()"></video>
+      <video src="../assets/bf-example4-web.mp4" muted loop playsinline preload="none" aria-label="A looping graphic made for one of the fashion designers" onerror="this.remove()"></video>
+      <video src="../assets/bf-example5-web.mp4" muted loop playsinline preload="none" aria-label="A looping graphic made for one of the fashion designers" onerror="this.remove()"></video>
+      <span class="ph-label">production.jpg / .mp4 — a designer's loop</span>
+    </figure>
+    <div class="cs-text reveal">
+      <span class="cs-num">02</span>
+      <h2>Production</h2>
+      <p>The graphics for Beyond Fashion were created by a group of students in New Media Design.</p>
+      <p>Each student was responsible for a selection of looping graphics tailored to each fashion designer.</p>
+    </div>
+  </section>
+
+  <section class="cs-row">
+    <figure class="cs-media reveal" style="--ar:4 / 3">
+      <!-- Floor plan: save it in assets/ as "bf floorplan.png" (or change the name here) and it
+           joins the carousel. class="is-whole" shows a diagram complete on a light background
+           instead of cropping it to fill the frame; photos fill the frame. -->
+      <img class="is-whole" src="../assets/bf floorplan.png" alt="Floor plan of the show: runway, seating, model pose spots and camera positions" loading="lazy" onerror="this.remove()">
+      <img src="../assets/bf layout2.jpg" alt="The team reviewing the floor plan on the LED wall during setup" style="object-position:50% 30%" loading="lazy" onerror="this.remove()">
+      <img src="../assets/BF Layout1.jpg" alt="The finished room: rows of chairs around the runway under red stage light" loading="lazy" onerror="this.remove()">
+      <span class="ph-label">Layout — floor plan and setup</span>
+    </figure>
+    <div class="cs-text reveal">
+      <span class="cs-num">03</span>
+      <h2>Layout</h2>
+      <p>We students were also tasked with designing the layout of the show.</p>
+      <p>We went through many iterations. The final design notates seating arrangements, ticket prices for seats, the runway layout, model pose spots, camera crew positions and more.</p>
+    </div>
+  </section>
+
+  <section class="cs-row">
+    <figure class="cs-media reveal" style="--ar:16 / 9">
+      <!-- Web version of "BF Gopro Video Edit.mp4" (181.6 MB) re-encoded at 720p without sound: 16.8 MB.
+           A video stays up for its own length in the carousel, then the photo after it. -->
+      <video src="../assets/bf-execution-web.mp4" muted loop playsinline preload="none" aria-label="Beyond Fashion show day: GoPro footage of the show with the live visuals" onerror="this.remove()"></video>
+      <img src="../assets/bf exe2.jpg" alt="Beyond Fashion on show day" loading="lazy" onerror="this.remove()">
+      <img src="../assets/work/beyond-fashion/bf-runway-model.jpg" alt="A model on the runway in front of the LED wall" style="object-position:50% 30%" loading="lazy" onerror="this.remove()">
+      <img src="../assets/work/beyond-fashion/bf-speaker-led-wall.jpg" alt="A speaker on stage in front of the LED wall" loading="lazy" onerror="this.remove()">
+      <span class="ph-label">bf-execution.mp4 — show day</span>
+    </figure>
+    <div class="cs-text reveal">
+      <span class="cs-num">04</span>
+      <h2>Execution</h2>
+      <!-- DRAFT: only says what's already known (date from the pass, role, tools). Replace with
+           how the day actually went: setup, rehearsal, cueing, anything that went wrong. -->
+      <p>On show day, December 12, 2025, I worked as the Screen Operator, running the LED wall and the lights live from the VJ station.</p>
+      <p>Everything ran in Resolume Arena, with the looks we'd built in After Effects ready to trigger as the show moved from one designer to the next.</p>
+    </div>
+  </section>
+
+  <a class="next-case" href="boiler-room.html">
+    <span class="eyebrow">Next case study</span>
+    <span class="next-title">Boiler Room <span aria-hidden="true">→</span></span>
+  </a>
+</main>
+
+<footer id="contact">
+  <div class="col">
+    <div class="brand">Erick Wittmann</div>
+  </div>
+  <div class="col">
+    <h4>Contact</h4>
+    <a href="mailto:erickwittmann@gmail.com">erickwittmann@gmail.com</a>
+  </div>
+  <div class="col">
+    <h4>Elsewhere</h4>
+    <a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://www.behance.net/erickwittmann" target="_blank" rel="noopener">Behance</a>
+  </div>
+  <div class="col">
+    <h4>&nbsp;</h4>
+    <span>© 2026 Erick Wittmann. All rights reserved.</span>
+  </div>
+</footer>
+
+<script src="../js/page-music.js"></script>
+<script src="../js/page-audio.js"></script>
+<script src="../js/site.js"></script>
+<script src="../js/tilt.js"></script>
+<script src="../js/carousel.js"></script>
+<script src="../js/lightbox.js"></script>
+<script src="../js/chroma.js"></script>
+</body>
+</html>

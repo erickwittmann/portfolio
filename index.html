@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Erick Wittmann — Motion &amp; Audiovisual Design</title>
+<meta name="description" content="Erick Wittmann is a motion graphics and audiovisual designer. Step onto the stage and run the lights.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <ul>
+    <li class="nav-name"><a href="#top">Erick Wittmann</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <!-- One scroll sequence: the media grid fills the window and is also the stage's LED screen.
+       Scrolling pulls the camera back out of the screen to the whole stage (js/hero.js), then the
+       page carries on. .stage-pin stays in the window while the section scrolls past behind it. -->
+  <section class="stage-seq intro" id="top" aria-label="Selected visuals and interactive stage">
+    <h1 class="sr-only">Erick Wittmann — Motion &amp; Audiovisual Designer</h1>
+    <div class="stage-pin">
+      <div class="intro-frame" id="intro-frame"><div class="intro-grid" id="intro-grid"></div></div>
+      <div id="wrap"></div>
+      <div id="status" aria-live="polite"></div>
+    </div>
+  </section>
+  <script src="js/sfx.js"></script>
+  <script src="js/page-music.js"></script>
+  <script src="js/page-audio.js"></script>
+  <script src="js/intro-media.js"></script>
+  <script src="js/intro.js"></script>
+
+  <section class="about" id="about">
+    <!-- Yellow disc with a cursor pixel trail behind a cut-out portrait (transparent PNG). The
+         cut-out is clipped to the circle at the bottom only, so the head can break the top edge. -->
+    <figure class="portrait reveal">
+      <canvas class="pixel-trail" aria-hidden="true"></canvas>
+      <div class="cutout"><img src="assets/portrait5.png" alt="Erick Wittmann" onerror="this.remove()"></div>
+    </figure>
+    <div class="reveal">
+      <p class="eyebrow">About</p>
+      <h2>Hi, I’m <em class="px-word">Erick</em> <span class="wave" aria-hidden="true">👋</span></h2>
+      <p class="lead">I’m a <em class="px-word">motion graphics</em> and <em class="px-word">audiovisual designer</em>.</p>
+      <p class="body">I’m a senior New Media Design student graduating in Spring 2027, looking for work at creative digital agencies or event venues.</p>
+      <div class="links">
+        <a href="#work">Selected work</a>
+        <a href="#contact">Get in touch</a>
+      </div>
+      <!-- Socials: add another <li> to extend the grid; it wraps onto a new row by itself. -->
+      <ul class="socials" aria-label="Social">
+        <li><a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".4"/></svg>
+          <span>Instagram</span></a></li>
+        <li><a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5v6M8 7.6v.01M11.5 16.5v-6M11.5 13.2c0-1.7 1-2.7 2.3-2.7s2.2.9 2.2 2.7v3.3"/></svg>
+          <span>LinkedIn</span></a></li>
+        <li><a href="https://www.behance.net/erickwittmann" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h4.5a2.75 2.75 0 0 1 0 5.5H3zM3 11.5h5a3.25 3.25 0 0 1 0 6.5H3zM15 7h5M14 14h7a3.5 3.5 0 1 0-1.2 2.7"/></svg>
+          <span>Behance</span></a></li>
+        <!-- Hidden for now: vimeo.com/erickwittmann returns "page not found". Put the real address in
+             and remove this comment to bring the tile back.
+        <li><a href="https://vimeo.com/erickwittmann" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8.6l.9 1.1c.9-.7 1.7-1.1 2.1-.5.7 1.1 1.8 7.8 3.4 7.8 1.9 0 6.3-4.6 7.9-9 1-2.8-.4-4.5-2.6-4.4-1.6.1-3 1.3-3.6 3.4 1.6-.8 3-.4 2.4 1.4-.6 1.6-2.3 4-3 4-1 0-1.6-6.6-3-7.4C7.4 4.4 5 6.5 3 8.6z"/></svg>
+          <span>Vimeo</span></a></li>
+        -->
+      </ul>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section class="works" id="work">
+    <div class="works-head reveal">
+      <h2>Selected Works</h2>
+      <span>04 Projects</span>
+    </div>
+    <div class="projects">
+      <a class="project reveal" href="work/beyond-fashion.html">
+        <div class="cover">
+          <div class="art art-fashion"></div>
+          <video src="assets/Beyond Fashion Compressed.mp4" muted loop playsinline preload="none" aria-hidden="true" onerror="this.remove()"></video>
+          <div class="cover-title"><h3><b>Beyond Fashion</b><span>VJ Set</span></h3><p>Erick Wittmann<span>Fashion Show · LED Wall</span></p></div>
+        </div>
+        <div class="project-meta"><span>01 — Live Visuals</span><span>2025</span><span class="go">View case study →</span></div>
+      </a>
+      <a class="project reveal" href="#">
+        <div class="cover">
+          <div class="art art-etch"></div>
+          <video src="assets/EtchaSketch rec.mp4" muted loop playsinline preload="none" aria-hidden="true" onerror="this.remove()"></video>
+          <div class="cover-title"><h3><b>Multiplayer</b><span>Etch-a-Sketch</span></h3><p>Erick Wittmann<span>Interactive IV</span></p></div>
+        </div>
+        <div class="project-meta"><span>02 — Interactive</span><span>2026</span><span class="go">View case study →</span></div>
+      </a>
+      <a class="project reveal" href="work/boiler-room.html">
+        <div class="cover">
+          <div class="art art-boiler"></div>
+          <video src="assets/Boiler Room Square.mp4" muted loop playsinline preload="none" aria-hidden="true" onerror="this.remove()"></video>
+          <div class="cover-title"><h3><b>Boiler Room</b><span>Audiovisuals</span></h3><p>Erick Wittmann<span>Live Visuals</span></p></div>
+        </div>
+        <div class="project-meta"><span>03 — Live Visuals</span><span>2026</span><span class="go">View case study →</span></div>
+      </a>
+      <a class="project reveal" href="#">
+        <div class="cover">
+          <div class="art art-reel"></div>
+          <img src="assets/work/title-sequence.jpg" alt="" loading="lazy" onerror="this.remove()">
+          <div class="cover-title"><h3><b>Reel</b><span>Title Sequence</span></h3><p>Erick Wittmann<span>Brand Spot</span></p></div>
+        </div>
+        <div class="project-meta"><span>04 — Motion</span><span>2026</span><span class="go">View case study →</span></div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer id="contact">
+  <div class="col">
+    <div class="brand">Erick Wittmann</div>
+  </div>
+  <div class="col">
+    <h4>Contact</h4>
+    <a href="mailto:erickwittmann@gmail.com">erickwittmann@gmail.com</a>
+  </div>
+  <div class="col">
+    <h4>Elsewhere</h4>
+    <a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://www.behance.net/erickwittmann" target="_blank" rel="noopener">Behance</a>
+  </div>
+  <div class="col">
+    <h4>&nbsp;</h4>
+    <span>© 2026 Erick Wittmann. All rights reserved.</span>
+  </div>
+</footer>
+
+<script src="js/vendor/three.min.js"></script>
+<script src="js/vendor/GLTFLoader.js"></script>
+<script src="js/vendor/meshopt_decoder.js"></script>
+<!-- 3D stage; the intro grid is its LED screen. (js/stage-cube.js is an older stand-in from before the
+     grid moved onto the screen: it would cover the grid, so it is no longer a drop-in swap.) -->
+<script src="js/hero.js"></script>
+<script src="js/stage-ui.js"></script>
+<script src="js/site.js"></script>
+<script src="js/tilt.js"></script>
+<script src="js/pixel-trail.js"></script>
+<script src="js/chroma.js"></script>
+</body>
+</html>

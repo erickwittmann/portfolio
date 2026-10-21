@@ -1,0 +1,51 @@
+# Not part of the website: kept on this computer, not published
+_original/
+docs/
+
+# OS / editor files
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.claude/
+
+# Media the site doesn't use (some over GitHub's 100 MB or Cloudflare's 25 MB limit).
+# If you start using one of these on a page, delete its line here.
+/assets/BF Gopro Video Edit.mp4
+/assets/BF Pass.png
+/assets/Boiler Room Arena Size.mp4
+/assets/Boiler Room Main Title Sequence.mp4
+/assets/Boiler Room Program.png
+/assets/Boiler Room Red.mp4
+/assets/Boiler Room Vert.mp4
+/assets/Boiler Room.png
+/assets/Etch a Sketch.png
+/assets/TD Threshold Test.mp4
+/assets/bf example1.mp4
+/assets/bf example1.png
+/assets/bf example2.mp4
+/assets/bf example2.png
+/assets/bf example3.mp4
+/assets/bf example3.png
+/assets/bf example4.mp4
+/assets/bf example4.png
+/assets/bf example5.mp4
+/assets/lost without you.mp3
+/assets/stage.glb
+/assets/tex-base-1024.jpg
+/assets/tex-base-2048.jpg
+/assets/tex-base.jpg
+/assets/tex-mr-1024.jpg
+/assets/tex-mr-2048.jpg
+/assets/tex-mr.jpg
+/assets/touchdesigner hand.png
+/assets/work/20-days/20d-poster-blue.jpg
+/assets/work/20-days/20d-poster-white.jpg
+/assets/work/black-mirror/bm-shattered.jpg
+/assets/work/black-mirror/bm-title-card.jpg
+/assets/work/boiler-room/br-still-vertical.jpg
+/assets/work/digital-graffiti/dg-still-green.jpg
+/assets/work/digital-graffiti/dg-still-red.jpg
+/assets/work/project01/p01-logo.jpg
+/assets/work/project01/p01-process-book.jpg
+/assets/yaego, kučka - ketamina.mp3

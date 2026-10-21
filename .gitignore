@@ -49,3 +49,7 @@ desktop.ini
 /assets/work/project01/p01-logo.jpg
 /assets/work/project01/p01-process-book.jpg
 /assets/yaego, kučka - ketamina.mp3
+
+# Wrangler
+.wrangler/
+node_modules/

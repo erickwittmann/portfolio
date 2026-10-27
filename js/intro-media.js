@@ -33,6 +33,10 @@ window.INTRO_MEDIA = [
   { src: 'assets/Digital Graffiti Cropped.mp4', caption: 'Projection Mapping', aspect: 3.13 }
 ];
 
+// The name tile (name, portrait, the links below) is off: the opening screen shows the name now.
+// true brings it back.
+window.INTRO_TEXT_TILE = false;
+
 // Links in the one text tile.
 window.INTRO_LINKS = [
   { label: 'Instagram', href: 'https://www.instagram.com/erickwittmann' },

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Black Mirror — Erick Wittmann</title>
+<meta name="description" content="A spec title sequence and Netflix ad for Black Mirror, made in After Effects by a student team including Erick Wittmann.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<!-- Music for this page: set it in js/page-music.js (under 'black-mirror'). -->
+<body class="case">
+
+<nav class="nav" id="nav">
+  <ul>
+    <li class="nav-name"><a href="../index.html">Erick Wittmann</a></li>
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!--
+  Black Mirror: a spec title sequence + Netflix ad, from the team's process book in Figma
+  (BLACK-MIRROR-TITLE-SEQUENCE). Media in assets/work/black-mirror/: the title sequence is a web version
+  of assets/12_10_FINALCUT.mp4 (kept out of Git: too big), the ads of the files in Downloads (sound levelled to -16 LUFS like the rest of the site); the images are
+  exports of the Figma frames. Videos play their sound on hover / in the focus view.
+-->
+<main>
+  <header class="cs-head">
+    <p class="eyebrow reveal">Case Study — Title Sequence · Spec Work</p>
+    <h1 class="reveal">Black Mirror</h1>
+    <dl class="cs-facts reveal">
+      <div><dt>Project</dt><dd>Title sequence + Netflix ad</dd></div>
+      <div><dt>Tools</dt><dd>After Effects</dd></div>
+      <div><dt>Team</dt><dd>Sharon Wang Liu, Emily Ott, Claire Wang, Erick Wittmann</dd></div>
+      <div><dt>When</dt><dd>Fall 2025</dd></div>
+    </dl>
+  </header>
+
+  <figure class="cs-hero reveal" style="--ar:16 / 9" data-hover-audio>
+    <video src="../assets/work/black-mirror/bm-title-sequence.mp4" muted loop playsinline preload="none" aria-label="Black Mirror title sequence" onerror="this.remove()"></video>
+    <span class="ph-label">Title sequence — final cut, 32 s</span>
+  </figure>
+
+  <!-- Overview: the show background from the process book. -->
+  <section class="cs-overview reveal" aria-labelledby="overview-title">
+    <div class="fmt-head">
+      <span class="cs-num">01</span>
+      <h2 id="overview-title">Show / Story Background</h2>
+      <p>Black Mirror is a critically acclaimed anthology series created by Charlie Brooker that explores the dark, thought-provoking intersections between technology, society, and human behavior.</p>
+      <p>Each standalone episode presents a speculative near-future scenario, serving as both cautionary tale and cultural commentary. The show’s evolving timeline mirrors real world technological shifts moving from early social media anxieties to AI, surveillance, and digital identity.</p>
+    </div>
+  </section>
+
+  <section class="cs-row">
+    <figure class="cs-media reveal" style="--ar:1587 / 1120">
+      <img src="../assets/work/black-mirror/bm-mood-1.jpg" alt="Moodboard: chrome spikes, chains, shattered glass and turbine-like rings in black and silver" loading="lazy" onerror="this.remove()">
+      <img src="../assets/work/black-mirror/bm-mood-2.jpg" alt="Moodboard: liquid chrome, bubbles, chains and a shattering glass" loading="lazy" onerror="this.remove()">
+      <img src="../assets/work/black-mirror/bm-mood-3.jpg" alt="Moodboard: x-ray skeletons, iridescent glass, a glowing head in profile and a glass scorpion" loading="lazy" onerror="this.remove()">
+      <img src="../assets/work/black-mirror/bm-mood-4.jpg" alt="Moodboard: cracked screens, thermal surveillance, ASCII figures and figures made of light" loading="lazy" onerror="this.remove()">
+      <span class="ph-label">Moodboards</span>
+    </figure>
+    <div class="cs-text reveal">
+      <span class="cs-num">02</span>
+      <h2>Moodboards</h2>
+      <p>Four boards of references for the look: chrome, chains and shattered glass; liquid metal; x-ray and iridescent bodies; cracked screens, surveillance and ASCII figures.</p>
+    </div>
+  </section>
+
+  <section class="cs-row">
+    <figure class="cs-media reveal" style="--ar:1587 / 1120">
+      <img src="../assets/work/black-mirror/bm-typography.jpg" alt="Type specimen: Proxima Nova from Black to Thin, and a 'Directed by Charlie Brooker' credit" loading="lazy" onerror="this.remove()">
+    </figure>
+    <div class="cs-text reveal">
+      <span class="cs-num">03</span>
+      <h2>Typography</h2>
+      <p>The show’s title font is Proxima Nova Bold, so the credits are set in the Proxima Nova family, Black through Thin.</p>
+    </div>
+  </section>
+
+  <section class="fmt reveal" aria-labelledby="sketch-title">
+    <div class="fmt-head">
+      <span class="cs-num">04</span>
+      <h2 id="sketch-title">Sketches</h2>
+    </div>
+    <div class="fmt-row">
+      <figure class="cs-media fmt-item" style="--r:1146 / 805; --ar:1146 / 805">
+        <img src="../assets/work/black-mirror/bm-sketch-smileys.jpg" alt="Six sketches of the cracked smiley in different materials" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>01</b> Smileys</figcaption>
+      </figure>
+      <figure class="cs-media fmt-item" style="--r:1; --ar:1">
+        <img src="../assets/work/black-mirror/bm-sketch-skulls.jpg" alt="Two glowing x-ray skull sketches with chromatic aberration" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>02</b> Skulls</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="fmt reveal" aria-labelledby="frames-title">
+    <div class="fmt-head">
+      <span class="cs-num">05</span>
+      <h2 id="frames-title">Final Frames</h2>
+      <p>Click any frame to see it larger.</p>
+    </div>
+    <div class="fmt-grid">
+      <figure class="cs-media fmt-item" style="--ar:1400 / 788"><img src="../assets/work/black-mirror/bm-frame-1.jpg" alt="Final frame: blurred light through cracked glass, with the credit Produced by Madonna Baptiste" loading="lazy" onerror="this.remove()"></figure>
+      <figure class="cs-media fmt-item" style="--ar:1400 / 788"><img src="../assets/work/black-mirror/bm-frame-3.jpg" alt="Final frame: a head in profile breaking into blue and orange shards" loading="lazy" onerror="this.remove()"></figure>
+      <figure class="cs-media fmt-item" style="--ar:1400 / 788"><img src="../assets/work/black-mirror/bm-frame-2.jpg" alt="Final frame: the Black Mirror title cracking behind a shattered screen" loading="lazy" onerror="this.remove()"></figure>
+      <figure class="cs-media fmt-item" style="--ar:1400 / 788"><img src="../assets/work/black-mirror/bm-frame-4.jpg" alt="Final frame: Black Mirror, A Netflix Original Series, over a shattered smiley" loading="lazy" onerror="this.remove()"></figure>
+    </div>
+    <div class="fmt-row fmt-row--verts">
+      <figure class="cs-media fmt-item" style="--r:684 / 1220; --ar:684 / 1220"><img src="../assets/work/black-mirror/bm-vert-1.jpg" alt="Vertical final frame: the title warping in coloured light" loading="lazy" onerror="this.remove()"></figure>
+      <figure class="cs-media fmt-item" style="--r:684 / 1220; --ar:684 / 1220"><img src="../assets/work/black-mirror/bm-vert-2.jpg" alt="Vertical final frame: Black Mirror in iridescent letters" loading="lazy" onerror="this.remove()"></figure>
+      <figure class="cs-media fmt-item" style="--r:684 / 1220; --ar:684 / 1220"><img src="../assets/work/black-mirror/bm-vert-3.jpg" alt="Vertical final frame: the title over red light and cracked glass" loading="lazy" onerror="this.remove()"></figure>
+      <figure class="cs-media fmt-item" style="--r:684 / 1220; --ar:684 / 1220"><img src="../assets/work/black-mirror/bm-vert-4.jpg" alt="Vertical final frame: the title with the Netflix Originals mark" loading="lazy" onerror="this.remove()"></figure>
+    </div>
+  </section>
+
+  <section class="fmt reveal" aria-labelledby="ad-title">
+    <div class="fmt-head">
+      <span class="cs-num">06</span>
+      <h2 id="ad-title">Netflix Ad</h2>
+      <p>A seven-second ad, vertical and square. Hover for sound, or click to watch it larger.</p>
+    </div>
+    <div class="fmt-row">
+      <figure class="cs-media fmt-item" style="--r:608 / 1080; --ar:608 / 1080" data-hover-audio>
+        <video src="../assets/work/black-mirror/bm-ad-vertical.mp4" muted loop playsinline preload="none" aria-label="Black Mirror Netflix ad, vertical" onerror="this.remove()"></video>
+        <figcaption class="fmt-cap"><b>01</b> Vertical <span>9 : 16 · 7 s</span></figcaption>
+      </figure>
+      <figure class="cs-media fmt-item" style="--r:1; --ar:1" data-hover-audio>
+        <video src="../assets/work/black-mirror/bm-ad-square.mp4" muted loop playsinline preload="none" aria-label="Black Mirror Netflix ad, square" onerror="this.remove()"></video>
+        <figcaption class="fmt-cap"><b>02</b> Square <span>1 : 1 · 7 s</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="fmt reveal" aria-labelledby="mock-title">
+    <div class="fmt-head">
+      <span class="cs-num">07</span>
+      <h2 id="mock-title">Mockups</h2>
+    </div>
+    <div class="fmt-row">
+      <figure class="cs-media fmt-item" style="--r:1730 / 1298; --ar:1730 / 1298">
+        <img src="../assets/work/black-mirror/bm-mockup-billboard.jpg" alt="Mockup: the visuals on a row of billboard screens under a wooden canopy" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>01</b> Billboard</figcaption>
+      </figure>
+      <figure class="cs-media fmt-item" style="--r:1166 / 1308; --ar:1166 / 1308">
+        <img src="../assets/work/black-mirror/bm-mockup-citylight.jpg" alt="Mockup: a vertical frame on a city-light display against a concrete wall" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>02</b> City light</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <a class="next-case" href="beyond-fashion.html">
+    <span class="eyebrow">Next case study</span>
+    <span class="next-title">Beyond Fashion 2025 <span aria-hidden="true">→</span></span>
+  </a>
+</main>
+
+<footer id="contact">
+  <div class="col">
+    <div class="brand">Erick Wittmann</div>
+  </div>
+  <div class="col">
+    <h4>Contact</h4>
+    <a href="mailto:erickwittmann@gmail.com">erickwittmann@gmail.com</a>
+  </div>
+  <div class="col">
+    <h4>Elsewhere</h4>
+    <a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener">LinkedIn</a>
+    <!-- Behance hidden for now: <a href="https://www.behance.net/erickwittmann" target="_blank" rel="noopener">Behance</a> -->
+  </div>
+  <div class="col">
+    <h4>&nbsp;</h4>
+    <span>© 2026 Erick Wittmann. All rights reserved.</span>
+  </div>
+</footer>
+
+<script src="../js/vendor/lenis.min.js"></script>
+<script src="../js/smooth-scroll.js"></script>
+<script src="../js/page-music.js"></script>
+<script src="../js/page-audio.js"></script>
+<script src="../js/spectrum.js"></script>
+<script src="../js/nav-audio.js"></script>
+<script src="../js/site.js"></script>
+<script src="../js/tilt.js"></script>
+<script src="../js/carousel.js"></script>
+<script src="../js/hover-audio.js"></script>
+<script src="../js/lightbox.js"></script>
+<script src="../js/chroma.js"></script>
+</body>
+</html>

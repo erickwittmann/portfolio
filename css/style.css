@@ -596,3 +596,71 @@ html.lenis, html.lenis body { height:auto; }
   .na-wave { width:110px; height:26px; }
   .na-skip { width:18px; }
 }
+
+/* ---------- The Program (work/boiler-room.html, js/td-map.js) ----------
+   Intro text in two columns, then the TouchDesigner network with an outline per stage. The
+   outlines and labels sit in % of the picture; label size follows the picture's width (cqw). */
+.cs-program { padding:clamp(56px,7vw,110px) var(--gutter); border-top:1px solid var(--line); }
+.program-intro { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(28px,5vw,96px); padding-top:22px;
+  border-top:1px solid var(--line); margin-bottom:clamp(36px,5vw,72px); }
+.program-intro h3 { display:flex; align-items:center; gap:16px; margin:0 0 16px; font-size:clamp(22px,2vw,32px); font-weight:500; }
+.program-intro h3 img { width:clamp(30px,2.6vw,40px); height:auto; image-rendering:pixelated; }
+.program-intro p { margin:0; max-width:52ch; color:#c9c9c9; }
+.program-intro b { color:#fff; font-weight:600; }
+.td-map { position:relative; }
+.td-toggle { display:block; margin:0 auto clamp(14px,2vw,24px); padding:8px 16px; border:1px solid rgba(255,255,255,.35); background:#000;
+  color:#fff; font:inherit; font-size:13px; letter-spacing:.06em; cursor:pointer; transition:border-color .2s, background-color .2s; }
+.td-toggle:hover, .td-toggle:focus-visible { border-color:#fff; outline:none; }
+.td-scroll { overflow-x:auto; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch; }
+.td-canvas { position:relative; min-width:720px; aspect-ratio:2543 / 737; container-type:inline-size; }
+.td-net { position:absolute; inset:0; width:100%; height:100%; transition:opacity .35s var(--ease); }
+.td-box { position:absolute; display:block; opacity:0; transition:opacity .35s var(--ease); cursor:pointer; }
+span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c) 14%, transparent); }
+.td-label { position:absolute; padding:0; border:0; background:none; font:inherit; font-size:1.85cqw; line-height:1.15; white-space:nowrap;
+  color:var(--c); cursor:pointer; opacity:1; transition:opacity .35s var(--ease), text-shadow .35s var(--ease); }
+.td-label:focus-visible { outline:1px dashed var(--c); outline-offset:4px; }
+/* States: all outlines, none, or just one stage. */
+.td-map[data-show="all"] .td-box { opacity:1; }
+.td-map[data-show="none"] .td-label { opacity:.75; }
+.td-map:where(:not([data-show="all"]):not([data-show="none"])) .td-net { opacity:.75; }
+.td-map:where(:not([data-show="all"]):not([data-show="none"])) .td-label { opacity:.3; }
+.td-map[data-show="audio"] [data-stage="audio"], .td-map[data-show="render"] [data-stage="render"],
+.td-map[data-show="feedback"] [data-stage="feedback"], .td-map[data-show="colors"] [data-stage="colors"],
+.td-map[data-show="mirrors"] [data-stage="mirrors"], .td-map[data-show="composite"] [data-stage="composite"] { opacity:1; }
+.td-map:where(:not([data-show="all"]):not([data-show="none"])) .td-label[aria-pressed="true"],
+.td-map[data-show="audio"] .td-label[data-stage="audio"], .td-map[data-show="render"] .td-label[data-stage="render"],
+.td-map[data-show="feedback"] .td-label[data-stage="feedback"], .td-map[data-show="colors"] .td-label[data-stage="colors"],
+.td-map[data-show="mirrors"] .td-label[data-stage="mirrors"], .td-map[data-show="composite"] .td-label[data-stage="composite"] {
+  text-shadow:0 0 18px var(--c); }
+/* The stages in order, under the map; the highlighted one stands out. */
+.td-steps { list-style:none; counter-reset:step; margin:clamp(24px,3vw,40px) 0 0; padding:0;
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px clamp(20px,3vw,48px); }
+.td-steps li { counter-increment:step; position:relative; padding:12px 0 0 0; border-top:1px solid var(--line); color:var(--dim);
+  font-size:14px; cursor:default; transition:color .3s var(--ease), border-color .3s var(--ease); }
+.td-steps li::before { content:counter(step,decimal-leading-zero); display:block; margin-bottom:6px; font-size:10px; letter-spacing:.24em; color:var(--faint); }
+.td-steps b { display:block; margin-bottom:4px; font-weight:600; color:var(--c); }
+.td-map:where(:not([data-show="all"]):not([data-show="none"])) .td-steps li { color:rgba(255,255,255,.28); }
+.td-map:where(:not([data-show="all"]):not([data-show="none"])) .td-steps b { opacity:.45; }
+.td-map[data-show="audio"] .td-steps [data-stage="audio"], .td-map[data-show="render"] .td-steps [data-stage="render"],
+.td-map[data-show="feedback"] .td-steps [data-stage="feedback"], .td-map[data-show="colors"] .td-steps [data-stage="colors"],
+.td-map[data-show="mirrors"] .td-steps [data-stage="mirrors"], .td-map[data-show="composite"] .td-steps [data-stage="composite"] {
+  color:#fff; border-color:var(--c); }
+.td-map[data-show="audio"] .td-steps [data-stage="audio"] b, .td-map[data-show="render"] .td-steps [data-stage="render"] b,
+.td-map[data-show="feedback"] .td-steps [data-stage="feedback"] b, .td-map[data-show="colors"] .td-steps [data-stage="colors"] b,
+.td-map[data-show="mirrors"] .td-steps [data-stage="mirrors"] b, .td-map[data-show="composite"] .td-steps [data-stage="composite"] b { opacity:1; }
+@media (max-width:760px) {
+  .program-intro { grid-template-columns:1fr; }
+  .td-steps { grid-template-columns:1fr 1fr; }
+}
+
+/* Text-only lead-in section (Boiler Room overview): the formats' header style, with a larger paragraph. */
+.cs-overview { padding:clamp(48px,6vw,96px) var(--gutter) clamp(40px,5vw,72px); border-top:1px solid var(--line); }
+.cs-overview .fmt-head { margin-bottom:0; }
+.cs-overview .fmt-head p { max-width:58ch; margin-top:16px; font-size:clamp(17px,1.45vw,22px); line-height:1.45; color:#d4d4d4; }
+.cs-hero + .cs-overview { border-top:0; padding-top:0; }   /* right under the title video: no extra gap or divider */
+
+/* A 2 x 2 grid of frames (e.g. Black Mirror's final frames), and a row of verticals under it. */
+.fmt-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.fmt-row--verts { margin-top:12px; }
+.cs-overview .fmt-head p + p { margin-top:14px; }
+@media (max-width:760px) { .fmt-grid { gap:8px; } .fmt-row--verts { margin-top:8px; } }

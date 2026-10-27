@@ -46,16 +46,12 @@
     <span class="ph-label">Main title sequence — 16 : 9</span>
   </figure>
 
-  <section class="cs-row">
-    <figure class="cs-media reveal" style="--ar:1476 / 830">
-      <img src="../assets/work/boiler-room/br-still-wide.jpg" alt="A Boiler Room visual: the logo at the centre of a kaleidoscope of coloured tiles" loading="lazy" onerror="this.remove()">
-      <span class="ph-label">Still</span>
-    </figure>
-    <div class="cs-text reveal">
+  <!-- Overview: text only, a short lead-in before the formats. -->
+  <section class="cs-overview reveal" aria-labelledby="overview-title">
+    <div class="fmt-head">
       <span class="cs-num">01</span>
-      <h2>Overview</h2>
-      <p>This is a select few of the live concert visuals I created as spec work for Boiler Room, a live EDM venue with many artists and many different kinds of music.</p>
-      <p>I created these with TouchDesigner and After Effects to display the range of genres that Boiler Room encompasses.</p>
+      <h2 id="overview-title">Overview</h2>
+      <p>This is a select few of the live concert visuals I created as spec work for Boiler Room, a live EDM venue with many artists and many different kinds of music. I created these with TouchDesigner and After Effects to display the range of genres that Boiler Room encompasses.</p>
     </div>
   </section>
 
@@ -119,19 +115,59 @@
       </div>
       <div>
         <h3>Approach</h3>
-        <p>Audio-reactive motion graphics, built in TouchDesigner and finished in After Effects.</p>
-        <p>TouchDesigner captures live audio and converts it to a wave spectrum. A line of 3D shapes takes its values from each point, is rendered with a camera and light, then runs through a feedback loop, gets its colours, is reflected through mirrors and composited with rotations.</p>
+        <p>Audio-reactive motion graphics, built in TouchDesigner and finished in After Effects. How the program works is broken down below.</p>
         <!-- Add how it was done: how the visuals react to the music, how each format was handled,
              anything you solved along the way. -->
       </div>
     </div>
-    <!-- The TouchDesigner network, labelled by stage. Click to view it larger. -->
-    <figure class="cs-figure reveal">
-      <div class="cs-media" style="--ar:1920 / 1080">
-        <img src="../assets/work/boiler-room/br-program.png" alt="The TouchDesigner program, in stages: audio to wave spectrum, 3D rendering, feedback loop, colours, mirrors and composite" loading="lazy" onerror="this.remove()">
+  </section>
+
+  <!-- The Program: the TouchDesigner network, as an interactive map (js/td-map.js). Hover or tap
+       a stage to highlight its part of the network; "Hide all" / "See all" toggles every outline.
+       The outlines and labels are placed in % of the network picture (from the Figma file,
+       SENIOR-WORKSHOP > Group 3); data-stage ties each label, outline and sentence together. -->
+  <section class="cs-program reveal" aria-labelledby="program-title">
+    <div class="fmt-head">
+      <span class="cs-num">04</span>
+      <h2 id="program-title">The Program</h2>
+    </div>
+    <div class="program-intro">
+      <div>
+        <h3><span>TouchDesigner</span><img src="../assets/work/boiler-room/program/td-icon.png" alt="" width="40" height="40"></h3>
+        <p>TouchDesigner is an <b>audiovisual software</b> that allows users to connect live audio into the program and processed by a series of nodes.</p>
       </div>
-      <figcaption>The program — TouchDesigner network, audio in to composite out</figcaption>
-    </figure>
+      <p class="program-flow">The software captures <b>live audio</b> and converts it to a wave spectrum. A line is created with 3D shapes that have values assigned to each point. The visual is rendered with a camera and light, then processed through a feedback loop, assigned colors, reflected through mirrors, and composited with rotations.</p>
+    </div>
+
+    <div class="td-map" data-show="all">
+      <button type="button" class="td-toggle" aria-pressed="true">Hide all</button>
+      <div class="td-scroll">
+        <div class="td-canvas">
+          <img class="td-net" src="../assets/work/boiler-room/program/td-network.png" alt="The TouchDesigner network: about fifty nodes wired left to right, from the audio input to the final composite" width="2543" height="737">
+          <img class="td-box td-box--svg" data-stage="audio" src="../assets/work/boiler-room/program/box-audio.svg" alt="" style="left:1.3%; top:24.29%; width:36.39%; height:40.3%">
+          <img class="td-box td-box--svg" data-stage="render" src="../assets/work/boiler-room/program/box-3d.svg" alt="" style="left:29.49%; top:36.36%; width:23.48%; height:45.19%">
+          <span class="td-box" data-stage="feedback" style="inset:36.36% 38.5% 44.37% 54.7%; --c:#ff0004"></span>
+          <span class="td-box" data-stage="colors" style="inset:56.17% 34.33% 15.88% 55.17%; --c:#00b7ff"></span>
+          <span class="td-box" data-stage="mirrors" style="inset:47.63% 17.62% 44.37% 61.66%; --c:#ff00f2"></span>
+          <img class="td-box td-box--svg" data-stage="composite" src="../assets/work/boiler-room/program/box-composite.svg" alt="" style="left:79.08%; top:26.05%; width:18.05%; height:48.98%">
+          <button type="button" class="td-label" data-stage="audio" style="top:13.84%; left:9.71%; --c:#fff">Audio to Wave Spectrum</button>
+          <button type="button" class="td-label" data-stage="render" style="top:84.26%; left:35.27%; --c:#fffb00">3D Rendering</button>
+          <button type="button" class="td-label" data-stage="feedback" style="top:26.05%; left:51.67%; --c:#ff0004">Feedback Loop</button>
+          <button type="button" class="td-label" data-stage="colors" style="top:86.7%; left:57.61%; --c:#00b7ff">Colors</button>
+          <button type="button" class="td-label" data-stage="mirrors" style="top:38.26%; left:67.2%; --c:#ff00f2">Mirrors</button>
+          <button type="button" class="td-label" data-stage="composite" style="top:16.28%; left:83.96%; --c:#1aff00">Composite</button>
+        </div>
+      </div>
+      <!-- One line per stage, from the description above; the highlighted stage's line shows. -->
+      <ol class="td-steps">
+        <li data-stage="audio" style="--c:#fff"><b>Audio to Wave Spectrum</b> Live audio is captured and converted to a wave spectrum.</li>
+        <li data-stage="render" style="--c:#fffb00"><b>3D Rendering</b> A line is created with 3D shapes that have values assigned to each point, rendered with a camera and light.</li>
+        <li data-stage="feedback" style="--c:#ff0004"><b>Feedback Loop</b> The visual is processed through a feedback loop.</li>
+        <li data-stage="colors" style="--c:#00b7ff"><b>Colors</b> Colors are assigned.</li>
+        <li data-stage="mirrors" style="--c:#ff00f2"><b>Mirrors</b> It's reflected through mirrors.</li>
+        <li data-stage="composite" style="--c:#1aff00"><b>Composite</b> Everything is composited with rotations.</li>
+      </ol>
+    </div>
   </section>
 
   <!-- Process (TouchDesigner screengrabs): put the images in assets/work/boiler-room/ and
@@ -142,16 +178,16 @@
       <img src="../assets/work/boiler-room/td-network-2.jpg" alt="The TouchDesigner network for the visuals" loading="lazy" onerror="this.remove()">
     </figure>
     <div class="cs-text reveal">
-      <span class="cs-num">04</span>
+      <span class="cs-num">05</span>
       <h2>Process</h2>
       <p>How the network was built.</p>
     </div>
   </section>
   -->
 
-  <a class="next-case" href="beyond-fashion.html">
+  <a class="next-case" href="black-mirror.html">
     <span class="eyebrow">Next case study</span>
-    <span class="next-title">Beyond Fashion 2025 <span aria-hidden="true">→</span></span>
+    <span class="next-title">Black Mirror <span aria-hidden="true">→</span></span>
   </a>
 </main>
 
@@ -186,6 +222,7 @@
 <script src="../js/carousel.js"></script>
 <script src="../js/hover-audio.js"></script>
 <script src="../js/lightbox.js"></script>
+<script src="../js/td-map.js"></script>
 <script src="../js/chroma.js"></script>
 </body>
 </html>

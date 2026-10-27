@@ -24,6 +24,9 @@
   // while it switched off once the camera pulled back, to save frames on 2x screens; Erick wants
   // it back. Lower this, e.g. to 0.25, to trade the flex for smoother pull-backs on slow machines.)
   var FLEX_UNTIL = 1.01;
+  // The tile with the name, portrait and social links. Off since the opening screen carries the
+  // name: set INTRO_TEXT_TILE = true in js/intro-media.js to bring it back.
+  var TEXT_TILE = window.INTRO_TEXT_TILE === true;
 
   // ---------- Layout seed ----------
   // ?seed=<n> previews a layout, INTRO_SEED locks one, ?shuffle ignores the lock; otherwise random.
@@ -133,6 +136,15 @@
     // A tile left without media is worse than a piece left out, so layouts that come up short
     // score badly and another is tried; placeholder art only fills in as a last resort.
     free.forEach(function (k, j) { if (!loose[j]) dropped += 1000; media[k] = loose[j] || { src: 'art:reel' }; });
+    // No name tile (INTRO_TEXT_TILE false): its slot gets a piece of media too. It's chosen after
+    // everything else, without drawing new random numbers, so the rest of the locked layout
+    // (INTRO_SEED) stays exactly as it was.
+    if (!TEXT_TILE) {
+      var used = Object.keys(media).map(function (k) { return media[k]; });
+      var spare = pool.filter(function (m) { return used.indexOf(m) < 0 && !(isVideo(m.src) && videos >= MAX_VIDEOS); });
+      var fitting = spare.filter(function (m) { return !m.aspect || cropOf(tiles[textIndex].aspect, m.aspect) <= MAX_CROP; });
+      media[textIndex] = fitting[0] || spare[0] || { src: 'art:reel' };
+    }
     return { tiles: tiles, baseC: bc, baseR: br, textIndex: textIndex, media: media, dropped: dropped };
   }
   var L = build();
@@ -158,7 +170,7 @@
   var vids = [], tileEls = [];
   tiles.forEach(function (t, k) {
     var el;
-    if (k === textIndex) {
+    if (k === textIndex && TEXT_TILE) {
       el = document.createElement('div');
       el.className = 'tile tile--text';
       if (PORTRAITS.length) {

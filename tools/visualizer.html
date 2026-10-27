@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visualizer preview</title>
+<!-- Full-window preview of the stage's visualizer (js/visualizer.js), for tuning its look without
+     scrolling the homepage. Not published (tools/ is in .assetsignore). Click to start the music;
+     N = next song. Change the look in LOOK at the top of js/visualizer.js and reload. -->
+<style>
+  html, body { margin:0; height:100%; background:#000; overflow:hidden; font:12px/1.4 system-ui, sans-serif; color:#888; }
+  canvas { display:block; width:100%; height:100%; }
+  #hint { position:fixed; left:14px; bottom:12px; letter-spacing:.08em; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hint">Click to start the music · N = next song · ↑/↓ = volume (the picture grows and shrinks with it)</div>
+<script src="../js/vendor/three.min.js"></script>
+<script src="../js/spectrum.js"></script>
+<script src="../js/visualizer.js"></script>
+<script>
+(function () {
+  // Same playlist as the homepage (js/hero.js TRACKS).
+  var SONGS = ['../assets/yaego, kučka - ketamina.mp3', '../assets/PULL UP.mp3', '../assets/Blood Cultures - Unarchiver_Cut.mp3', '../assets/XY.mp3',
+               '../assets/Ferdous - Gravity.mp3', '../assets/Ferdous - Sad Nebula.mp3'];
+  var canvas = document.getElementById('c'), hint = document.getElementById('hint');
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false });
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  var viz = Visualizer(THREE, renderer, { width: 960 });
+  var show = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial({ map: viz.texture, toneMapped: false }));
+  var scene = new THREE.Scene(), cam = new THREE.Camera(); scene.add(show);
+  function resize() {
+    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    renderer.setSize(innerWidth, innerHeight, false);
+    viz.setAspect(innerWidth / innerHeight);
+  }
+  resize(); addEventListener('resize', resize);
+
+  var audio = new Audio(), ctx = null, an = null, freq = null, song = 0, avg = 0.2, lastKick = 0, level = 0;
+  audio.crossOrigin = 'anonymous';
+  audio.addEventListener('ended', function () { next(); });
+  function next() { song = (song + 1) % SONGS.length; audio.src = SONGS[song]; audio.play(); hint.textContent = SONGS[song].split('/').pop(); }
+  addEventListener('click', function () {
+    if (ctx) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    an = ctx.createAnalyser(); an.fftSize = 1024; an.smoothingTimeConstant = 0.72;
+    freq = new Uint8Array(an.frequencyBinCount);
+    ctx.createMediaElementSource(audio).connect(an); an.connect(ctx.destination);
+    audio.src = SONGS[0]; audio.volume = 0.5; audio.play();
+    hint.textContent = SONGS[0].split('/').pop() + ' · N = next song';
+  });
+  addEventListener('keydown', function (e) {
+    if (e.key === 'n' || e.key === 'N') next();
+    if (e.key === 'ArrowUp') audio.volume = Math.min(1, audio.volume + 0.1);
+    if (e.key === 'ArrowDown') audio.volume = Math.max(0, audio.volume - 0.1);
+    if (e.key === ' ') { if (audio.paused) audio.play(); else audio.pause(); }
+  });
+
+  var last = performance.now(), t = 0;
+  (function loop(now) {
+    requestAnimationFrame(loop);
+    var dt = Math.min(0.05, (now - last) / 1000); last = now; t += dt;
+    var kick = false, playing = an && !audio.paused, lvl;
+    if (playing) {   // same analysis as the stage (js/hero.js updateAudio)
+      an.getByteFrequencyData(freq);
+      var bass = 0, mid = 0, i;
+      for (i = 1; i < 7; i++) bass += freq[i];
+      for (i = 7; i < 80; i++) mid += freq[i];
+      bass /= 6 * 255; mid /= 73 * 255;
+      lvl = Math.min(1, bass * 0.7 + mid * 0.6);
+      avg += (bass - avg) * 0.04;
+      if (bass > avg * 1.2 && bass > 0.32 && t - lastKick > 0.28) { kick = true; lastKick = t; }
+    } else {   // idle 120 BPM pulse, like the stage before sound is allowed
+      var beat = (t * 2) % 1; lvl = 0.32 + 0.38 * Math.pow(1 - beat, 5); kick = beat < dt * 2;
+    }
+    level += (lvl - level) * 0.35;
+    viz.render(dt, { freq: playing ? freq : null, level: level, kick: kick, hue: 0, volume: audio.volume, playing: !!playing });
+    show.material.map = viz.texture;
+    renderer.setRenderTarget(null);
+    renderer.render(scene, cam);
+  })(last);
+})();
+</script>
+</body>
+</html>

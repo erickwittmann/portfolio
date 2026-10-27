@@ -36,8 +36,8 @@ window.INTRO_MEDIA = [
 // Links in the one text tile.
 window.INTRO_LINKS = [
   { label: 'Instagram', href: 'https://www.instagram.com/erickwittmann' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/erick-wittmann-b228b2305/' },
-  { label: 'Behance', href: 'https://www.behance.net/erickwittmann' }
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/erick-wittmann-b228b2305/' }
+  // { label: 'Behance', href: 'https://www.behance.net/erickwittmann' },   // hidden for now
   // { label: 'Vimeo', href: '' }   // hidden for now: vimeo.com/erickwittmann is "page not found"
 ];
 

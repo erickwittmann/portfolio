@@ -179,7 +179,8 @@
       // "To the stage" scrolls to the point where the camera has pulled all the way back.
       el.querySelector('.ic-scroll').addEventListener('click', function (e) {
         e.preventDefault();
-        window.scrollTo({ top: seqEnd(), behavior: reduced ? 'auto' : 'smooth' });
+        if (window.SmoothScroll) window.SmoothScroll.scrollTo(seqEnd(), { duration: 2.4 });
+        else window.scrollTo({ top: seqEnd(), behavior: reduced ? 'auto' : 'smooth' });
       });
     } else {
       var m = L.media[k] || { src: 'art:reel' };
@@ -220,9 +221,10 @@
   frame.addEventListener('pointerleave', function () { tileEls.forEach(function (o) { o.classList.remove('is-focus'); }); });
 
   // ---------- Videos: play while the stage section is on screen and the tab is visible ----------
-  var onScreen = true;
+  // (Also paused once the visualizer has taken over the LED screen: js/hero.js calls setGridHidden.)
+  var onScreen = true, gridHidden = false;
   function syncVideos() {
-    var want = onScreen && !document.hidden;
+    var want = onScreen && !gridHidden && !document.hidden;
     vids.forEach(function (v) {
       if (want && v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
       if (!want && !v.paused) v.pause();
@@ -241,10 +243,21 @@
     var y = window.scrollY || window.pageYOffset, s = seqStart();
     return clamp((y - s) / Math.max(1, section.offsetHeight - pin.clientHeight), 0, 1);
   }
-  window.StageSeq = { progress: progress, end: seqEnd, frame: frame, pin: pin };
+  // past(): how far the page has scrolled beyond the full-stage view, in window heights (0 there,
+  // 1 = one window further down). The content scrolls over the fixed stage from that point on.
+  function past() { return Math.max(0, ((window.scrollY || window.pageYOffset) - seqEnd()) / Math.max(1, pin.clientHeight)); }
+  window.StageSeq = {
+    progress: progress, past: past, end: seqEnd, frame: frame, pin: pin,
+    setGridHidden: function (h) { if (h !== gridHidden) { gridHidden = h; syncVideos(); } }
+  };
   var shownP = -1;
   function onScroll() {
     var p = progress();
+    // Past the full-stage view: darken the stage behind the content (more toward the bottom of the
+    // window, where the text is) and put the stage controls away.
+    var ps = past();
+    pin.style.setProperty('--scrim', smooth(0.05, 0.9, ps).toFixed(3));
+    document.documentElement.classList.toggle('is-past-stage', ps > 0.35);
     if (p === shownP) return;
     shownP = p;
     // The nav arrives while the stage comes into view and stays for as long as the stage is seen.

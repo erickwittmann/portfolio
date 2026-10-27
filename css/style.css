@@ -20,7 +20,7 @@ img, video, canvas { display:block; max-width:100%; }
 .nav { position:fixed; top:0; left:0; right:0; z-index:30; background:#000; display:flex; align-items:center;
   height:calc(var(--nav-h) + env(safe-area-inset-top,0px)); padding:env(safe-area-inset-top,0px) var(--gutter) 0; }
 .nav ul { list-style:none; margin:0; padding:0; width:100%; display:flex; justify-content:space-between; align-items:center; gap:24px; }
-.nav a { --track:.62em; position:relative; display:inline-block; font-size:clamp(13px,1.45vw,24px); font-weight:600; line-height:1;
+.nav a { --track:.62em; position:relative; display:inline-block; font-size:clamp(12px,1.15vw,22px); font-weight:600; line-height:1;
   letter-spacing:var(--track); margin-right:calc(-1 * var(--track)); /* cancel trailing tracking so the last letter lines up with the edge */
   text-transform:uppercase; white-space:nowrap; transition:opacity .2s; }
 /* Hover underline: sweeps in from the left, out to the right. Stops short of the trailing tracking
@@ -43,6 +43,13 @@ img, video, canvas { display:block; max-width:100%; }
    draw in front of the grid), then the deck. */
 .stage-seq { position:relative; --zoom-len:170vh; height:calc(100vh + var(--zoom-len)); height:calc(100svh + var(--zoom-len)); }
 .stage-pin { position:sticky; top:0; height:100vh; height:100svh; overflow:hidden; background:#000; }
+/* Homepage: the stage stays fixed behind the whole page, and everything after the zoom scrolls over
+   it. The section itself is now only scroll length for the camera move. */
+.stage-seq .stage-pin { position:fixed; left:0; right:0; z-index:0; }
+/* Darkens the stage behind the content, most toward the bottom where the text and cards are
+   (--scrim 0..1, set from the scroll position by js/intro.js). */
+.stage-pin::after { content:""; position:absolute; inset:0; z-index:4; pointer-events:none; opacity:var(--scrim,0);
+  background:linear-gradient(180deg, rgba(0,0,0,.25) 0%, rgba(0,0,0,.45) 45%, rgba(0,0,0,.82) 100%); }
 #wrap { position:absolute; inset:0; z-index:2; pointer-events:none; }   /* clicks go through to the grid */
 #wrap canvas { width:100%; height:100%; }
 #status { position:absolute; z-index:3; left:var(--gutter); top:calc(var(--nav-h) + env(safe-area-inset-top,0px) + 12px);
@@ -154,10 +161,15 @@ img, video, canvas { display:block; max-width:100%; }
    after it, with a gradient behind it that fades the stage into black, so there's no hard cut from
    the scene to the page. Its transparent top must not block the stage controls underneath, so only
    its content takes clicks. */
-.about { --overlap:30vh; position:relative; z-index:4; margin-top:calc(-1 * var(--overlap)); pointer-events:none;
+.about { --overlap:37vh; position:relative; z-index:4; margin-top:calc(-1 * var(--overlap)); pointer-events:none;
   display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:clamp(40px,7vw,120px); align-items:center;
-  padding:calc(var(--overlap) * .45) var(--gutter) clamp(96px,12vw,180px);
-  background:linear-gradient(180deg, rgba(0,0,0,0) 0, rgba(0,0,0,.55) calc(var(--overlap) * .45), rgba(0,0,0,.9) calc(var(--overlap) * .8), #000 var(--overlap)); }
+  padding:calc(var(--overlap) * .12) var(--gutter) clamp(96px,12vw,180px);
+  /* Darkens the stage behind the text, fading in at the top and back out at the bottom, so there's
+     no edge where the next section starts. */
+  background:linear-gradient(180deg, rgba(0,0,0,0) 0, rgba(0,0,0,.62) calc(var(--overlap) * .55), rgba(0,0,0,.62) calc(100% - 22vh), rgba(0,0,0,0) 100%); }
+/* Soft shadows lift the About text off the stage lights behind it. */
+.about h2, .about .lead, .about .eyebrow, .about .links { text-shadow:0 2px 18px rgba(0,0,0,.85), 0 0 2px rgba(0,0,0,.6); }
+.about .body { color:rgba(255,255,255,.78); text-shadow:0 1px 12px rgba(0,0,0,.9), 0 0 2px rgba(0,0,0,.7); }
 .about > * { pointer-events:auto; }
 .portrait { --sun:#fff64f; position:relative; margin:0; aspect-ratio:1; max-width:560px; width:100%; justify-self:center;
   border-radius:50%; background:var(--sun); touch-action:pan-y; }
@@ -508,3 +520,79 @@ html.lb-lock, html.lb-lock body { overflow:hidden; }
 .cs-figure { margin:clamp(40px,5vw,72px) 0 0; }
 .cs-figure .cs-media { background:#000; }
 .cs-figure figcaption { margin-top:14px; font-size:10px; letter-spacing:.24em; text-transform:uppercase; color:var(--dim); }
+
+/* ---------- Opening screen (js/enter.js) ----------
+   The grid shows straight away, a little dimmed, with the name and "click to enter" on black
+   tags. Clicking lifts the dim and the camera pulls back to the stage. */
+.enter { position:absolute; inset:0; z-index:5; pointer-events:none; background:rgba(0,0,0,.38);
+  transition:opacity .8s var(--ease), background-color .8s var(--ease); }
+.enter.is-out { opacity:0; background:rgba(0,0,0,0); }
+.enter-name, .enter-go { position:absolute; transform:translate(-50%,-50%); padding:.45em .6em; background:#000;
+  color:#fff; font-family:var(--font); white-space:nowrap; line-height:1.15; }
+.enter-name { left:36.5%; top:36.5%; font-size:clamp(17px,1.7vw,26px); font-weight:600; letter-spacing:-.01em; }
+.enter-go { left:54%; top:77%; border:0; font-size:clamp(15px,1.45vw,22px); font-weight:300; color:#cfcfcf;
+  cursor:pointer; pointer-events:auto; transition:color .3s var(--ease); }
+.enter-go:hover, .enter-go:focus-visible { color:#fff; outline:none; }
+html.is-gated .stage-pin { cursor:pointer; }
+@media (max-width:700px) { .enter-name { left:50%; top:42%; } .enter-go { left:50%; top:58%; } }
+
+/* ---------- Homepage over the stage ----------
+   About, the works and the footer scroll over the fixed stage (see .stage-seq .stage-pin). */
+.works { position:relative; z-index:4; }
+.stage-seq ~ .rule { display:none; }   /* the divider would cut across the stage behind */
+footer { position:relative; z-index:5; background:#000; }
+/* The stage controls are put away once the content covers the stage. */
+html.is-past-stage .stage-ui { opacity:0 !important; pointer-events:none !important; }
+html.is-past-stage .stage-ui * { pointer-events:none !important; }
+
+/* Selected works as a staggered collage (desktop): Boiler Room large on the left with Beyond Fashion
+   smaller beside it, then Etch-a-Sketch large on the right with the Reel smaller beside it.
+   The cards keep the page's order (01-04) for screen readers; only their placement changes. */
+@media (min-width:900px) {
+  .projects { grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:clamp(20px,2.6vw,44px); row-gap:clamp(56px,7vw,120px); }
+  .projects .project:nth-child(3) { grid-column:1 / span 7; grid-row:1; }           /* Boiler Room */
+  .projects .project:nth-child(1) { grid-column:9 / span 4; grid-row:1; align-self:start; margin-top:clamp(40px,6vw,110px); }  /* Beyond Fashion */
+  .projects .project:nth-child(2) { grid-column:5 / span 8; grid-row:2; }           /* Etch-a-Sketch */
+  .projects .project:nth-child(4) { grid-column:1 / span 3; grid-row:2; align-self:end; }   /* Reel */
+  .projects .project:nth-child(1) .cover-title h3, .projects .project:nth-child(4) .cover-title h3 { font-size:clamp(18px,1.7vw,28px); }
+  .projects .project:nth-child(1) .project-meta, .projects .project:nth-child(4) .project-meta { flex-wrap:wrap; gap:6px 16px; letter-spacing:.2em; }
+}
+
+/* Lenis smooth scrolling (js/smooth-scroll.js) */
+html.lenis, html.lenis body { height:auto; }
+.lenis.lenis-smooth { scroll-behavior:auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior:contain; }
+/* (No overflow:hidden while stopped: hiding the scrollbar would shift the stage sideways as the
+   opening screen hands over. Stopped Lenis already swallows the wheel; the focus view locks itself.) */
+
+/* ---------- Nav music player (js/nav-audio.js) ----------
+   Back, a live histogram (click: pause/play), skip. The volume bar drops down on hover. */
+.nav-audio { position:relative; display:flex; align-items:center; gap:clamp(8px,1vw,16px); }
+.na-skip, .na-wave { padding:0; border:0; background:none; color:#fff; cursor:pointer; }
+.na-skip { display:grid; place-items:center; width:22px; height:22px; opacity:.85; transition:opacity .2s; }
+.na-skip:hover, .na-skip:focus-visible { opacity:1; }
+.na-skip svg { width:12px; height:12px; fill:currentColor; }
+.na-skip[hidden] { display:none; }
+.na-wave { display:block; width:clamp(130px,14vw,280px); height:34px; }
+.na-wave canvas { display:block; width:100%; height:100%; }
+.na-skip:focus-visible, .na-wave:focus-visible { outline:1px dashed rgba(255,255,255,.6); outline-offset:4px; }
+/* Volume: a black bar under the player, slides down while the player is hovered or focused. */
+.na-vol { position:absolute; left:-10px; right:-10px; top:100%; padding:14px 0 0; opacity:0; visibility:hidden;
+  transform:translateY(-6px); transition:opacity .25s var(--ease), transform .25s var(--ease), visibility 0s .25s; }
+.nav-audio:hover .na-vol, .nav-audio:focus-within .na-vol { opacity:1; visibility:visible; transform:none; transition-delay:0s; }
+.na-vol-in { display:block; padding:10px 14px; background:#000; }
+.na-vol input { -webkit-appearance:none; appearance:none; display:block; width:100%; height:14px; margin:0; background:none; cursor:pointer; }
+.na-vol input::-webkit-slider-runnable-track { height:1px; background:linear-gradient(90deg,#fff var(--v,50%),rgba(255,255,255,.35) var(--v,50%)); }
+.na-vol input::-moz-range-track { height:1px; background:rgba(255,255,255,.35); }
+.na-vol input::-moz-range-progress { height:1px; background:#fff; }
+.na-vol input::-webkit-slider-thumb { -webkit-appearance:none; width:11px; height:11px; margin-top:-5px; border:0; border-radius:50%; background:#fff; }
+.na-vol input::-moz-range-thumb { width:11px; height:11px; border:0; border-radius:50%; background:#fff; }
+.na-vol input:focus-visible { outline:1px dashed rgba(255,255,255,.6); outline-offset:4px; }
+@media (max-width:760px) {
+  .nav .nav-name { flex:1 1 auto; flex-basis:auto; text-align:left; }
+  .nav-audio { order:1; }
+  .nav li:not(.nav-name):not(.nav-audio) { order:2; flex:1 1 33%; }
+  .nav ul::after { content:""; order:1; flex-basis:100%; height:0; }   /* line break after the player */
+  .na-wave { width:110px; height:26px; }
+  .na-skip { width:18px; }
+}

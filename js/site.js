@@ -1,10 +1,7 @@
 (function () {
-  // Pause 3D rendering while the stage is scrolled out of view (the reel's audio keeps playing).
+  // (The homepage's stage used to pause when scrolled out of view. It now stays fixed behind the
+  // page as a backdrop, so it keeps running; it still stops while the tab is hidden.)
   if ('IntersectionObserver' in window) {
-    var hero = document.getElementById('top');   // homepage only
-    if (hero) new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (window.__setHeroVisible) window.__setHeroVisible(en.isIntersecting); });
-    }, { threshold: 0 }).observe(hero);
 
     // Fade sections up as they enter the viewport.
     var io = new IntersectionObserver(function (entries) {

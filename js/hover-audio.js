@@ -39,6 +39,7 @@
     if (!level(f)) { f.classList.add('is-muted-pref'); return; }
     current = f;
     f.classList.add('has-sound'); f.classList.remove('needs-click');
+    if (PA && PA.connect) PA.connect(v);   // so the nav player's histogram shows it
     v.volume = 0; v.muted = false;
     if (v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
     ramp(v, level(f));

@@ -87,11 +87,13 @@
     if (isVid) { var p = el.play(); if (p && p.catch) p.catch(function () {}); }
     var sw = innerWidth - document.documentElement.clientWidth;
     document.documentElement.classList.add('lb-lock');
+    if (window.SmoothScroll) window.SmoothScroll.stop();
     if (sw > 0) document.documentElement.style.paddingRight = sw + 'px';
     void lb.offsetWidth;
     lb.classList.add('is-open');
     morph(from, target(el, f));
     if (o.sound && level(f)) {
+      if (PA && PA.connect) PA.connect(el);   // so the nav player's histogram shows it
       el.volume = 0; el.muted = false; ramp(el, level(f));
       if (PA) PA.duck(true);
     }
@@ -110,6 +112,7 @@
       if (o.video) { o.el.muted = true; var p = o.el.play(); if (p && p.catch) p.catch(function () {}); }
       lb.hidden = true;
       document.documentElement.classList.remove('lb-lock');
+      if (window.SmoothScroll) window.SmoothScroll.start();
       document.documentElement.style.paddingRight = '';
       o.paused.forEach(function (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); });
       open = null;

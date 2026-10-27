@@ -42,6 +42,7 @@
   // it off for a normally mastered song; add e.g. gain: 0.8 if one stands out as too loud. The
   // overall stage level is LEVEL.stage in js/page-audio.js.
   var TRACKS = [
+    { artist: 'yaego, kučka', title: 'ketamina', src: 'assets/yaego, kučka - ketamina.mp3', gain: 0.73 },
     { artist: 'Internet Girl', title: 'PULL UP', src: 'assets/PULL UP.mp3', gain: 0.73 },
     { artist: 'Blood Cultures', title: 'Unarchiver', src: 'assets/Blood Cultures - Unarchiver_Cut.mp3', gain: 0.97 },
     { artist: 'Feng', title: 'XY', src: 'assets/XY.mp3' },
@@ -178,12 +179,23 @@
   // to it, it painted a broad tan highlight across the glossy black wall.
   var glow = new THREE.PointLight(0x9bb4ff, 0.9, 22); glow.position.set(SCREEN_C.x, SCREEN_C.y - 1.5, SCREEN_C.z + 6); scene.add(glow);
   var glowTarget = new THREE.Color(0x9bb4ff);
+  // The audio-reactive visualizer (js/visualizer.js): drawn on a plane just in front of the hole.
+  // It fades in over the grid once the page content starts scrolling over the stage (vizMix), and the
+  // grid behind it is hidden (and its videos paused) once it's fully covered.
+  var viz = window.Visualizer ? window.Visualizer(THREE, renderer) : null, vizMix = 0, vizScreen = null;
+  if (viz) {
+    vizScreen = new THREE.Mesh(unitPlane, new THREE.MeshBasicMaterial({ map: viz.texture, transparent: true, opacity: 0, toneMapped: false, fog: false, depthWrite: false }));
+    vizScreen.position.set(SCREEN_C.x, SCREEN_C.y, SCREEN_C.z + 0.004);
+    vizScreen.layers.set(SCREEN_LAYER); vizScreen.renderOrder = 1; vizScreen.visible = false;
+    scene.add(vizScreen);
+  }
   function sizeScreen() {
     var a = W / H;
     if (a >= SCREEN_MAX_W / SCREEN_MAX_H) { screenW = SCREEN_MAX_W; screenH = SCREEN_MAX_W / a; }
     else { screenH = SCREEN_MAX_H; screenW = SCREEN_MAX_H * a; }
     hole.scale.set(screenW, screenH, 1); proxy.scale.copy(hole.scale);
     hole.updateMatrixWorld(); proxy.updateMatrixWorld();
+    if (vizScreen) { vizScreen.scale.copy(hole.scale); vizScreen.updateMatrixWorld(); viz.setAspect(screenW / screenH); }
   }
 
   // ---------- Grid picture (for reflections) ----------
@@ -309,7 +321,8 @@
   var players = [makePlayer(), makePlayer()], curP = 0, trackIndex = 0, xfadeAt = -1e9;
   function active() { return players[curP].el; }
   function playEl(el) { var p = el.play(); if (p && p.catch) p.catch(function () {}); }
-  function playSafe() { playEl(active()); }
+  function playSafe() { if (!userPaused) playEl(active()); }
+  var userPaused = false;   // paused from the nav player: nothing restarts the music by itself
   function loadInto(pl, i) { pl.el.src = TRACKS[i].src; pl.el.load(); }
   function trackGain(i) { var g = TRACKS[i].gain; return typeof g === 'number' ? g : 1; }
   loadInto(players[0], 0);
@@ -337,8 +350,9 @@
       } catch (e) { audio.analyser = audio.master = null; }
     }
     players.forEach(function (pl) { pl.el.muted = false; });
+    if (PA && PA.setAnalyser && audio.analyser) PA.setAnalyser(audio.analyser);
     applyVolume(1.6);
-    if (reveal.t0 >= 0 && active().paused) playSafe();
+    if (reveal.t0 >= 0 && active().paused && !userPaused) playSafe();
   });
   // Volume and mute go through the master gain (or the elements themselves without Web Audio).
   function applyVolume(fade) {
@@ -349,6 +363,30 @@
     } else players[curP].el.volume = Math.min(1, v * trackGain(trackIndex));
     if (PA) PA.save(audio.volume, audio.muted);
     emit('mute');
+  }
+  // The nav player (js/nav-audio.js): play/pause, back, skip, and its volume bar.
+  function togglePlay() {
+    var el = active();
+    if (el.paused) { userPaused = false; playSafe(); applyVolume(0.4); }
+    else {
+      userPaused = true;
+      if (audio.master) {
+        var t = SFX.ctx.currentTime, g = audio.master.gain;
+        g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(0, t + 0.3);
+        setTimeout(function () { if (userPaused) el.pause(); }, 320);
+      } else el.pause();
+    }
+    emit('track');
+  }
+  if (PA && PA.setTransport) {
+    PA.setTransport({
+      isPlaying: function () { return !active().paused && !userPaused; },
+      toggle: togglePlay,
+      next: function () { nextTrack(1); },
+      prev: function () { nextTrack(-1); },
+      title: function () { var tr = TRACKS[trackIndex]; return tr.artist + ' — ' + tr.title; }
+    });
+    PA.onVolume(function (v) { audio.volume = v; audio.muted = false; applyVolume(); });
   }
   // Leaving for another page: fade the music out first (js/page-audio.js waits for it); Back
   // restores it.
@@ -362,6 +400,7 @@
     PA.fadeIn = function () { if (audio.master) applyVolume(1.2); };
   }
   function nextTrack(dir) {
+    userPaused = false;   // skipping plays the next song
     if (TRACKS.length < 2) { active().currentTime = 0; playSafe(); return; }
     trackIndex = (trackIndex + (dir || 1) + TRACKS.length) % TRACKS.length;
     var from = players[curP], to = players[1 - curP];
@@ -817,20 +856,11 @@
     if (statusEl.textContent === 'Setting the stage…') statusEl.textContent = '';
     perf.loadedAt = Math.round(w0); perf.warmupMs = Math.round(performance.now() - w0);   // for tuning (window.__dbg.perf)
     if (reveal.pending) startReveal();
-    // Cut the interactive parts out for their hover overlays a moment later, off the critical path.
+    // (The stage's hover wireframes and road-case controls were removed: music is run from the nav
+    // player now, js/nav-audio.js. buildHighlights() is kept below in case they come back.)
     setTimeout(function () {
-      buildHighlights();
-      // Draw them once, invisibly, now: that compiles their shaders and uploads their geometry while
-      // the visitor is still on the grid (the 3D canvas isn't shown yet). Left to the first hover or
-      // the discovery pulse it cost a 120-420 ms freeze on the stage (measured on a 2x screen).
-      Object.keys(highlights).forEach(function (n) {
-        var h = highlights[n];
-        h.shell.visible = h.lines.visible = true;
-        h.shell.material.uniforms.uAlpha.value = 0; h.lines.material.opacity = 0;
-      });
       updateCamera(1);
       draw(1);
-      Object.keys(highlights).forEach(function (n) { highlights[n].shell.visible = highlights[n].lines.visible = false; });
       stageReady = true;
       emit('ready');
     }, 300);
@@ -1015,6 +1045,39 @@
     } else if (med < BUDGET * 1.06 && late < 0.03 && ++perf.good >= 5) stepResolution(1, now);
   }
 
+  // ---------- Visualizer on the screen + the stage as a backdrop ----------
+  // ps = how far past the full-stage view (window heights). From there the content scrolls over the
+  // stage: the visualizer takes over the screen, and the stage renders a little lighter (resolution
+  // capped at BG_DPR) since it's now a backdrop behind text and cards.
+  var BG_DPR = 1.25, FULL_MAX = perf.max, shownGridHidden = false;
+  function updateViz(dt, kick, ps, now) {
+    var want = viz ? smooth(0.12, 0.55, ps) : 0;
+    vizMix += (want - vizMix) * Math.min(1, dt * 6);
+    if (Math.abs(vizMix - want) < 0.002) vizMix = want;
+    var on = vizMix > 0.001;
+    if (vizScreen) vizScreen.visible = on;
+    if (on) {
+      var audible = audio.analyser && !audio.muted && !active().paused;
+      viz.render(dt, { freq: audible ? audio.freq : null, level: show.level, kick: kick, hue: 0, volume: audio.volume, playing: audible });
+      vizScreen.material.map = viz.texture;
+      vizScreen.material.opacity = vizMix;
+      // Reflections show the visualizer instead of the grid picture once it dominates.
+      proxy.material.map = vizMix > 0.5 ? viz.texture : mirrorTex;
+    } else if (proxy.material.map !== mirrorTex) proxy.material.map = mirrorTex;
+    var hidden = vizMix >= 0.999;
+    if (hidden !== shownGridHidden) {
+      shownGridHidden = hidden;
+      frame.style.visibility = hidden ? 'hidden' : '';
+      if (SEQ.setGridHidden) SEQ.setGridHidden(hidden);
+    }
+    var cap = ps > 0.6 ? Math.min(FULL_MAX, BG_DPR) : FULL_MAX;
+    if (cap !== perf.max) {
+      perf.max = cap;
+      if (perf.dpr > cap) { perf.dpr = cap; renderer.setPixelRatio(cap); if (post) post.resize(); perf.settleUntil = now + 600; }
+    }
+    return hidden;
+  }
+
   // ---------- Render loop ----------
   // While the grid fills the window (p 0) nothing 3D is drawn at all. Nothing runs while the
   // section is scrolled away (js/site.js) or the tab is hidden.
@@ -1027,10 +1090,11 @@
     var dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
     var kick = updateAudio(dt, t);
     if (!heroVisible) { perf.last = 0; return; }
-    var p = SEQ.progress();
+    var p = SEQ.progress(), ps = SEQ.past ? SEQ.past() : 0;
     maybeReveal(p);
     updateCamera(p);
-    warpGrid(p);
+    var gridHidden = allLoaded && updateViz(dt, kick, ps, now);
+    if (!gridHidden) warpGrid(p);
     // The stage fades in around the screen over the first part of the pull-back.
     var k = allLoaded ? smooth(0.0, 0.3, p) : 0;
     if (Math.abs(k - shownK) > 0.001) { wrap.style.opacity = k.toFixed(3); shownK = k; }
@@ -1040,7 +1104,7 @@
     updateRig(dt, t, kick, strobing);
     updatePyro(dt);
     updateHighlights(dt, t, p);
-    updateMirror(now);
+    if (vizMix < 0.5) updateMirror(now);
     updateEnvFace();
     draw(p);
     adaptResolution(now);

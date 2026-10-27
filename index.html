@@ -33,11 +33,16 @@
       <div id="status" aria-live="polite"></div>
     </div>
   </section>
+  <script src="js/vendor/lenis.min.js"></script>
+  <script src="js/smooth-scroll.js"></script>
   <script src="js/sfx.js"></script>
   <script src="js/page-music.js"></script>
   <script src="js/page-audio.js"></script>
+  <script src="js/spectrum.js"></script>
+  <script src="js/nav-audio.js"></script>
   <script src="js/intro-media.js"></script>
   <script src="js/intro.js"></script>
+  <script src="js/enter.js"></script>
 
   <section class="about" id="about">
     <!-- Yellow disc with a cursor pixel trail behind a cut-out portrait (transparent PNG). The
@@ -63,9 +68,11 @@
         <li><a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5v6M8 7.6v.01M11.5 16.5v-6M11.5 13.2c0-1.7 1-2.7 2.3-2.7s2.2.9 2.2 2.7v3.3"/></svg>
           <span>LinkedIn</span></a></li>
+        <!-- Hidden for now: remove the comment marks to bring the Behance tile back.
         <li><a href="https://www.behance.net/erickwittmann" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h4.5a2.75 2.75 0 0 1 0 5.5H3zM3 11.5h5a3.25 3.25 0 0 1 0 6.5H3zM15 7h5M14 14h7a3.5 3.5 0 1 0-1.2 2.7"/></svg>
           <span>Behance</span></a></li>
+        -->
         <!-- Hidden for now: vimeo.com/erickwittmann returns "page not found". Put the real address in
              and remove this comment to bring the tile back.
         <li><a href="https://vimeo.com/erickwittmann" target="_blank" rel="noopener">
@@ -132,7 +139,7 @@
     <h4>Elsewhere</h4>
     <a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="https://www.behance.net/erickwittmann" target="_blank" rel="noopener">Behance</a>
+    <!-- Behance hidden for now: <a href="https://www.behance.net/erickwittmann" target="_blank" rel="noopener">Behance</a> -->
   </div>
   <div class="col">
     <h4>&nbsp;</h4>
@@ -145,8 +152,9 @@
 <script src="js/vendor/meshopt_decoder.js"></script>
 <!-- 3D stage; the intro grid is its LED screen. (js/stage-cube.js is an older stand-in from before the
      grid moved onto the screen: it would cover the grid, so it is no longer a drop-in swap.) -->
+<script src="js/visualizer.js"></script>
 <script src="js/hero.js"></script>
-<script src="js/stage-ui.js"></script>
+<!-- js/stage-ui.js (road-case controls on the stage) retired: music is run from the nav player. -->
 <script src="js/site.js"></script>
 <script src="js/tilt.js"></script>
 <script src="js/pixel-trail.js"></script>

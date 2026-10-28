@@ -42,8 +42,8 @@
   // it off for a normally mastered song; add e.g. gain: 0.8 if one stands out as too loud. The
   // overall stage level is LEVEL.stage in js/page-audio.js.
   var TRACKS = [
+    { artist: 'Internet Girl', title: 'PULL UP', src: 'assets/PULL UP2.mp3', gain: 0.76 },   // cut so the drop lands on the zoom-out
     { artist: 'yaego, kučka', title: 'ketamina', src: 'assets/yaego, kučka - ketamina.mp3', gain: 0.73 },
-    { artist: 'Internet Girl', title: 'PULL UP', src: 'assets/PULL UP.mp3', gain: 0.73 },
     { artist: 'Blood Cultures', title: 'Unarchiver', src: 'assets/Blood Cultures - Unarchiver_Cut.mp3', gain: 0.97 },
     { artist: 'Feng', title: 'XY', src: 'assets/XY.mp3' },
     { artist: 'Ferdous', title: 'Gravity', src: 'assets/Ferdous - Gravity.mp3', gain: 0.95 },
@@ -880,14 +880,14 @@
     active().currentTime = 0;
     playSafe();
   }
-  // Fixtures strike one by one (with a relay click each), then the washes fade up. Driven by the
+  // Fixtures strike one by one, then the washes fade up. Silent: the music carries the reveal. Driven by the
   // frame clock rather than timers, so it can't drift from what's drawn.
   function updateReveal(now) {
     if (reveal.t0 < 0 || washPower >= 1) return;
     var e = now - reveal.t0;
     beams.forEach(function (b, i) {
       var at = 250 + i * 150;
-      if (e >= at && !b.struck) { b.struck = true; SFX.relay(i); }
+      if (e >= at && !b.struck) b.struck = true;   // (no sound: the music carries the reveal)
       b.power = Math.min(1, Math.max(0, (e - at) / 220));
     });
     washPower = Math.min(1, Math.max(0, (e - 250 - beams.length * 150) / 900));
@@ -1050,8 +1050,12 @@
   // stage: the visualizer takes over the screen, and the stage renders a little lighter (resolution
   // capped at BG_DPR) since it's now a backdrop behind text and cards.
   var BG_DPR = 1.25, FULL_MAX = perf.max, shownGridHidden = false;
+  var worksEl = document.getElementById('work');
   function updateViz(dt, kick, ps, now) {
-    var want = viz ? smooth(0.12, 0.55, ps) : 0;
+    // Only once the Selected Works section scrolls up into view: it starts when the section's top
+    // reaches 95% of the window and has fully taken over by 35%. Above that, the grid stays on.
+    var wt = worksEl ? worksEl.getBoundingClientRect().top / (window.innerHeight || H) : 99;
+    var want = viz ? smooth(0.95, 0.35, wt) : 0;
     vizMix += (want - vizMix) * Math.min(1, dt * 6);
     if (Math.abs(vizMix - want) < 0.002) vizMix = want;
     var on = vizMix > 0.001;

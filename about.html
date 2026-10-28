@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>About — Erick Wittmann</title>
+<meta name="description" content="About Erick Wittmann, a New Media Design student at RIT working in motion and experiential design: C4D, After Effects and TouchDesigner.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<!-- Music for this page: set it in js/page-music.js (under 'about'). -->
+<body class="case">
+
+<nav class="nav" id="nav">
+  <ul>
+    <li class="nav-name"><a href="index.html">Erick Wittmann</a></li>
+    <li><a href="about.html" aria-current="page">About</a></li>
+    <li><a href="index.html#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!--
+  About page: the longer version of the homepage's About section. The text is from the About page
+  of the old Framer site (erickwittmann.framer.website/about); the gallery is the images from it.
+  Images live in assets/about/ (about-1 ... about-11): add, remove or reorder figures below.
+-->
+<main class="about-page">
+  <section class="ab-hero">
+    <figure class="portrait reveal">
+      <canvas class="pixel-trail" aria-hidden="true"></canvas>
+      <div class="cutout"><img src="assets/portrait5.png" alt="Erick Wittmann" onerror="this.remove()"></div>
+    </figure>
+    <div class="reveal">
+      <p class="eyebrow">About</p>
+      <h1>Hi, I’m <em class="px-word">Erick</em></h1>
+      <p class="lead">I’m a senior <em class="px-word">New Media Design</em> student at RIT, graduating in Spring 2027.</p>
+      <p>I’m interested in aspects of <b>Motion</b> and <b>Experiential Design</b>. I use programs like C4D, After Effects, and TouchDesigner to create visual loops and animations.</p>
+      <p>Collaboration is where I thrive, and I’m always open to work on something new. I’m looking for work at creative digital agencies or event venues.</p>
+    </div>
+  </section>
+
+  <section class="cs-spec reveal" aria-label="Details">
+    <div class="cs-spec-grid">
+      <div>
+        <h3>Focus</h3>
+        <ul class="cs-list"><li>Motion design</li><li>Experiential design</li><li>Live &amp; audio-reactive visuals</li></ul>
+      </div>
+      <div>
+        <h3>Tools</h3>
+        <ul class="cs-list"><li>After Effects</li><li>Cinema 4D</li><li>TouchDesigner</li><li>Resolume Arena</li></ul>
+      </div>
+      <div>
+        <h3>Location</h3>
+        <ul class="cs-list"><li>Rochester Institute of Technology</li><li>Rochester, New York, United States</li></ul>
+        <h3 class="ab-sub">Elsewhere</h3>
+        <ul class="cs-list cs-list--links">
+          <li><a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener">Instagram <span>↗</span></a></li>
+          <li><a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener">LinkedIn <span>↗</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="fmt reveal" aria-labelledby="gallery-title">
+    <div class="fmt-head">
+      <span class="cs-num">—</span>
+      <h2 id="gallery-title">Visual experiments</h2>
+      <p>Loops, stills and experiments. Click any to see it larger.</p>
+    </div>
+    <div class="ab-gallery">
+      <figure class="cs-media ab-item" style="--ar:1322 / 1136"><img src="assets/about/about-2.jpg" alt="A blue dot-matrix ring" loading="lazy" onerror="this.closest('figure').remove()"></figure>
+      <figure class="cs-media ab-item" style="--ar:997 / 712"><img src="assets/about/about-3.jpg" alt="Fish: photos of fish and a face collaged over a bright landscape" loading="lazy" onerror="this.closest('figure').remove()"></figure>
+      <figure class="cs-media ab-item" style="--ar:1400 / 730"><img src="assets/about/about-4.jpg" alt="An ERICK WITTMANN title card beside a car in yellow halftone" loading="lazy" onerror="this.closest('figure').remove()"></figure>
+      <figure class="cs-media ab-item" style="--ar:1400 / 752"><img src="assets/about/about-5.jpg" alt="Erick Wittmann in pink type over blue circuit lines" loading="lazy" onerror="this.closest('figure').remove()"></figure>
+      <figure class="cs-media ab-item" style="--ar:609 / 1078"><img src="assets/about/about-6.jpg" alt="A line drawing of a circle and a ship in white on black" loading="lazy" onerror="this.closest('figure').remove()"></figure>
+      <figure class="cs-media ab-item" style="--ar:558 / 562"><img src="assets/about/about-7.jpg" alt="A red and pink kaleidoscope star" loading="lazy" onerror="this.closest('figure').remove()"></figure>
+      <figure class="cs-media ab-item" style="--ar:1000 / 1250"><img src="assets/about/about-8.jpg" alt="A self-portrait broken into a pixel mosaic" loading="lazy" onerror="this.closest('figure').remove()"></figure>
+      <figure class="cs-media ab-item" style="--ar:1400 / 788"><img src="assets/about/about-9.jpg" alt="An ASCII-filtered purple form" loading="lazy" onerror="this.closest('figure').remove()"></figure>
+      <figure class="cs-media ab-item" style="--ar:1018 / 1190"><img src="assets/about/about-10.jpg" alt="A self-portrait in a mirror with glitched colour" loading="lazy" onerror="this.closest('figure').remove()"></figure>
+      <figure class="cs-media ab-item" style="--ar:864 / 884"><img src="assets/about/about-11.jpg" alt="A cubist face in flat blue, yellow and red" loading="lazy" onerror="this.closest('figure').remove()"></figure>
+    </div>
+  </section>
+
+  <a class="next-case ab-cta" href="mailto:erickwittmann@gmail.com">
+    <span class="eyebrow">Get in touch</span>
+    <span class="next-title">Let’s make cool shit <span aria-hidden="true">→</span></span>
+  </a>
+</main>
+
+<footer id="contact">
+  <div class="col">
+    <div class="brand">Erick Wittmann</div>
+  </div>
+  <div class="col">
+    <h4>Contact</h4>
+    <a href="mailto:erickwittmann@gmail.com">erickwittmann@gmail.com</a>
+  </div>
+  <div class="col">
+    <h4>Elsewhere</h4>
+    <a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener">LinkedIn</a>
+    <!-- Behance hidden for now: <a href="https://www.behance.net/erickwittmann" target="_blank" rel="noopener">Behance</a> -->
+  </div>
+  <div class="col">
+    <h4>&nbsp;</h4>
+    <span>© 2026 Erick Wittmann. All rights reserved.</span>
+  </div>
+</footer>
+
+<script src="js/vendor/lenis.min.js"></script>
+<script src="js/smooth-scroll.js"></script>
+<script src="js/page-music.js"></script>
+<script src="js/page-audio.js"></script>
+<script src="js/spectrum.js"></script>
+<script src="js/nav-audio.js"></script>
+<script src="js/site.js"></script>
+<script src="js/tilt.js"></script>
+<script src="js/pixel-trail.js"></script>
+<script src="js/lightbox.js"></script>
+<script src="js/chroma.js"></script>
+</body>
+</html>

@@ -6,6 +6,9 @@
 // - Clicking a video opens it in the focus view (js/lightbox.js), where it plays with sound whether or
 //   not the pointer is on it. Touch screens (no hover): tap a video to open it with sound.
 // - Uses the visitor's volume and mute from the rest of the site (js/page-audio.js).
+// - Ambient videos (data-ambient-audio="0.3"): after the first click they keep playing their sound
+//   quietly all the time (at that fraction of full), come up to full on hover, and go quiet while
+//   another video or the focus view has the sound.
 (function () {
   var figs = document.querySelectorAll('[data-hover-audio]');
   if (!figs.length) return;
@@ -13,7 +16,7 @@
   var fine = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
   var activated = false;   // has the visitor clicked/tapped/pressed a key yet?
   function isActive() { return activated || (navigator.userActivation && navigator.userActivation.hasBeenActive); }
-  ['pointerdown', 'keydown'].forEach(function (ev) { window.addEventListener(ev, function () { activated = true; }, { capture: true }); });
+  ['pointerdown', 'keydown'].forEach(function (ev) { window.addEventListener(ev, function () { activated = true; setTimeout(syncAmbient, 0); }, { capture: true }); });
   // Loudness = the site's volume x the level for videos (js/page-audio.js) x the figure's own trim (data-gain).
   function level(f) {
     var p = PA ? PA.prefs : { volume: 0.5, muted: false }, m = PA && PA.LEVEL ? PA.LEVEL.media : 0.8;
@@ -21,7 +24,21 @@
     return p.muted ? 0 : Math.min(1, p.volume * m * g);
   }
 
-  var current = null;
+  var current = null, held = false;   // held: the focus view has the sound
+  function ambientK(f) { var a = parseFloat(f.getAttribute('data-ambient-audio')); return a > 0 ? Math.min(1, a) : 0; }
+  // Bring every ambient video to where it should be: a quiet bed, or silent while something else plays.
+  function syncAmbient() {
+    Array.prototype.forEach.call(figs, function (f) {
+      var k = ambientK(f), v = f.__video;
+      if (!k || !v || f === current) return;
+      var want = (!isActive() || held || document.hidden || current) ? 0 : level(f) * k;
+      if (want > 0) {
+        if (PA && PA.connect) PA.connect(v);
+        if (v.muted) { v.volume = 0; v.muted = false; }
+        ramp(v, want);
+      } else if (!v.muted) ramp(v, 0, function () { if (f !== current && !(level(f) * k > 0 && isActive() && !held && !current && !document.hidden)) v.muted = true; });
+    });
+  }
   function ramp(v, to, done) {
     cancelAnimationFrame(v.__raf);
     var from = v.volume, t0 = performance.now();
@@ -40,16 +57,20 @@
     current = f;
     f.classList.add('has-sound'); f.classList.remove('needs-click');
     if (PA && PA.connect) PA.connect(v);   // so the nav player's histogram shows it
-    v.volume = 0; v.muted = false;
+    v.muted = false;
     if (v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    if (!ambientK(f)) v.volume = 0;   // an ambient video rises from its bed instead of from silence
     ramp(v, level(f));
     if (PA) PA.duck(true);
+    syncAmbient();   // other ambient videos go quiet
   }
   function soundOff(f) {
     var v = f.__video;
     f.classList.remove('has-sound', 'needs-click', 'is-muted-pref');
     if (current === f) { current = null; if (PA) PA.duck(false); }
+    if (ambientK(f)) { syncAmbient(); return; }   // back down to its bed (and the others come back)
     ramp(v, 0, function () { if (current !== f) v.muted = true; });
+    syncAmbient();
   }
 
   Array.prototype.forEach.call(figs, function (f) {
@@ -73,7 +94,10 @@
     }
   });
   // Leaving the page or switching tabs: stop any video sound.
-  document.addEventListener('visibilitychange', function () { if (document.hidden && current) soundOff(current); });
+  document.addEventListener('visibilitychange', function () { if (document.hidden && current) soundOff(current); syncAmbient(); });
   // For the focus view: stop whatever is playing on hover.
-  window.HoverAudio = { stop: function () { if (current) soundOff(current); Array.prototype.forEach.call(figs, function (f) { f.classList.remove('needs-click'); }); } };
+  window.HoverAudio = {
+    stop: function () { held = true; if (current) soundOff(current); syncAmbient(); Array.prototype.forEach.call(figs, function (f) { f.classList.remove('needs-click'); }); },
+    resume: function () { held = false; syncAmbient(); }   // the focus view closed
+  };
 })();

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Project01 — Erick Wittmann</title>
+<meta name="description" content="Motion branding for PROJECT01, a student-founded startup platform: a brand animation by Erick Wittmann, Adrian Smith and Nora Miskulin.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<!-- Music for this page: set it in js/page-music.js (under 'project01'). -->
+<body class="case">
+
+<nav class="nav" id="nav">
+  <ul>
+    <li class="nav-name"><a href="../index.html">Erick Wittmann</a></li>
+    <li><a href="../about.html">About</a></li>
+    <li><a href="../index.html#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!--
+  Project01: motion branding for PROJECT01, a student-founded startup platform (NMDE.305 Motion
+  Graphics, Project 02). Text and images from the team's process book in Figma (Process-Deck-Update).
+  Media in assets/work/project01/.
+  The videos are web versions of assets/project01-horizontal/-square/-vertical (kept out of Git),
+  with their sound levelled like the rest of the site.
+-->
+<main>
+  <header class="cs-head">
+    <p class="eyebrow reveal">Case Study — Motion Branding</p>
+    <h1 class="reveal">Project01</h1>
+    <dl class="cs-facts reveal">
+      <div><dt>Project</dt><dd>Brand identity animation</dd></div>
+      <div><dt>For</dt><dd>PROJECT01, a student-founded startup platform</dd></div>
+      <div><dt>Team</dt><dd>Adrian Smith, Nora Miskulin, Erick Wittmann</dd></div>
+      <div><dt>When</dt><dd>Fall 2025</dd></div>
+    </dl>
+  </header>
+
+  <!-- Video first: while p01-animation.mp4 doesn't exist it removes itself and the still shows. -->
+  <!-- data-ambient-audio: plays its sound quietly all the time (30%), full on hover. -->
+  <figure class="cs-hero reveal" style="--ar:16 / 9" data-hover-audio data-ambient-audio="0.3">
+    <video src="../assets/work/project01/p01-animation.mp4" muted loop playsinline preload="none" aria-label="PROJECT01 brand animation" onerror="this.remove()"></video>
+    <img src="../assets/work/project01/p01-logo.jpg" alt="The PROJECT01 logo: First startup operating system" style="z-index:0">
+    <span class="ph-label">Brand animation — 15 s</span>
+  </figure>
+
+  <section class="cs-overview reveal" aria-labelledby="brand-title">
+    <div class="fmt-head">
+      <span class="cs-num">01</span>
+      <h2 id="brand-title">Brand Background</h2>
+      <p>PROJECT01 is a startup platform designed to guide early-stage founders while giving investors transparent, real-time insight into progress. For founders, it feels like a gamified workspace powered by AI, helping them cut through uncertainty and keep moving. To investors, it’s a tool for spotting standout teams early.</p>
+      <p>The idea came from its student-founders, who saw how many early-stage teams were struggling to stay on track. Existing tools were either too generic or built mainly for investors, leaving a gap for something that could serve both sides at once. PROJECT01 was created to fill that gap: a workspace that is structured, motivating, and measurable.</p>
+    </div>
+  </section>
+
+  <section class="cs-overview reveal" aria-labelledby="identity-title">
+    <div class="fmt-head">
+      <span class="cs-num">02</span>
+      <h2 id="identity-title">About the Visual Identity</h2>
+      <p>PROJECT01’s visual identity leans heavily into a digital, space-inspired aesthetic. The brand uses a black background with white typography as its foundation, accented with glowing gradients in electric blues. These accents give the brand a futuristic, retro-tech feel while remaining minimal and sharp.</p>
+      <p>Instead of polished photography, PROJECT01 relies on AI-generated and digitally filtered imagery, reinforcing its identity as tech-driven and experimental. The recurring planetary and cosmic metaphors — “your startup is a planet, PROJECT01 is a solar system” — position the brand as an entire digital universe for founders.</p>
+      <p>The overall look is underground yet elegant: hackerish, futuristic, and optimistic. By leaning into these aesthetics, PROJECT01 embraces technology rather than hiding it, presenting itself as a forward-facing platform built for tech-savvy founders.</p>
+      <p class="p01-links"><a href="https://www.project01.io/" target="_blank" rel="noopener">project01.io ↗</a><a href="https://www.linkedin.com/company/project01-platform" target="_blank" rel="noopener">PROJECT01 on LinkedIn ↗</a></p>
+    </div>
+  </section>
+
+  <section class="cs-program reveal" aria-labelledby="concept-title">
+    <div class="fmt-head">
+      <span class="cs-num">03</span>
+      <h2 id="concept-title">Concept for Animation</h2>
+    </div>
+    <div class="program-intro">
+      <div>
+        <p>The animation positions PROJECT01 as a startup operating system. Just as the platform serves as a digital foundation for founders, the animation unfolds like the system powering up.</p>
+        <p>Terminal windows, ASCII code, and liquid metal transitions represent the technical backbone of the brand, while smooth pacing and clean compositions reflect its optimistic and approachable tone.</p>
+      </div>
+      <p>Rather than softening or disguising the tech, the animation leans into it. The sequence shows the system coming to life: starting with raw computer elements, building toward structure, and finally expanding into a digital universe. This reflects their promise that every startup is a planet, and PROJECT01 is the universe that supports it.</p>
+    </div>
+    <p class="p01-statement">Startup Operating System</p>
+  </section>
+
+  <section class="cs-row">
+    <figure class="cs-media reveal" style="--ar:1350 / 700">
+      <img src="../assets/work/project01/p01-mood-effects.jpg" alt="Visual effect moodboard: HUD elements, pixel textures, a pixelated hand and globe, warped type" loading="lazy" onerror="this.remove()">
+      <img src="../assets/work/project01/p01-mood-type.jpg" alt="Typography moodboard: tech posters, Red Hat Display, terminal-style and HUD type" loading="lazy" onerror="this.remove()">
+      <img src="../assets/work/project01/p01-mood-immersive.jpg" alt="Immersiveness moodboard: HUD interfaces, holographic panels, sci-fi rings and tunnels" loading="lazy" onerror="this.remove()">
+      <span class="ph-label">Moodboards</span>
+    </figure>
+    <div class="cs-text reveal">
+      <span class="cs-num">04</span>
+      <h2>Moodboards</h2>
+      <p>Three boards: visual effects, typography, and immersiveness.</p>
+    </div>
+  </section>
+
+  <section class="fmt fmt--compact reveal" aria-labelledby="sketch-title">
+    <div class="fmt-head">
+      <span class="cs-num">05</span>
+      <h2 id="sketch-title">Sketches</h2>
+    </div>
+    <figure class="cs-media fmt-item fmt-item--wide" style="--ar:1396 / 608">
+      <img src="../assets/work/project01/p01-sketches.jpg" alt="Three pages of pen sketches: the computer, the wires, the logo, and the concept map for 'your startup's OS'" loading="lazy" onerror="this.remove()">
+    </figure>
+  </section>
+
+  <!-- Storyboard: the eight style frames in order, each with its step from the process book. -->
+  <section class="fmt reveal" aria-labelledby="story-title">
+    <div class="fmt-head">
+      <span class="cs-num">06</span>
+      <h2 id="story-title">Storyboard &amp; Style Frames</h2>
+      <p>Click any frame to see it larger.</p>
+    </div>
+    <ol class="sb-grid">
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/project01/p01-sf-1.jpg" alt="Frame 1: 'how do i build a startup?' typed in a terminal" loading="lazy"></figure><span>Animated text on-screen</span></li>
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/project01/p01-sf-2.jpg" alt="Frame 2: the camera shows a glowing blue computer" loading="lazy"></figure><span>Camera shows computer</span></li>
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/project01/p01-sf-3.jpg" alt="Frame 3: the scene seen through an ASCII filter" loading="lazy"></figure><span>ASCII filter turns on</span></li>
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/project01/p01-sf-4.jpg" alt="Frame 4: flying into the computer through the ASCII filter" loading="lazy"></figure><span>Camera flies into computer with filter on</span></li>
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/project01/p01-sf-5.jpg" alt="Frame 5: a swirl of liquid metal" loading="lazy"></figure><span>Filter turns off inside computer, liquid metal inside</span></li>
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/project01/p01-sf-6.jpg" alt="Frame 6: liquid metal strands spiralling together" loading="lazy"></figure><span>Liquid metal comes together in a spiral</span></li>
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/project01/p01-sf-7.jpg" alt="Frame 7: a progress bar" loading="lazy"></figure><span>Liquid metal becomes progress bar, motion cut</span></li>
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/project01/p01-sf-8.jpg" alt="Frame 8: the PROJECT01 logo" loading="lazy"></figure><span>Finish downloading. Logo locked in place</span></li>
+    </ol>
+  </section>
+
+  <section class="fmt reveal" aria-labelledby="formats-title">
+    <div class="fmt-head">
+      <span class="cs-num">07</span>
+      <h2 id="formats-title">Formats</h2>
+      <p>The animation cut for three screen shapes. Hover for sound, or click to watch it larger.</p>
+    </div>
+    <div class="fmt-row">
+      <figure class="cs-media fmt-item" style="--r:1920 / 1080; --ar:1920 / 1080" data-hover-audio>
+        <video src="../assets/work/project01/p01-animation.mp4" muted loop playsinline preload="none" aria-label="PROJECT01 animation, horizontal" onerror="this.remove()"></video>
+        <figcaption class="fmt-cap"><b>01</b> Horizontal <span>16 : 9 · 15 s</span></figcaption>
+      </figure>
+      <figure class="cs-media fmt-item" style="--r:1; --ar:1" data-hover-audio>
+        <video src="../assets/work/project01/p01-square.mp4" muted loop playsinline preload="none" aria-label="PROJECT01 animation, square" onerror="this.remove()"></video>
+        <figcaption class="fmt-cap"><b>02</b> Square <span>1 : 1 · 15 s</span></figcaption>
+      </figure>
+      <figure class="cs-media fmt-item" style="--r:608 / 1080; --ar:608 / 1080" data-hover-audio>
+        <video src="../assets/work/project01/p01-vertical.mp4" muted loop playsinline preload="none" aria-label="PROJECT01 animation, vertical" onerror="this.remove()"></video>
+        <figcaption class="fmt-cap"><b>03</b> Vertical <span>9 : 16 · 15 s</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="fmt fmt--compact reveal" aria-labelledby="mock-title">
+    <div class="fmt-head">
+      <span class="cs-num">08</span>
+      <h2 id="mock-title">Mockups</h2>
+    </div>
+    <div class="fmt-row">
+      <figure class="cs-media fmt-item" style="--r:1300 / 976; --ar:1300 / 976">
+        <img src="../assets/work/project01/p01-mock-subway.jpg" alt="Mockup: the liquid-metal spiral on a subway platform screen" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>01</b> Subway</figcaption>
+      </figure>
+      <figure class="cs-media fmt-item" style="--r:1800 / 1200; --ar:1800 / 1200">
+        <img src="../assets/work/project01/p01-mock-building.jpg" alt="Mockup: the ASCII scene on a rooftop billboard screen" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>02</b> Rooftop screen</figcaption>
+      </figure>
+    </div>
+    <div class="fmt-row fmt-row--verts">
+      <figure class="cs-media fmt-item" style="--r:1; --ar:1">
+        <img src="../assets/work/project01/p01-mock-vertical.jpg" alt="Mockup: the opening terminal frame on a phone, upright" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>03</b> Phone, vertical</figcaption>
+      </figure>
+      <figure class="cs-media fmt-item" style="--r:1; --ar:1">
+        <img src="../assets/work/project01/p01-mock-horizontal.jpg" alt="Mockup: the opening terminal frame on a phone, sideways" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>04</b> Phone, horizontal</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <a class="next-case" href="beyond-fashion.html">
+    <span class="eyebrow">Next case study</span>
+    <span class="next-title">Beyond Fashion 2025 <span aria-hidden="true">→</span></span>
+  </a>
+</main>
+
+<footer id="contact">
+  <div class="col">
+    <div class="brand">Erick Wittmann</div>
+  </div>
+  <div class="col">
+    <h4>Contact</h4>
+    <a href="mailto:erickwittmann@gmail.com">erickwittmann@gmail.com</a>
+  </div>
+  <div class="col">
+    <h4>Elsewhere</h4>
+    <a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener">LinkedIn</a>
+    <!-- Behance hidden for now: <a href="https://www.behance.net/erickwittmann" target="_blank" rel="noopener">Behance</a> -->
+  </div>
+  <div class="col">
+    <h4>&nbsp;</h4>
+    <span>© 2026 Erick Wittmann. All rights reserved.</span>
+  </div>
+</footer>
+
+<script src="../js/vendor/lenis.min.js"></script>
+<script src="../js/smooth-scroll.js"></script>
+<script src="../js/page-music.js"></script>
+<script src="../js/page-audio.js"></script>
+<script src="../js/spectrum.js"></script>
+<script src="../js/nav-audio.js"></script>
+<script src="../js/site.js"></script>
+<script src="../js/tilt.js"></script>
+<script src="../js/carousel.js"></script>
+<script src="../js/hover-audio.js"></script>
+<script src="../js/lightbox.js"></script>
+<script src="../js/chroma.js"></script>
+</body>
+</html>

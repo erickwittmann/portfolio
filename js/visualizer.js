@@ -16,10 +16,13 @@
     folds: 6,          // kaleidoscope mirrors around the centre (more = busier)
     tiles: 2,          // the mirrored picture repeats this many times across (1 = once)
     decay: 0.72,       // feedback: how much of the last frame stays (trails); 0.6 short, 0.9 long
-    threshold: 0.32,   // brightness that becomes solid colour; below it is black
-    tone: 3,           // colour steps per channel after the threshold (2 = harshest, 5 = smoother)
-    grain: 0.16,       // film grain amount
-    scanlines: 0.2,    // darkness of every other row
+    threshold: 0.55,   // brightness that becomes a lit tile; below it is black
+    tone: 3,           // grey steps for lit tiles (2 = harshest, 5 = smoother)
+    grain: 0.35,       // film grain amount (on lit tiles only: black stays black)
+    scanlines: 0.18,   // darkness of every other row
+    tile: 7,           // mosaic tile size, in pixels of the 512-wide picture
+    edge: 0.95,        // brightness of the glowing edges
+    bright: 0.52,      // overall brightness: kept low so the work in front stays the focus
     sizeMin: 0.78,     // picture size at volume 0 ...
     sizeMax: 1.12      // ... and at full volume
   };
@@ -77,33 +80,34 @@
     '}'
   ].join('\n');
 
-  // Pass 2: threshold -> tone -> grit.
+  // Pass 2, black and white: mosaic tiles -> threshold + grey steps -> glowing edges -> grit.
   var GRIT = [
     'precision highp float;',
     'varying vec2 vUv;',
     'uniform sampler2D uSrc;',
     'uniform vec2 uRes;',
-    'uniform float uTime, uKick, uThresh, uTone, uGrain, uScan;',
+    'uniform float uTime, uKick, uThresh, uTone, uGrain, uScan, uTile, uEdge, uBright;',
     'float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }',
+    'float lumAt(vec2 uv) { return dot(texture2D(uSrc, uv).rgb, vec3(0.299, 0.587, 0.114)); }',   // perceived brightness: blues read dark
     'void main() {',
-    '  vec2 off = vec2(0.002 + uKick * 0.01, 0.0);',   // RGB split, wider on kicks
-    '  vec3 c = vec3(texture2D(uSrc, vUv + off).r, texture2D(uSrc, vUv).g, texture2D(uSrc, vUv - off).b);',
-    '  float lum = max(c.r, max(c.g, c.b));',
-    // Threshold: anything bright enough becomes flat, full colour; the rest drops to black.
-    // Saturate: stretch each colour so its weakest channel hits zero (blurred mixes like pink go
-    // back to pure red); near-greys stay white.
-    '  float mn = min(c.r, min(c.g, c.b)), spread = lum - mn;',
-    '  vec3 hue = spread > 0.12 ? (c - mn) / spread : vec3(1.0);',
-    '  vec3 o = hue * step(uThresh, lum);',
-    // Two-tone body: dimmer where it only just passed the threshold.
-    '  o *= mix(0.55, 1.0, step(uThresh * 1.9, lum));',
-    // Tone: posterize to a few steps per channel.
-    '  o = floor(o * uTone + 0.5) / uTone;',
+    // Mosaic: every tile takes the value at its centre; thin dark gaps between tiles.
+    '  vec2 cells = uRes / uTile, id = floor(vUv * cells), f = fract(vUv * cells);',
+    '  vec2 c = (id + 0.5) / cells, d = 1.0 / cells;',
+    '  float l = lumAt(c);',
+    // Edges between neighbouring tiles (a sharp line), plus a wider, softer halo for the glow.
+    '  float e1 = length(vec2(lumAt(c + vec2(d.x, 0.0)) - lumAt(c - vec2(d.x, 0.0)), lumAt(c + vec2(0.0, d.y)) - lumAt(c - vec2(0.0, d.y))));',
+    '  float e2 = length(vec2(lumAt(c + vec2(2.0 * d.x, 0.0)) - lumAt(c - vec2(2.0 * d.x, 0.0)), lumAt(c + vec2(0.0, 2.0 * d.y)) - lumAt(c - vec2(0.0, 2.0 * d.y))));',
+    '  float edge = max(clamp(e1 * 2.2, 0.0, 1.0), clamp(e2 * 1.1, 0.0, 1.0) * 0.4);',
+    // Threshold + a few grey steps for the tiles' body, dimmer than the edges.
+    '  float body = floor(l * uTone + 0.5) / uTone * step(uThresh, l);',
+    '  float v = body * 0.3 + edge * uEdge;',
+    '  v *= mix(0.2, 1.0, step(0.12, f.x) * step(0.12, f.y));',
+    '  v *= uBright * (1.0 + uKick * 0.3);',
     // Grit: grain that changes every frame, and scanlines.
     '  vec2 px = floor(vUv * uRes);',
-    '  o += (hash(px + floor(uTime * 60.0) * 1.37) - 0.5) * uGrain;',
-    '  o *= 1.0 - uScan * mod(px.y, 2.0);',
-    '  gl_FragColor = vec4(clamp(o, 0.0, 1.0), 1.0);',
+    '  v *= 1.0 + (hash(px + floor(uTime * 60.0) * 1.37) - 0.5) * uGrain;',
+    '  v *= 1.0 - uScan * mod(px.y, 2.0);',
+    '  gl_FragColor = vec4(vec3(clamp(v, 0.0, 1.0)), 1.0);',
     '}'
   ].join('\n');
 
@@ -131,7 +135,8 @@
       vertexShader: VERT, fragmentShader: GRIT, depthTest: false, depthWrite: false,
       uniforms: {
         uSrc: { value: rtB.texture }, uRes: { value: new THREE.Vector2(W, H) }, uTime: { value: 0 }, uKick: { value: 0 },
-        uThresh: { value: LOOK.threshold }, uTone: { value: LOOK.tone }, uGrain: { value: LOOK.grain }, uScan: { value: LOOK.scanlines }
+        uThresh: { value: LOOK.threshold }, uTone: { value: LOOK.tone }, uGrain: { value: LOOK.grain }, uScan: { value: LOOK.scanlines },
+        uTile: { value: LOOK.tile }, uEdge: { value: LOOK.edge }, uBright: { value: LOOK.bright }
       }
     });
     var quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), feed);
@@ -180,6 +185,7 @@
         var g = grit.uniforms;
         g.uTime.value = t; g.uKick.value = kick * (1 - idle);
         g.uThresh.value = LOOK.threshold; g.uTone.value = LOOK.tone; g.uGrain.value = LOOK.grain; g.uScan.value = LOOK.scanlines;
+        g.uTile.value = LOOK.tile; g.uEdge.value = LOOK.edge; g.uBright.value = LOOK.bright;
         var keep = renderer.getRenderTarget(), auto = renderer.autoClear;
         renderer.autoClear = false;
         quad.material = feed; renderer.setRenderTarget(rtB); renderer.render(scene, cam);

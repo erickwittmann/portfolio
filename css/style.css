@@ -183,12 +183,15 @@ img, video, canvas { display:block; max-width:100%; }
 .portrait img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:50% 100%; }
 .about h2 { margin:0 0 28px; font-size:clamp(34px,4.2vw,64px); font-weight:600; line-height:1.02; letter-spacing:-.01em; }
 .about h2 .wave { display:inline-block; transform-origin:70% 80%; }
-.about:hover h2 .wave { animation:wave 1.2s ease-in-out; }
+.about:hover h2 .wave:not(.wave--ascii) { animation:wave 1.2s ease-in-out; }
+/* The ASCII hand (js/ascii-wave.js): a small canvas the size of a big emoji, sat on the baseline. */
+.about h2 .wave--ascii { width:1.4em; height:1.4em; vertical-align:-0.3em; margin-left:.05em; text-shadow:none; }
+.about h2 .wave--ascii canvas { display:block; width:100%; height:100%; filter:drop-shadow(0 2px 10px rgba(0,0,0,.7)); }
 @keyframes wave { 0%,100%{transform:rotate(0)} 20%{transform:rotate(16deg)} 40%{transform:rotate(-8deg)} 60%{transform:rotate(14deg)} 80%{transform:rotate(-4deg)} }
 .about .lead { margin:0 0 20px; font-size:clamp(19px,1.7vw,26px); line-height:1.3; max-width:26ch; }
 .about .lead em { font-style:italic; font-weight:600; }
 /* Pixel words (js/pixel-trail.js): a lit letter becomes a solid block of colour the size of its box. */
-.px-ch.is-px { color:transparent; }
+.px-ch.is-px { color:transparent; text-shadow:none; }   /* no shadow ghost on the colour block */
 .about .body { margin:0 0 36px; color:var(--dim); max-width:46ch; }
 .links { display:flex; flex-wrap:wrap; gap:12px 32px; font-size:12px; letter-spacing:.24em; text-transform:uppercase; }
 .links a { position:relative; padding-bottom:6px; }
@@ -664,3 +667,39 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 .fmt-row--verts { margin-top:12px; }
 .cs-overview .fmt-head p + p { margin-top:14px; }
 @media (max-width:760px) { .fmt-grid { gap:8px; } .fmt-row--verts { margin-top:8px; } }
+
+/* Project01: links under the identity text, the big concept line, and the storyboard grid. */
+.p01-links { display:flex; flex-wrap:wrap; gap:10px 28px; font-size:12px !important; letter-spacing:.2em; text-transform:uppercase; }
+.p01-links a { border-bottom:1px solid currentColor; padding-bottom:4px; }
+.p01-statement { margin:clamp(40px,6vw,96px) 0 0; font-size:clamp(40px,7.6vw,128px); line-height:1; letter-spacing:-.02em; font-weight:400; }
+.sb-grid { list-style:none; counter-reset:sb; margin:0; padding:0; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(18px,2.4vw,36px) 12px; }
+.sb-grid li { counter-increment:sb; }
+.sb-grid .cs-media { margin:0; }
+.sb-grid span { display:block; margin-top:12px; font-size:14px; line-height:1.4; color:#c9c9c9; }
+.sb-grid span::before { content:counter(sb) ". "; color:var(--dim); }
+@media (max-width:900px) { .sb-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+.program-intro > div > p + p { margin-top:1em; }
+
+/* Ambient videos (data-ambient-audio): the badge says the sound is already on, hover for full. */
+[data-ambient-audio] .hover-sound .hs-label::after { content:"Hover for full sound"; }
+[data-ambient-audio].has-sound .hover-sound .hs-label::after { content:"Sound on"; }
+[data-ambient-audio].needs-click .hover-sound .hs-label::after { content:"Click for sound"; }
+
+/* Compact sections (sketches, mockups): the media sits smaller, aligned with the section text. */
+.fmt--compact .fmt-item--wide, .fmt--compact .fmt-row, .fmt--compact .fmt-grid { max-width:880px; margin-left:clamp(0px,3.2vw,42px); }
+.fmt--compact .fmt-row--verts { max-width:560px; }
+@media (max-width:760px) { .fmt--compact .fmt-item--wide, .fmt--compact .fmt-row, .fmt--compact .fmt-grid { max-width:none; margin-left:0; } }
+
+/* ---------- About page (about.html) ---------- */
+.about-page { padding-top:var(--nav-h); }
+.ab-hero { display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:clamp(40px,7vw,120px); align-items:center;
+  padding:clamp(64px,8vw,130px) var(--gutter) clamp(56px,7vw,110px); }
+.ab-hero h1 { margin:0 0 28px; font-size:clamp(40px,5.4vw,84px); font-weight:600; line-height:1; letter-spacing:-.01em; }
+.ab-hero .lead { margin:0 0 20px; font-size:clamp(19px,1.7vw,26px); line-height:1.3; max-width:30ch; }
+.ab-hero p:not(.lead):not(.eyebrow) { margin:0 0 1em; max-width:50ch; color:#c9c9c9; }
+.ab-hero b { color:#fff; font-weight:600; }
+.ab-sub { margin-top:28px !important; }
+.ab-gallery { columns:3 300px; column-gap:12px; }
+.ab-item { break-inside:avoid; margin:0 0 12px; }
+.ab-cta { border-top:1px solid var(--line); }
+@media (max-width:760px) { .ab-hero { grid-template-columns:1fr; } .ab-hero .portrait { max-width:78%; } }

@@ -44,6 +44,28 @@
       burst(t, 0.03, 'bandpass', 2600 * k, 1.4, 0.32, 0.03);
       thump(t, 150 * k, 70, 0.16, 0.09);
     },
+    // A soft chime, played as each stage light strikes during the zoom-out (in place of the relay
+    // click). Successive lights climb a warm A major 9 chord, so the reveal plays as a gentle
+    // arpeggio: a sine with a quiet octave above, eased in, ringing out through a low-pass, panned
+    // a little left and right.
+    chime: function (i) {
+      if (!live()) return;
+      var NOTES = [220, 277.18, 329.63, 415.3, 493.88, 554.37, 659.25, 830.61];
+      var n = (i || 0) % NOTES.length, f = NOTES[n], t = ctx.currentTime + 0.01;
+      var lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2200; lp.Q.value = 0.3;
+      var g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.07, t + 0.04);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 2.4);
+      var out = g;
+      if (ctx.createStereoPanner) { var pan = ctx.createStereoPanner(); pan.pan.value = (n % 2 ? 0.35 : -0.35) * (0.5 + (n / NOTES.length) * 0.5); g.connect(pan); out = pan; }
+      lp.connect(g); out.connect(master);
+      [[f, 'sine', 1], [f * 2, 'sine', 0.22], [f * 3.01, 'triangle', 0.05]].forEach(function (p) {
+        var o = ctx.createOscillator(), og = ctx.createGain();
+        o.type = p[1]; o.frequency.value = p[0]; og.gain.value = p[2];
+        o.connect(og); og.connect(lp); o.start(t); o.stop(t + 2.5);
+      });
+    },
     // Big breaker "lights on": low thud, a hum swell, a bright click on top.
     clunk: function () {
       if (!live()) return;

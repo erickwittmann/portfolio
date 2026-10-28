@@ -116,6 +116,7 @@
       document.documentElement.style.paddingRight = '';
       o.paused.forEach(function (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); });
       open = null;
+      if (window.HoverAudio && window.HoverAudio.resume) window.HoverAudio.resume();
       o.fig.focus({ preventScroll: true });
     });
   }

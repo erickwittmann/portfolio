@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anatomy of a Computer — Erick Wittmann</title>
+<meta name="description" content="Anatomy of a Computer: an interactive website concept by Erick Wittmann that explains PC hardware visually. Research, sitemap, wireframes, four concepts and a prototype film.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<!-- Music for this page: set it in js/page-music.js (under 'anatomy-of-a-computer'). -->
+<body class="case">
+
+<nav class="nav" id="nav">
+  <ul>
+    <li class="nav-name"><a href="../index.html">Erick Wittmann</a></li>
+    <li><a href="../about.html">About</a></li>
+    <li><a href="../index.html#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!--
+  Anatomy of a Computer: Elements III, Project 2 (Prof. Hye-Jin Nae), Spring 2026. A solo
+  interactive-website concept; the outcome is the 23-second prototype film. Text and images are from
+  Erick's Figma file "Elements-III-P2" (Process Deck, concept pages, Final Visual Compositions);
+  the sitemap and user flow are from the FigJam board "E-III-P2-Sitemap".
+  Media in assets/work/anatomy/. The film is a web version of assets/Erick Wittmann - EIII P2 Prototype (1).mp4.
+-->
+<main>
+  <header class="cs-head">
+    <p class="eyebrow reveal">Case Study — Interactive / UX</p>
+    <h1 class="reveal">Anatomy of a Computer</h1>
+    <dl class="cs-facts reveal">
+      <div><dt>Project</dt><dd>Interactive website prototype</dd></div>
+      <div><dt>Course</dt><dd>Elements III, Project 2 — Prof. Hye-Jin Nae</dd></div>
+      <div><dt>Role</dt><dd>Solo: research, UX, visual design, motion</dd></div>
+      <div><dt>When</dt><dd>Spring 2026</dd></div>
+    </dl>
+  </header>
+
+  <figure class="cs-hero reveal" style="--ar:16 / 9">
+    <video src="../assets/work/anatomy/aoc-prototype.mp4" poster="../assets/work/anatomy/aoc-frame-1.jpg" muted loop playsinline preload="none" aria-label="Anatomy of a Computer: the prototype film" onerror="this.remove()"></video>
+    <img src="../assets/work/anatomy/aoc-frame-1.jpg" alt="The start screen: Anatomy of a Computer, click to start experience" style="z-index:0">
+    <span class="ph-label">Prototype — 1920 × 1080 · 23 s</span>
+  </figure>
+
+  <section class="cs-overview reveal" aria-labelledby="overview-title">
+    <div class="fmt-head">
+      <span class="cs-num">01</span>
+      <h2 id="overview-title">Overview</h2>
+      <p>Many people struggle to understand computer hardware specifications when they buy or upgrade a system. Technical jargon and the way parts depend on each other get in the way of an informed decision.</p>
+      <p>Anatomy of a Computer is an interactive web experience that explains how the core parts of a computer work together, mainly through visuals: progressive disclosure, motion, and clear explanations of the CPU, GPU, RAM, storage and the rest.</p>
+    </div>
+  </section>
+
+  <section class="cs-spec reveal" aria-label="Goals and audience">
+    <div class="cs-spec-grid">
+      <div>
+        <h3>Goals</h3>
+        <ul class="cs-list"><li>Educate <span>Demystify specs</span></li><li>Engage <span>Animation, discovery</span></li><li>Empower <span>Decide on understanding</span></li></ul>
+      </div>
+      <div>
+        <h3>Audience</h3>
+        <ul class="cs-list"><li>First-time PC builders</li><li>Students of computer architecture</li><li>Shoppers comparing specs</li></ul>
+      </div>
+      <div>
+        <h3>User needs</h3>
+        <ul class="cs-list"><li>Clarity</li><li>Context: how parts work together</li><li>Control: explore at their own pace</li><li>Visual learning</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="fmt reveal" aria-labelledby="research-title">
+    <div class="fmt-head">
+      <span class="cs-num">02</span>
+      <h2 id="research-title">Research</h2>
+      <p>Where people go today to learn about PC parts, and what each leaves out.</p>
+    </div>
+    <div class="fmt-row">
+      <figure class="cs-media fmt-item" style="--r:556 / 270; --ar:556 / 270">
+        <img src="../assets/work/anatomy/aoc-comp-1.jpg" alt="PCPartPicker's part list builder" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>01</b> PCPartPicker</figcaption>
+      </figure>
+      <figure class="cs-media fmt-item" style="--r:556 / 270; --ar:556 / 270">
+        <img src="../assets/work/anatomy/aoc-comp-2.jpg" alt="Intel ARK's product specifications search" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>02</b> Intel ARK</figcaption>
+      </figure>
+      <figure class="cs-media fmt-item" style="--r:556 / 270; --ar:556 / 270">
+        <img src="../assets/work/anatomy/aoc-comp-3.jpg" alt="YouTube search results for PC building tutorials" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>03</b> YouTube tutorials</figcaption>
+      </figure>
+    </div>
+    <div class="cs-spec-grid aoc-research">
+      <div><h3>PCPartPicker</h3><p>Strong at compatibility checking and price comparison. Little educational content; it assumes prior knowledge.</p></div>
+      <div><h3>Intel ARK</h3><p>A detailed specification database, behind a technical interface with no visual explanations.</p></div>
+      <div><h3>YouTube tutorials</h3><p>Visual demonstrations with personality, but quality is inconsistent and nothing is interactive.</p></div>
+    </div>
+    <div class="cs-spec-grid aoc-research">
+      <div><h3>Micro-interactions</h3><p>Small, focused animations that give feedback and guide attention: hover states on part callouts.</p></div>
+      <div><h3>Progressive disclosure</h3><p>Information revealed in layers to prevent overload: expandable detail panels and tooltips.</p></div>
+      <div><h3>Animation practices</h3><p>Ease-out curves that feel like physical objects, and every animation carrying meaning, not decoration.</p></div>
+    </div>
+  </section>
+
+  <section class="fmt reveal" aria-labelledby="map-title">
+    <div class="fmt-head">
+      <span class="cs-num">03</span>
+      <h2 id="map-title">Sitemap &amp; Content Flow</h2>
+      <p>Four ways in: explore the parts, see how power, data and air flow through them, get ready to build, or look something up. Parts can be explored in any order, with chevrons for a linear path and a menu for direct access.</p>
+    </div>
+    <figure class="cs-media fmt-item fmt-item--wide" style="--ar:2160 / 690">
+      <img src="../assets/work/anatomy/aoc-sitemap.jpg" alt="Sitemap: Home branches to Explore Parts (eight parts), See How It Works (power, data, airflow), Ready to Build (checklist, compatibility, assembly guide) and Quick Reference (glossary, compare specs)" loading="lazy" onerror="this.remove()">
+    </figure>
+    <figure class="cs-media fmt-item fmt-item--wide" style="--ar:2400 / 800">
+      <img src="../assets/work/anatomy/aoc-flow.jpg" alt="User flow: from the exploded-view entry animation to the landing page, part close-ups, flow pages, tooltips, quick reference and the build path" loading="lazy" onerror="this.remove()">
+    </figure>
+  </section>
+
+  <section class="fmt reveal" aria-labelledby="wire-title">
+    <div class="fmt-head">
+      <span class="cs-num">04</span>
+      <h2 id="wire-title">Wireframes</h2>
+      <p>The landing page and a part page, each built around an interactive 3D model you can spin, with the navigation condensed until you hover.</p>
+    </div>
+    <div class="fmt-row">
+      <figure class="cs-media fmt-item" style="--r:1640 / 736; --ar:1640 / 736">
+        <img src="../assets/work/anatomy/aoc-wf-landing.jpg" alt="Annotated landing page wireframe: name and description, two calls to action, condensed navigation, and an exploded 3D model of a PC" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>01</b> Landing page</figcaption>
+      </figure>
+      <figure class="cs-media fmt-item" style="--r:1640 / 736; --ar:1640 / 736">
+        <img src="../assets/work/anatomy/aoc-wf-part.jpg" alt="Annotated part page wireframe: a graphics card with icon navigation down the side and tooltips on the model" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>02</b> Part page</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="fmt reveal" aria-labelledby="dir-title">
+    <div class="fmt-head">
+      <span class="cs-num">05</span>
+      <h2 id="dir-title">Visual Direction</h2>
+      <p>Two boards pulled in opposite directions: precise, clean product pages, and a technical “computer console”, asking what the computer would see as its parts talk to each other.</p>
+    </div>
+    <div class="fmt-row">
+      <figure class="cs-media fmt-item" style="--r:16 / 9; --ar:16 / 9">
+        <img src="../assets/work/anatomy/aoc-board-1.jpg" alt="Inspiration board V1, Precise, Clean Objects: minimalist product pages for cars and headphones" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>V1</b> Precise, clean objects</figcaption>
+      </figure>
+      <figure class="cs-media fmt-item" style="--r:16 / 9; --ar:16 / 9">
+        <img src="../assets/work/anatomy/aoc-board-2.jpg" alt="Inspiration board V2, Computer Console: blue technical posters, halftone fields and geometric glyphs" loading="lazy" onerror="this.remove()">
+        <figcaption class="fmt-cap"><b>V2</b> Computer console</figcaption>
+      </figure>
+    </div>
+    <div class="cs-spec-grid aoc-principles">
+      <div><h3>Premium &amp; precise</h3><p>Clean edges, consistent spacing, a professional finish.</p></div>
+      <div><h3>Tech-forward</h3><p>Dark themes, subtle glows, modern sans-serif.</p></div>
+      <div><h3>Informative motion</h3><p>Animation guides attention and reveals hierarchy.</p></div>
+      <div><h3>Progressive complexity</h3><p>Start simple, reveal depth through interaction.</p></div>
+    </div>
+  </section>
+
+  <!-- The four concepts, in order, each with the critique that led to the next. -->
+  <section class="fmt reveal aoc-concepts-head" aria-labelledby="concepts-title">
+    <div class="fmt-head">
+      <span class="cs-num">06</span>
+      <h2 id="concepts-title">Four Concepts</h2>
+      <p>Each round was critiqued and the next one answered it. AI tools played a small part along the way, helping restyle part renders into the blueprint hologram look.</p>
+    </div>
+  </section>
+
+  <section class="cs-row">
+    <figure class="cs-media reveal" style="--ar:1114 / 651">
+      <img src="../assets/work/anatomy/aoc-concept-1.jpg" alt="Concept 1: an Intel Core i7 with a blue Central Processing Unit label, a side menu of parts and many buttons" loading="lazy" onerror="this.remove()">
+    </figure>
+    <div class="cs-text reveal">
+      <span class="cs-num">01</span>
+      <h2>Initial concept</h2>
+      <p><b>Hierarchy:</b> labels and buttons outweighed the part itself, when the visuals should lead.</p>
+      <p><b>Complexity:</b> too much information at once.</p>
+    </div>
+  </section>
+
+  <section class="cs-row">
+    <figure class="cs-media reveal" style="--ar:768 / 867">
+      <img src="../assets/work/anatomy/aoc-concept-2.jpg" alt="Concept 2: a graphics card on blue and on grey, with a giant GPU headline and store buttons" loading="lazy" onerror="this.remove()">
+    </figure>
+    <div class="cs-text reveal">
+      <span class="cs-num">02</span>
+      <h2>Second concept</h2>
+      <p><b>Purpose:</b> the branding and layout felt like a store selling a product rather than a place to learn.</p>
+      <p><b>Interaction:</b> the UI was static and always on screen. It should appear when it's needed.</p>
+    </div>
+  </section>
+
+  <section class="cs-row">
+    <figure class="cs-media reveal" style="--ar:1011 / 592">
+      <img src="../assets/work/anatomy/aoc-concept-3.jpg" alt="Concept 3: a holographic blueprint graphics card on a dark circuit background, with power, data and airflow legends and a radial part menu" loading="lazy" onerror="this.remove()">
+    </figure>
+    <div class="cs-text reveal">
+      <span class="cs-num">03</span>
+      <h2>Third concept</h2>
+      <p><b>Dark mode, holographic:</b> it hit the project goals and the audience, but cost readability and accessibility.</p>
+      <p><b>UI:</b> many controls invited exploration but could overwhelm a first-time visitor.</p>
+    </div>
+  </section>
+
+  <section class="cs-row">
+    <figure class="cs-media reveal" style="--ar:726 / 816">
+      <img src="../assets/work/anatomy/aoc-concept-4.jpg" alt="Final concept: an AMD Ryzen CPU centred on a light screen, and the same CPU as a blue hologram in dark mode with a Corner Tab tooltip" loading="lazy" onerror="this.remove()">
+    </figure>
+    <div class="cs-text reveal">
+      <span class="cs-num">04</span>
+      <h2>Final concept</h2>
+      <p><b>Centred layout:</b> the part sits in the middle, explored with directional controls.</p>
+      <p><b>Light / dark:</b> the start screen is light so information is easy to take in; interacting with a part turns it into a dark holographic display.</p>
+      <p><b>Collapsible UI:</b> layered, and opened only when needed.</p>
+    </div>
+  </section>
+
+  <!-- Stills exported from the After Effects prototype, in order. -->
+  <section class="fmt reveal" aria-labelledby="frames-title">
+    <div class="fmt-head">
+      <span class="cs-num">07</span>
+      <h2 id="frames-title">Final Frames</h2>
+      <p>Stills from the prototype film. Click any frame to see it larger.</p>
+    </div>
+    <ol class="sb-grid">
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/anatomy/aoc-frame-1.jpg" alt="Start screen: Anatomy of a Computer, click to start experience" loading="lazy"></figure><span>Start screen</span></li>
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/anatomy/aoc-frame-2.jpg" alt="The power supply, with the graphics card sliding in" loading="lazy"></figure><span>Power supply</span></li>
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/anatomy/aoc-frame-3.jpg" alt="The graphics card in light mode" loading="lazy"></figure><span>Graphics card</span></li>
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/anatomy/aoc-frame-4.jpg" alt="The graphics card as a blue hologram with a DisplayPort tooltip" loading="lazy"></figure><span>Hologram + tooltip</span></li>
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/anatomy/aoc-frame-5.jpg" alt="The CPU in light mode" loading="lazy"></figure><span>CPU</span></li>
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/anatomy/aoc-frame-6.jpg" alt="The CPU as a hologram with the Corner Tab tooltip" loading="lazy"></figure><span>Corner tab</span></li>
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/anatomy/aoc-frame-7.jpg" alt="Transition out of the CPU" loading="lazy"></figure><span>Transition</span></li>
+      <li><figure class="cs-media" style="--ar:16 / 9"><img src="../assets/work/anatomy/aoc-frame-8.jpg" alt="High-contrast view inside the case" loading="lazy"></figure><span>Inside the case</span></li>
+    </ol>
+  </section>
+
+  <section class="cs-overview reveal" aria-labelledby="next-title">
+    <div class="fmt-head">
+      <span class="cs-num">08</span>
+      <h2 id="next-title">Scope</h2>
+      <p>The prototype covers the part pages: the start screen, the power supply, graphics card and CPU, and the light-to-hologram interaction. The flow pages, build guide, compatibility check and quick reference in the sitemap are the planned rest of the system.</p>
+    </div>
+  </section>
+
+  <a class="next-case" href="beyond-fashion.html">
+    <span class="eyebrow">Next case study</span>
+    <span class="next-title">Beyond Fashion 2025 <span aria-hidden="true">→</span></span>
+  </a>
+</main>
+
+<footer id="contact">
+  <div class="col">
+    <div class="brand">Erick Wittmann</div>
+  </div>
+  <div class="col">
+    <h4>Contact</h4>
+    <a href="mailto:erickwittmann@gmail.com">erickwittmann@gmail.com</a>
+  </div>
+  <div class="col">
+    <h4>Elsewhere</h4>
+    <a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener">LinkedIn</a>
+    <!-- Behance hidden for now: <a href="https://www.behance.net/erickwittmann" target="_blank" rel="noopener">Behance</a> -->
+  </div>
+  <div class="col">
+    <h4>&nbsp;</h4>
+    <span>© 2026 Erick Wittmann. All rights reserved.</span>
+  </div>
+</footer>
+
+<script src="../js/vendor/lenis.min.js"></script>
+<script src="../js/smooth-scroll.js"></script>
+<script src="../js/page-music.js"></script>
+<script src="../js/page-audio.js"></script>
+<script src="../js/spectrum.js"></script>
+<script src="../js/nav-audio.js"></script>
+<script src="../js/site.js"></script>
+<script src="../js/tilt.js"></script>
+<script src="../js/hover-audio.js"></script>
+<script src="../js/lightbox.js"></script>
+<script src="../js/chroma.js"></script>
+</body>
+</html>

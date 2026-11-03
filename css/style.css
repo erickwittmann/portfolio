@@ -158,19 +158,20 @@ img, video, canvas { display:block; max-width:100%; }
 
 /* ---------- About ---------- */
 /* The about section rides up over the bottom of the stage view (--overlap) instead of starting
-   after it, with a gradient behind it that fades the stage into black, so there's no hard cut from
-   the scene to the page. Its transparent top must not block the stage controls underneath, so only
-   its content takes clicks. */
-.about { --overlap:37vh; position:relative; z-index:4; margin-top:calc(-1 * var(--overlap)); pointer-events:none;
-  display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:clamp(40px,7vw,120px); align-items:center;
-  padding:calc(var(--overlap) * .12) var(--gutter) clamp(96px,12vw,180px);
-  /* Darkens the stage behind the text, fading in at the top and back out at the bottom, so there's
-     no edge where the next section starts. */
-  background:linear-gradient(180deg, rgba(0,0,0,0) 0, rgba(0,0,0,.62) calc(var(--overlap) * .55), rgba(0,0,0,.62) calc(100% - 22vh), rgba(0,0,0,0) 100%); }
-/* Soft shadows lift the About text off the stage lights behind it. */
-.about h2, .about .lead, .about .eyebrow, .about .links { text-shadow:0 2px 18px rgba(0,0,0,.85), 0 0 2px rgba(0,0,0,.6); }
+   after it. It uses the opening screen's bar layout (js/enter.js), with no fill so the stage shows: the
+   portrait, copy and icons between two hairlines, links underneath. Its transparent top must not
+   block the stage controls underneath, so only the bar takes clicks. */
+.about { --overlap:40vh; position:relative; z-index:4; margin-top:calc(-1 * var(--overlap)); pointer-events:none;
+  padding:calc(var(--overlap) * .55) 0 clamp(96px,12vw,180px); }
+.about-bar { pointer-events:auto; display:flex; flex-direction:column; align-items:center; gap:clamp(18px,2.4vw,30px);
+  padding:clamp(36px,4.4vw,64px) var(--gutter) clamp(28px,3.2vw,44px); }
+/* No fill: the stage shows through, so soft shadows lift the text off the lights behind it. */
+.about h2, .about .lead, .about-links a { text-shadow:0 2px 18px rgba(0,0,0,.85), 0 0 2px rgba(0,0,0,.6); }
 .about .body { color:rgba(255,255,255,.78); text-shadow:0 1px 12px rgba(0,0,0,.9), 0 0 2px rgba(0,0,0,.7); }
-.about > * { pointer-events:auto; }
+.about .soc-icons svg { filter:drop-shadow(0 2px 10px rgba(0,0,0,.7)); }
+.about-box { display:grid; grid-template-columns:clamp(190px,21vw,330px) minmax(0,1fr) auto; align-items:center;
+  gap:clamp(24px,4vw,72px); width:100%; max-width:1180px; padding:clamp(4px,1vw,14px) clamp(24px,3.2vw,52px);
+  border-left:1px solid rgba(255,255,255,.32); border-right:1px solid rgba(255,255,255,.32); }
 .portrait { --sun:#fff64f; position:relative; margin:0; aspect-ratio:1; max-width:560px; width:100%; justify-self:center;
   border-radius:50%; background:var(--sun); touch-action:pan-y; }
 .portrait::after { content:"Portrait"; position:absolute; left:0; right:0; bottom:18%; text-align:center; font-size:10px;
@@ -181,45 +182,23 @@ img, video, canvas { display:block; max-width:100%; }
 .portrait .cutout { position:absolute; left:0; right:0; bottom:0; top:-16%; z-index:1; overflow:hidden;
   border-radius:0 0 50% 50% / 0 0 43.1% 43.1%; pointer-events:none; }
 .portrait img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:50% 100%; }
-.about h2 { margin:0 0 28px; font-size:clamp(34px,4.2vw,64px); font-weight:600; line-height:1.02; letter-spacing:-.01em; }
-.about h2 .wave { display:inline-block; transform-origin:70% 80%; }
-.about:hover h2 .wave:not(.wave--ascii) { animation:wave 1.2s ease-in-out; }
-/* The ASCII hand (js/ascii-wave.js): a small canvas the size of a big emoji, sat on the baseline. */
-.about h2 .wave--ascii { width:1.4em; height:1.4em; vertical-align:-0.3em; margin-left:.05em; text-shadow:none; }
-.about h2 .wave--ascii canvas { display:block; width:100%; height:100%; filter:drop-shadow(0 2px 10px rgba(0,0,0,.7)); }
-@keyframes wave { 0%,100%{transform:rotate(0)} 20%{transform:rotate(16deg)} 40%{transform:rotate(-8deg)} 60%{transform:rotate(14deg)} 80%{transform:rotate(-4deg)} }
-.about .lead { margin:0 0 20px; font-size:clamp(19px,1.7vw,26px); line-height:1.3; max-width:26ch; }
-.about .lead em { font-style:italic; font-weight:600; }
+.about h2 { margin:0 0 14px; font-size:clamp(30px,3.3vw,52px); font-weight:400; line-height:1.04; letter-spacing:-.01em; }
+.about h2 em { font-weight:500; }
+.about .lead { margin:0 0 12px; font-size:clamp(17px,1.45vw,23px); font-weight:300; line-height:1.3; max-width:36ch; }
+.about .lead em { font-style:italic; font-weight:500; }
 /* Pixel words (js/pixel-trail.js): a lit letter becomes a solid block of colour the size of its box. */
-.px-ch.is-px { color:transparent; text-shadow:none; }   /* no shadow ghost on the colour block */
-.about .body { margin:0 0 36px; color:var(--dim); max-width:46ch; }
-.links { display:flex; flex-wrap:wrap; gap:12px 32px; font-size:12px; letter-spacing:.24em; text-transform:uppercase; }
-.links a { position:relative; padding-bottom:6px; }
-.links a::after { content:""; position:absolute; left:0; right:0; bottom:0; height:1px; background:currentColor; transform-origin:left; transition:transform .4s var(--ease); }
-.links a:hover::after { transform:scaleX(.3); }
-/* Four to a row; a fifth link starts a new row. Each tile carries a running index. */
-.socials { list-style:none; margin:clamp(48px,6vw,96px) 0 0; padding:0; max-width:600px; counter-reset:soc;
-  display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(10px,1.6vw,24px); }
-.socials a { counter-increment:soc; position:relative; display:grid; place-items:center; aspect-ratio:1;
-  border:1px solid var(--line); background:rgba(255,255,255,.03); color:var(--fg);
-  transition:background-color .35s var(--ease), border-color .35s var(--ease), color .35s var(--ease); }
-.socials a::before { content:counter(soc,decimal-leading-zero); position:absolute; top:9px; right:10px;
-  font-size:10px; letter-spacing:.12em; color:var(--faint); transition:color .35s var(--ease); }
-.socials svg { width:30%; height:30%; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linejoin:round; stroke-linecap:round;
-  transition:transform .45s var(--ease); }
-.socials span { position:absolute; left:10px; bottom:9px; font-size:9px; letter-spacing:.18em; text-transform:uppercase;
-  color:var(--dim); transition:color .35s var(--ease); }
-.socials a:hover, .socials a:focus-visible { background:#fff64f; border-color:#fff64f; color:#000; }
-.socials a:hover::before, .socials a:hover span, .socials a:focus-visible::before, .socials a:focus-visible span { color:rgba(0,0,0,.6); }
-.socials a:hover svg { transform:scale(1.08); }
-.socials a:focus-visible { outline:1px solid #fff; outline-offset:3px; }
+.px-ch.is-px { color:transparent; text-shadow:none; }
+.about .body { margin:0; font-size:clamp(13px,1.05vw,16px); font-weight:300; line-height:1.5; max-width:48ch; }
+.about-links { display:flex; flex-wrap:wrap; justify-content:center; gap:6px clamp(20px,2.6vw,40px); }
+.about-links a { padding:4px 6px; color:#cfcfcf; font-size:clamp(13px,1.05vw,16px); font-weight:300;
+  text-decoration:underline; text-underline-offset:.22em; text-decoration-thickness:1px; transition:color .3s var(--ease); }
+.about-links a:hover, .about-links a:focus-visible { color:#fff; }
 @media (max-width:760px) {
-  .about { grid-template-columns:1fr; }
-  .portrait { max-width:84%; margin-top:12%; }
-}
-@media (max-width:520px) {
-  /* Tiles get too small for a label: keep it for screen readers only. */
-  .socials span { width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+  .about { --overlap:28vh; }
+  .about-bar { padding-left:16px; padding-right:16px; }
+  .about-box { grid-template-columns:1fr; justify-items:center; text-align:center; gap:22px; padding:8px 16px 4px; }
+  .portrait { max-width:68%; margin-top:-14%; }
+  .about .lead, .about .body { margin-left:auto; margin-right:auto; }
 }
 
 .rule { height:1px; margin:0; border:0; background:var(--line); }
@@ -525,19 +504,59 @@ html.lb-lock, html.lb-lock body { overflow:hidden; }
 .cs-figure figcaption { margin-top:14px; font-size:10px; letter-spacing:.24em; text-transform:uppercase; color:var(--dim); }
 
 /* ---------- Opening screen (js/enter.js) ----------
-   The grid shows straight away, a little dimmed, with the name and "click to enter" on black
-   tags. Clicking lifts the dim and the camera pulls back to the stage. */
-.enter { position:absolute; inset:0; z-index:5; pointer-events:none; background:rgba(0,0,0,.38);
-  transition:opacity .8s var(--ease), background-color .8s var(--ease); }
-.enter.is-out { opacity:0; background:rgba(0,0,0,0); }
-.enter-name, .enter-go { position:absolute; transform:translate(-50%,-50%); padding:.45em .6em; background:#000;
-  color:#fff; font-family:var(--font); white-space:nowrap; line-height:1.15; }
-.enter-name { left:36.5%; top:36.5%; font-size:clamp(17px,1.7vw,26px); font-weight:600; letter-spacing:-.01em; }
-.enter-go { left:54%; top:77%; border:0; font-size:clamp(15px,1.45vw,22px); font-weight:300; color:#cfcfcf;
-  cursor:pointer; pointer-events:auto; transition:color .3s var(--ease); }
+   The grid shows straight away, a little dimmed, with a black bar across the middle (Erick's Figma
+   frame 38). Clicking anywhere fades the text, then the bar collapses to a line and closes while
+   the dim lifts; then the camera pulls back to the stage. */
+.enter { position:absolute; inset:0; z-index:5; pointer-events:none; background:rgba(0,0,0,.42);
+  transition:background-color 1s var(--ease) .1s; }
+.enter.is-out { background:rgba(0,0,0,0); }
+.enter-bar { position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); display:flex; flex-direction:column;
+  align-items:center; gap:clamp(8px,1vh,14px); padding:clamp(26px,4.6vh,48px) 16px clamp(22px,3.4vh,36px); }
+/* The black is its own layer that scales to nothing about the centre line: a transform, so it stays
+   smooth while the stage starts drawing behind it. */
+.enter-bar::before { content:""; position:absolute; inset:0; z-index:-1; background:#000;
+  transition:transform .75s cubic-bezier(.65,0,.35,1) .08s; }
+.enter.is-out .enter-bar::before { transform:scaleY(0); }
+/* The cursor's pixel trail (js/pixel-trail.js), over the black and under the text; it closes with the bar. */
+.enter-bar .pixel-trail { position:absolute; inset:0; width:100%; height:100%; border-radius:0; image-rendering:pixelated; opacity:.9;
+  transition:transform .75s cubic-bezier(.65,0,.35,1) .08s; }
+.enter.is-out .enter-bar .pixel-trail { transform:scaleY(0); }
+.enter-box, .enter-go { position:relative; }
+.enter-box, .enter-go { transition:opacity .28s var(--ease); }
+.enter.is-out .enter-box, .enter.is-out .enter-go { opacity:0; }
+/* Between two hairlines: the address and the tag on the left, the icons on the right. */
+.enter-box { display:flex; align-items:center; justify-content:space-between; gap:clamp(20px,4vw,64px);
+  width:min(54.5vw, 820px); padding:clamp(14px,2.2vh,24px) clamp(20px,2.8vw,40px);
+  border-left:1px solid rgba(255,255,255,.32); border-right:1px solid rgba(255,255,255,.32); }
+.enter-id { display:flex; flex-direction:column; gap:4px; margin:0; color:#fff; font-family:var(--font); line-height:1.15; }
+.enter-name { font-size:clamp(22px,2.4vw,38px); font-weight:400; letter-spacing:-.005em; }
+.enter-tag { display:inline-flex; align-items:center; gap:.4em; font-size:clamp(13px,1.25vw,19px); font-weight:300; color:var(--dim); }
+.enter-tag svg { width:1em; height:1em; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linejoin:round; }
+.enter-go { border:0; padding:4px 6px; background:none; color:#cfcfcf; font:300 clamp(13px,1.05vw,16px) var(--font);
+  text-decoration:underline; text-underline-offset:.22em; text-decoration-thickness:1px; cursor:pointer; pointer-events:auto; }
 .enter-go:hover, .enter-go:focus-visible { color:#fff; outline:none; }
+.enter .soc-icons { pointer-events:auto; }
 html.is-gated .stage-pin { cursor:pointer; }
-@media (max-width:700px) { .enter-name { left:50%; top:42%; } .enter-go { left:50%; top:58%; } }
+@media (max-width:700px) {
+  .enter-box { width:100%; gap:16px; padding:12px 16px; }
+  .enter .soc-icons { --si:30px; }
+}
+
+/* Social icons (gate and About bar): grey, and on hover they fill yellow, grow and tip slightly.
+   Instagram is drawn as an outline, LinkedIn as a solid tile with the letters cut out in black. */
+.soc-icons { --si:clamp(34px,3.3vw,50px); display:flex; gap:calc(var(--si) * .42); margin:0; padding:0; list-style:none; flex-shrink:0; }
+.soc-icons a { display:block; width:var(--si); height:var(--si); color:#7a7a7a;
+  transition:color .3s var(--ease), transform .45s cubic-bezier(.34,1.56,.64,1); }
+.soc-icons svg { display:block; width:100%; height:100%; fill:currentColor; }
+.soc-icons .si-line { fill:none; stroke:currentColor; stroke-width:2; }
+.soc-icons .si-cut { fill:none; stroke:#000; stroke-width:2.3; stroke-linecap:round; stroke-linejoin:round; }
+.soc-icons .si-dot { fill:#000; }
+.soc-icons a:hover, .soc-icons a:focus-visible { color:#fff64f; transform:scale(1.18) rotate(-8deg); outline:none; }
+.soc-icons li:nth-child(even) a:hover, .soc-icons li:nth-child(even) a:focus-visible { transform:scale(1.18) rotate(7deg); }
+@media (prefers-reduced-motion:reduce) {
+  .enter, .enter-bar::before, .enter-box, .enter-go { transition-duration:.01s; transition-delay:0s; }
+  .soc-icons a:hover, .soc-icons a:focus-visible, .soc-icons li:nth-child(even) a:hover { transform:none; }
+}
 
 /* ---------- Homepage over the stage ----------
    About, the works and the footer scroll over the fixed stage (see .stage-seq .stage-pin). */
@@ -695,7 +714,7 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 .ab-hero { display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:clamp(40px,7vw,120px); align-items:center;
   padding:clamp(64px,8vw,130px) var(--gutter) clamp(56px,7vw,110px); }
 .ab-hero h1 { margin:0 0 28px; font-size:clamp(40px,5.4vw,84px); font-weight:600; line-height:1; letter-spacing:-.01em; }
-.ab-hero .lead { margin:0 0 20px; font-size:clamp(19px,1.7vw,26px); line-height:1.3; max-width:30ch; }
+.ab-hero .lead { margin:0 0 20px; font-size:clamp(19px,1.7vw,26px); line-height:1.3; max-width:36ch; }
 .ab-hero p:not(.lead):not(.eyebrow) { margin:0 0 1em; max-width:50ch; color:#c9c9c9; }
 .ab-hero b { color:#fff; font-weight:600; }
 .ab-sub { margin-top:28px !important; }

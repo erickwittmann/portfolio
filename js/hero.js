@@ -42,7 +42,7 @@
   // it off for a normally mastered song; add e.g. gain: 0.8 if one stands out as too loud. The
   // overall stage level is LEVEL.stage in js/page-audio.js.
   var TRACKS = [
-    { artist: 'Internet Girl', title: 'PULL UP', src: 'assets/PULL UP2.mp3', gain: 0.76 },   // cut so the drop lands on the zoom-out
+    { artist: 'Internet Girl', title: 'PULL UP', src: 'assets/PULL UP2.mp3', gain: 0.65 },   // cut so the drop lands on the zoom-out
     { artist: 'yaego, kučka', title: 'ketamina', src: 'assets/yaego, kučka - ketamina.mp3', gain: 0.73 },
     { artist: 'Blood Cultures', title: 'Unarchiver', src: 'assets/Blood Cultures - Unarchiver_Cut.mp3', gain: 0.97 },
     { artist: 'Feng', title: 'XY', src: 'assets/XY.mp3' },

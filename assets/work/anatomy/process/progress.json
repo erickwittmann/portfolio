@@ -1,0 +1,3902 @@
+{
+ "project": "Anatomy of a Computer",
+ "started": "2026-10-29T01:02:31-04:00",
+ "updated": "2026-10-30T19:08:09-04:00",
+ "status": "done",
+ "current": {
+  "phase": "Complete",
+  "note": "v18: hardware audit applied, 43 verified sources",
+  "since": "2026-10-30T19:08:09-04:00"
+ },
+ "dimensions": [
+  {
+   "id": "discover",
+   "label": "Discoverability",
+   "desc": "Can a first-time visitor tell what to do and find the interesting parts?"
+  },
+  {
+   "id": "clarity",
+   "label": "Clarity",
+   "desc": "Is the content understandable to a 10-year-old and still useful to an enthusiast?"
+  },
+  {
+   "id": "explore",
+   "label": "Exploration",
+   "desc": "Depth of things to poke at: views, hotspots, angles, hidden layers."
+  },
+  {
+   "id": "delight",
+   "label": "Delight",
+   "desc": "Is it fun? Motion, surprise, reward, personality."
+  },
+  {
+   "id": "feedback",
+   "label": "Feedback",
+   "desc": "Does every action respond immediately and legibly?"
+  },
+  {
+   "id": "motion",
+   "label": "Motion fidelity",
+   "desc": "How closely transitions follow the prototype video."
+  },
+  {
+   "id": "visual",
+   "label": "Visual craft",
+   "desc": "Typography, hierarchy, polish, consistency with the Figma system."
+  },
+  {
+   "id": "access",
+   "label": "Accessibility",
+   "desc": "Keyboard, screen reader, contrast, reduced motion, touch targets."
+  },
+  {
+   "id": "mobile",
+   "label": "Mobile",
+   "desc": "Works and feels intentional on a phone."
+  },
+  {
+   "id": "perf",
+   "label": "Performance",
+   "desc": "Load weight, frame rate, time to first interaction."
+  }
+ ],
+ "iterations": [
+  {
+   "id": 0,
+   "label": "Figma baseline",
+   "kind": "baseline",
+   "folder": "baseline",
+   "summary": "Faithful build of the V4 prototype + V5 style frames: flat renders, 4 view modes, 3 hotspots per part, fade/scan transitions.",
+   "scores": {
+    "discover": 5,
+    "clarity": 6,
+    "explore": 4,
+    "delight": 4,
+    "feedback": 6,
+    "motion": 3,
+    "visual": 7,
+    "access": 5,
+    "mobile": 6,
+    "perf": 7
+   },
+   "critique": [
+    {
+     "dim": "discover",
+     "sev": 2,
+     "note": "Nothing tells a first-timer they can hover hotspots or switch views; it reads as a poster."
+    },
+    {
+     "dim": "explore",
+     "sev": 3,
+     "note": "Parts are flat PNGs — you can't turn them, zoom in, or look underneath. Three hotspots per part is the whole depth."
+    },
+    {
+     "dim": "explore",
+     "sev": 2,
+     "note": "Four of seven parts are 'render in progress' dead ends."
+    },
+    {
+     "dim": "motion",
+     "sev": 3,
+     "note": "The prototype video's language (pixel-mosaic intro, carousel slide, title ticker, typewriter, x-ray flash) is mostly missing."
+    },
+    {
+     "dim": "clarity",
+     "sev": 2,
+     "note": "Copy is pitched at enthusiasts. A 9-year-old won't know what 'parallel processing' means."
+    },
+    {
+     "dim": "access",
+     "sev": 2,
+     "note": "Callout text renders around 9–11px; grey #7d7d7d body copy on black is borderline contrast."
+    },
+    {
+     "dim": "delight",
+     "sev": 2,
+     "note": "No reward for curiosity — nothing to find, collect, or play with."
+    },
+    {
+     "dim": "feedback",
+     "sev": 1,
+     "note": "Airflow legend and the connection web look interactive but do nothing."
+    },
+    {
+     "dim": "visual",
+     "sev": 1,
+     "note": "Strong, faithful to Figma. Ghost type and HUD details carry the mood well."
+    },
+    {
+     "dim": "mobile",
+     "sev": 1,
+     "note": "Compact layout works, but hotspots are small and the art is cropped."
+    }
+   ],
+   "changes": [
+    {
+     "area": "build",
+     "desc": "Static HTML/CSS/JS build of the Figma comps (session 1)."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v0-0.jpg",
+     "label": "Overview"
+    },
+    {
+     "src": "shots/v0-1.jpg",
+     "label": "Data view"
+    },
+    {
+     "src": "shots/v0-2.jpg",
+     "label": "Phone"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 103,
+     "css": 434,
+     "js": 437
+    },
+    "bytes": 42624,
+    "added": 974,
+    "removed": 0,
+    "files": [
+     {
+      "file": "app.js",
+      "loc": 437,
+      "added": 437,
+      "removed": 0
+     },
+     {
+      "file": "index.html",
+      "loc": 103,
+      "added": 103,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 434,
+      "added": 434,
+      "removed": 0
+     }
+    ]
+   },
+   "time": "2026-10-29T01:03:22-04:00"
+  },
+  {
+   "id": 1,
+   "label": "Real-time 3D + video motion",
+   "folder": "live",
+   "summary": "Ported the Figma build to three.js with the three GLB models plus simplified stand-ins for the other four parts. Added the prototype video's motion language: 1-bit mosaic intro, carousel slide, title ticker, typewriter copy, light↔dark flash, top-down x-ray scan, drawn-on callouts, band-wipe home. New Airflow view, live power/data traces, clickable connection web, hotspot close-ups.",
+   "scores": {
+    "discover": 6,
+    "clarity": 6,
+    "explore": 7,
+    "delight": 7,
+    "feedback": 6,
+    "motion": 8,
+    "visual": 7,
+    "access": 6,
+    "mobile": 5,
+    "perf": 6
+   },
+   "critique": [
+    {
+     "dim": "discover",
+     "sev": 3,
+     "note": "Huge jump in what you can do, but nothing says so. A first-timer won't guess the part can be dragged, zoomed, or that hotspots fly in close."
+    },
+    {
+     "dim": "clarity",
+     "sev": 2,
+     "note": "Copy is still enthusiast-level ('vapor chamber', 'PCIe lanes'). A 9-year-old needs a plain-words layer and comparisons."
+    },
+    {
+     "dim": "explore",
+     "sev": 2,
+     "note": "X-ray shows the inside, but you still can't pull a part apart. The GPU's named meshes (shroud, fans, heatsink, board) are begging for an exploded view."
+    },
+    {
+     "dim": "delight",
+     "sev": 2,
+     "note": "The scan and airflow are genuinely fun. There is still no goal or reward for curiosity, and no sound."
+    },
+    {
+     "dim": "feedback",
+     "sev": 2,
+     "note": "The default hotspot can point at a feature turned away from you (GPU display ports), so the first callout appears dimmed and unexplained."
+    },
+    {
+     "dim": "mobile",
+     "sev": 2,
+     "note": "On phones the callout sits on top of the model and the hotspots are small for thumbs."
+    },
+    {
+     "dim": "perf",
+     "sev": 1,
+     "note": "Renders every frame even when nothing moves; two copies of each mesh are drawn during scans."
+    },
+    {
+     "dim": "motion",
+     "sev": 1,
+     "note": "Close to the video now. Missing: the glitch/noise exit and the copper render variant."
+    },
+    {
+     "dim": "access",
+     "sev": 1,
+     "note": "Keyboard + reduced-motion work; callout text is now 12–14px. The 3D view itself has no text alternative beyond its label."
+    }
+   ],
+   "changes": [
+    {
+     "area": "3D",
+     "desc": "three.js stage: GLB loading (meshopt + WebP), auto-centring/orientation, drag-to-spin with inertia, scroll/pinch zoom, idle sway."
+    },
+    {
+     "area": "x-ray",
+     "desc": "Fresnel hologram twins revealed by a clipping-plane scan line; dense fins get a dimmer pass."
+    },
+    {
+     "area": "views",
+     "desc": "Power/Data show animated Manhattan-routed traces; new Airflow view with particle streams and faster fans."
+    },
+    {
+     "area": "motion",
+     "desc": "Pixel-mosaic intro, carousel slide, title roll, erase-then-type copy, flash between light and dark, band wipe home."
+    },
+    {
+     "area": "content",
+     "desc": "All 7 parts explorable; RAM/SSD/cooler/PSU as labelled simplified models; motherboard hotspots anchored to real component materials (socket, RAM, M.2, CMOS battery, I/O)."
+    },
+    {
+     "area": "controls",
+     "desc": "Mode labels always visible; Airflow legend works; connection web is clickable."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v1-0.jpg",
+     "label": "GPU overview"
+    },
+    {
+     "src": "shots/v1-1.jpg",
+     "label": "CPU data traces"
+    },
+    {
+     "src": "shots/v1-2.jpg",
+     "label": "GPU airflow"
+    },
+    {
+     "src": "shots/v1-3.jpg",
+     "label": "Phone"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 100,
+     "css": 282,
+     "js": 1302
+    },
+    "bytes": 92011,
+    "added": 1566,
+    "removed": 419,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 100,
+      "added": 56,
+      "removed": 59
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 93,
+      "added": 93,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 820,
+      "added": 820,
+      "removed": 0
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 165,
+      "added": 165,
+      "removed": 0
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 172,
+      "added": 172,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 52,
+      "added": 52,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 282,
+      "added": 208,
+      "removed": 360
+     }
+    ]
+   },
+   "time": "2026-10-29T01:25:41-04:00"
+  },
+  {
+   "id": 2,
+   "label": "Discoverability + plain words",
+   "folder": "live",
+   "summary": "A first-visit tour that advances when you actually drag, tap a ring, switch view and change part; numbered hotspot rings with hover labels; Simple words by default with a More detail switch (copy written for 8–12 year olds for every part, view and hotspot); the starting hotspot is the one facing you; a phone callout card; ~30fps when idle and paused behind the index.",
+   "scores": {
+    "discover": 8,
+    "clarity": 8,
+    "explore": 7,
+    "delight": 7,
+    "feedback": 7,
+    "motion": 8,
+    "visual": 7,
+    "access": 7,
+    "mobile": 7,
+    "perf": 7
+   },
+   "critique": [
+    {
+     "dim": "delight",
+     "sev": 3,
+     "note": "Now easy to start, but there's still no reason to keep going. Kids love collecting: there are 24 features to find and nothing counts them."
+    },
+    {
+     "dim": "explore",
+     "sev": 2,
+     "note": "X-ray hints at the inside, but you can't take the GPU apart. Its shroud, fans, heatsink and board are separate meshes — an exploded view is the obvious next step."
+    },
+    {
+     "dim": "clarity",
+     "sev": 2,
+     "note": "No sense of real size. A CPU on screen looks as big as a motherboard; kids need 'about the size of a cracker'."
+    },
+    {
+     "dim": "feedback",
+     "sev": 1,
+     "note": "Silent. A soft tick on switches and a whoosh on the x-ray scan would make actions feel physical (with a mute switch)."
+    },
+    {
+     "dim": "access",
+     "sev": 1,
+     "note": "Hotspots are real buttons with labels and the wording switch helps reading levels; the 3D scene itself still has no text summary for screen readers."
+    },
+    {
+     "dim": "discover",
+     "sev": 1,
+     "note": "The tour is quick and skippable and comes back via the ? button. Good."
+    }
+   ],
+   "changes": [
+    {
+     "area": "onboarding",
+     "desc": "4-step coach marks (drag, tap a ring, switch view, change part) that move on when you do the thing; ? replays it."
+    },
+    {
+     "area": "wording",
+     "desc": "Simple words / More detail switch; plain-language copy for 7 parts × up to 5 views + 24 hotspots, remembered between visits."
+    },
+    {
+     "area": "hotspots",
+     "desc": "Numbered rings, hover labels, start on the feature facing you, explicit facing for GPU parts so close-ups turn the right way."
+    },
+    {
+     "area": "mobile",
+     "desc": "Callout moves into a card under the model; 40px touch rings."
+    },
+    {
+     "area": "perf",
+     "desc": "Idle frames halved after 6s; rendering pauses behind the parts index."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v2-0.jpg",
+     "label": "GPU, simple words"
+    },
+    {
+     "src": "shots/v2-1.jpg",
+     "label": "Motherboard power"
+    },
+    {
+     "src": "shots/v2-2.jpg",
+     "label": "PSU airflow"
+    },
+    {
+     "src": "shots/v2-3.jpg",
+     "label": "Phone with callout card"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 106,
+     "css": 351,
+     "js": 1552
+    },
+    "bytes": 110254,
+    "added": 339,
+    "removed": 14,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 106,
+      "added": 7,
+      "removed": 1
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 85,
+      "added": 85,
+      "removed": 0
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 93,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 884,
+      "added": 73,
+      "removed": 9
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 266,
+      "added": 105,
+      "removed": 4
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 172,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 52,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 351,
+      "added": 69,
+      "removed": 0
+     }
+    ]
+   },
+   "time": "2026-10-29T01:31:25-04:00"
+  },
+  {
+   "id": 3,
+   "label": "Discoveries, size, sound",
+   "folder": "live",
+   "summary": "Every hotspot you open is now a discovery: a ring counter in the header (n/24), check marks on found rings, toasts, a badge when a part is complete and a 'Computer Anatomist' finale. Real-world size comparisons under each part. Synthesized UI sounds (tick, slide whoosh, x-ray scan sweep, discovery chime) with a remembered mute. A live text summary of the 3D scene for screen readers. Close-ups zoom less on small parts.",
+   "scores": {
+    "discover": 8,
+    "clarity": 9,
+    "explore": 7,
+    "delight": 8,
+    "feedback": 8,
+    "motion": 8,
+    "visual": 7,
+    "access": 8,
+    "mobile": 7,
+    "perf": 7
+   },
+   "critique": [
+    {
+     "dim": "explore",
+     "sev": 3,
+     "note": "The last big missing idea: you still can't take a part apart. The GPU's shroud, fans, fins, board and backplate are separate meshes, and the stand-ins are built from parts — an exploded view would make 'anatomy' literal."
+    },
+    {
+     "dim": "visual",
+     "sev": 2,
+     "note": "The header right side is getting busy (counter, sound, menu) and the bottom panel is dense at 1280px. Needs a calm pass."
+    },
+    {
+     "dim": "delight",
+     "sev": 1,
+     "note": "Collecting works and the chime is satisfying. The finale card is static — the video's 1-bit mosaic would make it feel earned."
+    },
+    {
+     "dim": "motion",
+     "sev": 1,
+     "note": "Still missing the video's glitch/noise exit."
+    },
+    {
+     "dim": "mobile",
+     "sev": 1,
+     "note": "Counter collapses to a ring on phones; check the header doesn't crowd at 360px."
+    }
+   ],
+   "changes": [
+    {
+     "area": "discoveries",
+     "desc": "Persistent found set (24 features), header progress ring, check-marked rings, toasts, per-part badge, all-found finale with reset."
+    },
+    {
+     "area": "size",
+     "desc": "Size comparison per part in Simple words; millimetres in More detail."
+    },
+    {
+     "area": "sound",
+     "desc": "WebAudio synth sounds for tick, slide, scan, pop, discovery and badge; mute button remembered."
+    },
+    {
+     "area": "access",
+     "desc": "Screen-reader scene summary updates with each part/view; mute + counter have descriptive labels."
+    },
+    {
+     "area": "close-ups",
+     "desc": "Zoom scales with part size so small parts don't fill the screen."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v3-0.jpg",
+     "label": "Cooler airflow"
+    },
+    {
+     "src": "shots/v3-1.jpg",
+     "label": "SSD data"
+    },
+    {
+     "src": "shots/v3-2.jpg",
+     "label": "RAM framework"
+    },
+    {
+     "src": "shots/v3-3.jpg",
+     "label": "Phone"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 126,
+     "css": 406,
+     "js": 1693
+    },
+    "bytes": 122726,
+    "added": 225,
+    "removed": 9,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 126,
+      "added": 21,
+      "removed": 1
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 85,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 93,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 955,
+      "added": 79,
+      "removed": 8
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 277,
+      "added": 11,
+      "removed": 0
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 172,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/sfx.js",
+      "loc": 59,
+      "added": 59,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 52,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 406,
+      "added": 55,
+      "removed": 0
+     }
+    ]
+   },
+   "time": "2026-10-29T01:34:54-04:00"
+  },
+  {
+   "id": 4,
+   "label": "Exploded view",
+   "folder": "live",
+   "summary": "'Take it apart' peels each part into labelled layers: the GPU by its own named meshes (shroud, fans, fins, heat pipes, cold plate, board, backplate), the motherboard by component materials (memory, processor, covers, M.2, CMOS battery), the stand-ins by tagged pieces. Works in every view, so you can x-ray an exploded card. Labels relax so they don't overlap; tour gains a 'take it apart' step; E key toggles. Calmer layout: connection web drops out under 1280px. The finale now plays the intro's 1-bit circuit mosaic.",
+   "scores": {
+    "discover": 8,
+    "clarity": 9,
+    "explore": 9,
+    "delight": 9,
+    "feedback": 8,
+    "motion": 8,
+    "visual": 8,
+    "access": 8,
+    "mobile": 7,
+    "perf": 7
+   },
+   "critique": [
+    {
+     "dim": "explore",
+     "sev": 2,
+     "note": "You can now see how each part is built, but not how they fit together. The Figma sitemap's 'Assembly Guide / Ready to Build' branch is still missing — a guided build would give the whole site a goal."
+    },
+    {
+     "dim": "feedback",
+     "sev": 1,
+     "note": "Exploded labels are read-only; tapping a layer should say what it does."
+    },
+    {
+     "dim": "motion",
+     "sev": 1,
+     "note": "The video's glitch exit is still missing on the way home."
+    },
+    {
+     "dim": "mobile",
+     "sev": 1,
+     "note": "Exploded labels get small on phones; still usable."
+    },
+    {
+     "dim": "visual",
+     "sev": 1,
+     "note": "Exploded + x-ray together is the best-looking state in the site so far."
+    }
+   ],
+   "changes": [
+    {
+     "area": "explode",
+     "desc": "Per-piece rest/offset in part space converted to each piece's parent space; x-ray twins and edges follow their mesh; damped animation, side-on yaw and camera pull-back while apart."
+    },
+    {
+     "area": "labels",
+     "desc": "Deduplicated layer labels projected each frame with overlap relaxation; hotspots hide while apart."
+    },
+    {
+     "area": "tour",
+     "desc": "New 'take it apart' step; tour key bumped so returning visitors see it once."
+    },
+    {
+     "area": "layout",
+     "desc": "Connection web hides below 1280px; explode button lives bottom-left of the stage."
+    },
+    {
+     "area": "finale",
+     "desc": "All-found card plays the 1-bit mosaic behind it."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v4-0.jpg",
+     "label": "Exploded GPU x-ray"
+    },
+    {
+     "src": "shots/v4-1.jpg",
+     "label": "Exploded PSU"
+    },
+    {
+     "src": "shots/v4-2.jpg",
+     "label": "Exploded motherboard"
+    },
+    {
+     "src": "shots/v4-3.jpg",
+     "label": "Phone exploded RAM"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 132,
+     "css": 438,
+     "js": 1848
+    },
+    "bytes": 133341,
+    "added": 225,
+    "removed": 32,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 132,
+      "added": 6,
+      "removed": 0
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 85,
+      "added": 1,
+      "removed": 1
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 93,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 1088,
+      "added": 138,
+      "removed": 5
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 296,
+      "added": 19,
+      "removed": 0
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 175,
+      "added": 29,
+      "removed": 26
+     },
+     {
+      "file": "js/sfx.js",
+      "loc": 59,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 52,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 438,
+      "added": 32,
+      "removed": 0
+     }
+    ]
+   },
+   "time": "2026-10-29T01:40:15-04:00"
+  },
+  {
+   "id": 5,
+   "label": "Guided build",
+   "folder": "live",
+   "summary": "The Figma sitemap's 'Assembly Guide / Ready to Build' branch, as a game: 'Build a PC' empties the motherboard and asks six questions in assembly order (CPU, cooler, RAM, SSD, GPU, power). Pick the right part and it flies into its real position at real scale; a wrong pick shakes and gives a hint. Finishing switches the whole machine into the power x-ray. Also fixed: motherboard re-exported without palette merging, so CPU socket, CMOS battery and I/O hotspots anchor to the real components again; model URLs are versioned.",
+   "scores": {
+    "discover": 8,
+    "clarity": 9,
+    "explore": 9,
+    "delight": 9,
+    "feedback": 8,
+    "motion": 8,
+    "visual": 8,
+    "access": 8,
+    "mobile": 7,
+    "perf": 7
+   },
+   "critique": [
+    {
+     "dim": "explore",
+     "sev": 1,
+     "note": "The build gives the site a goal and teaches assembly order. It's a quiz, not a puzzle — dragging parts onto slots would be more hands-on, but tapping keeps it accessible for small kids and keyboards."
+    },
+    {
+     "dim": "feedback",
+     "sev": 2,
+     "note": "In the build, the board view is fixed; installed parts can hide the next slot (the GPU covers the lower board). A soft glow on the target slot would help."
+    },
+    {
+     "dim": "visual",
+     "sev": 1,
+     "note": "The finished machine in power x-ray is a strong ending."
+    },
+    {
+     "dim": "mobile",
+     "sev": 2,
+     "note": "Build tray wraps to two rows on phones and the board is small; workable but cramped."
+    },
+    {
+     "dim": "perf",
+     "sev": 1,
+     "note": "All three GLBs must load before the build can start; there's a toast if the board isn't ready, but no progress."
+    }
+   ],
+   "changes": [
+    {
+     "area": "build",
+     "desc": "Six-step guided build with real-mm scaling (ATX = 305 mm), board-space orientations, drop-in animations, hints, and a power-on finale; Build again / Explore buttons."
+    },
+    {
+     "area": "models",
+     "desc": "Motherboard re-optimised without palette() — 45 named materials instead of 14 — restoring socket/battery/I/O anchors and exploded groups."
+    },
+    {
+     "area": "infra",
+     "desc": "Versioned model URLs; ?build=N deep link; debug-only console hook."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v5-0.jpg",
+     "label": "Finished build, power x-ray"
+    },
+    {
+     "src": "shots/v5-1.jpg",
+     "label": "Empty board, step 1"
+    },
+    {
+     "src": "shots/v5-2.jpg",
+     "label": "Motherboard with fixed anchors"
+    },
+    {
+     "src": "shots/v5-3.jpg",
+     "label": "Phone build"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 140,
+     "css": 479,
+     "js": 2052
+    },
+    "bytes": 148483,
+    "added": 262,
+    "removed": 9,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 140,
+      "added": 8,
+      "removed": 0
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 85,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 93,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 1269,
+      "added": 190,
+      "removed": 9
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 319,
+      "added": 23,
+      "removed": 0
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 175,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/sfx.js",
+      "loc": 59,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 52,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 479,
+      "added": 41,
+      "removed": 0
+     }
+    ]
+   },
+   "time": "2026-10-29T01:47:52-04:00"
+  },
+  {
+   "id": 6,
+   "label": "Polish: slots, layers, glitch",
+   "folder": "live",
+   "summary": "The build now outlines the next slot in pulsing green (RAM slots, M.2, socket, PCIe footprint, PSU spot). Exploded-view labels are buttons: tap one to learn what that layer does (37 plain-language layer notes). Going home plays the video's glitch exit before the band wipe. Phones get a one-row scrolling build tray, a trimmed header and a lower pixel ratio; the 3D scene stops drawing while the title screen covers it.",
+   "scores": {
+    "discover": 8,
+    "clarity": 9,
+    "explore": 9,
+    "delight": 9,
+    "feedback": 9,
+    "motion": 9,
+    "visual": 8,
+    "access": 8,
+    "mobile": 8,
+    "perf": 8
+   },
+   "critique": [
+    {
+     "dim": "discover",
+     "sev": 2,
+     "note": "The guided build is the best thing in the site and it hides as a small pill at the end of the parts row. It should be offered up front — on the title screen and when the tour ends."
+    },
+    {
+     "dim": "access",
+     "sev": 2,
+     "note": "You can switch parts and views from the keyboard but can't rotate or zoom the model without a mouse or touch."
+    },
+    {
+     "dim": "visual",
+     "sev": 1,
+     "note": "Exploded GPU labels still bunch in the middle of the card; readable, not elegant."
+    },
+    {
+     "dim": "delight",
+     "sev": 1,
+     "note": "The power-on finale could be a moment: fans spinning up, a short boot hum."
+    },
+    {
+     "dim": "perf",
+     "sev": 1,
+     "note": "Nothing renders behind the intro now and phones render at 1.5x."
+    }
+   ],
+   "changes": [
+    {
+     "area": "build",
+     "desc": "Pulsing slot outline per step, computed from component materials or the placement maths shared with install()."
+    },
+    {
+     "area": "explode",
+     "desc": "Layer labels are buttons with plain-language tips (37 entries)."
+    },
+    {
+     "area": "motion",
+     "desc": "Glitch-bar exit (difference blend) before the band wipe when returning to the title."
+    },
+    {
+     "area": "mobile",
+     "desc": "Single-row snap-scrolling build tray, trimmed header meta, DPR capped at 1.5 under 760px."
+    },
+    {
+     "area": "perf",
+     "desc": "Render loop idles while the settled title screen covers the scene."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v6-0.jpg",
+     "label": "Exploded cooler x-ray"
+    },
+    {
+     "src": "shots/v6-1.jpg",
+     "label": "Build step 3 with slot glow"
+    },
+    {
+     "src": "shots/v6-2.jpg",
+     "label": "GPU data"
+    },
+    {
+     "src": "shots/v6-3.jpg",
+     "label": "Phone"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 140,
+     "css": 500,
+     "js": 2154
+    },
+    "bytes": 156189,
+    "added": 141,
+    "removed": 18,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 140,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 85,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 94,
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 1329,
+      "added": 78,
+      "removed": 18
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 360,
+      "added": 41,
+      "removed": 0
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 175,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/sfx.js",
+      "loc": 59,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 52,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 500,
+      "added": 21,
+      "removed": 0
+     }
+    ]
+   },
+   "time": "2026-10-29T01:53:01-04:00"
+  },
+  {
+   "id": 7,
+   "label": "Build up front + keyboard 3D",
+   "folder": "live",
+   "summary": "The guided build is now offered on the title screen ('or build a computer from scratch') and handed off when the tour ends (toast with a Build a PC button). The 3D model can be rotated, tilted, zoomed and reset from the keyboard (W A S D, + −, 0), including during the build; the canvas label and the parts index list the keys. Finishing the build powers on: fans spin up with a synthesized boot hum before the badge chime. Exploded labels push outward from the part's centre so they bunch less. Fixed an if/else split from patching and added tools/check.sh to syntax-check every module as ESM.",
+   "scores": {
+    "discover": 9,
+    "clarity": 9,
+    "explore": 9,
+    "delight": 9,
+    "feedback": 9,
+    "motion": 9,
+    "visual": 8,
+    "access": 9,
+    "mobile": 8,
+    "perf": 8
+   },
+   "critique": [
+    {
+     "dim": "visual",
+     "sev": 1,
+     "note": "Still the lowest-feeling area: the bottom panel is dense on laptops and the header right cluster is busy. A last calm typographic pass would help."
+    },
+    {
+     "dim": "mobile",
+     "sev": 1,
+     "note": "Everything works on phones; the 3D area is small relative to the panel. Acceptable."
+    },
+    {
+     "dim": "perf",
+     "sev": 1,
+     "note": "≈3 MB of models + ≈700 KB of three.js; hero model first, others stream in. Fine for a showcase."
+    },
+    {
+     "dim": "discover",
+     "sev": 1,
+     "note": "Both doors (explore / build) are visible from the first screen now."
+    }
+   ],
+   "changes": [
+    {
+     "area": "discover",
+     "desc": "Second title-screen entry straight into the build; tour completion offers the build via an action toast."
+    },
+    {
+     "area": "access",
+     "desc": "Keyboard rotate/tilt/zoom/reset for the 3D model, documented in the canvas label and index."
+    },
+    {
+     "area": "delight",
+     "desc": "Power-on finale: fan spin-up curve + boot hum."
+    },
+    {
+     "area": "explode",
+     "desc": "Radial push before overlap relaxation for exploded labels."
+    },
+    {
+     "area": "infra",
+     "desc": "tools/check.sh syntax-checks modules as ESM (plain node --check missed an error)."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v7-0.jpg",
+     "label": "Exploded GPU, radial labels"
+    },
+    {
+     "src": "shots/v7-1.jpg",
+     "label": "CPU power"
+    },
+    {
+     "src": "shots/v7-2.jpg",
+     "label": "PSU"
+    },
+    {
+     "src": "shots/v7-3.jpg",
+     "label": "Phone"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 142,
+     "css": 507,
+     "js": 2184
+    },
+    "bytes": 158117,
+    "added": 51,
+    "removed": 12,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 142,
+      "added": 4,
+      "removed": 2
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 87,
+      "added": 6,
+      "removed": 4
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 1356,
+      "added": 33,
+      "removed": 6
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 360,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 175,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/sfx.js",
+      "loc": 60,
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 52,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 507,
+      "added": 7,
+      "removed": 0
+     }
+    ]
+   },
+   "time": "2026-10-29T01:56:41-04:00"
+  },
+  {
+   "id": 8,
+   "label": "Calm pass + preload",
+   "folder": "live",
+   "summary": "A visual calm pass at laptop sizes: callouts stay clear of the side arrows (with a soft backing when they must overlap the part), the motherboard is scaled to fit above the panel, the wording switch moved into the spec column so the parts row has breathing room, the panel got taller with more bottom padding, and the header's second line is quieter. three.js and the hero GPU model are preloaded so the first part appears sooner.",
+   "scores": {
+    "discover": 9,
+    "clarity": 9,
+    "explore": 9,
+    "delight": 9,
+    "feedback": 9,
+    "motion": 9,
+    "visual": 9,
+    "access": 9,
+    "mobile": 8,
+    "perf": 8
+   },
+   "critique": [
+    {
+     "dim": "explore",
+     "sev": 2,
+     "note": "Most of the Figma sitemap is now real (explore parts, power/data/airflow flows, assembly guide). Its 'Quick Reference → Glossary' branch isn't — kids and adults both hit words like PCIe, VRM, NVMe with nowhere to look them up."
+    },
+    {
+     "dim": "mobile",
+     "sev": 1,
+     "note": "On phones the 3D stage is 58% of the screen; a tap-to-expand full-screen 3D view would make spinning parts nicer."
+    },
+    {
+     "dim": "perf",
+     "sev": 1,
+     "note": "Hero model + three.js are preloaded; the rest stream after start."
+    }
+   ],
+   "changes": [
+    {
+     "area": "layout",
+     "desc": "Callout clamp respects side arrows; motherboard size 4.3 → 3.8; wording switch moved under the spec legend; panel height clamp(220px, 28vh, 260px)."
+    },
+    {
+     "area": "perf",
+     "desc": "modulepreload for three.js, preload for the hero GLB."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v8-0.jpg",
+     "label": "Laptop GPU"
+    },
+    {
+     "src": "shots/v8-1.jpg",
+     "label": "Laptop motherboard x-ray"
+    },
+    {
+     "src": "shots/v8-2.jpg",
+     "label": "Exploded SSD x-ray"
+    },
+    {
+     "src": "shots/v8-3.jpg",
+     "label": "Phone"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 144,
+     "css": 516,
+     "js": 2186
+    },
+    "bytes": 160166,
+    "added": 19,
+    "removed": 6,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 144,
+      "added": 6,
+      "removed": 4
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 87,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 1358,
+      "added": 3,
+      "removed": 1
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 360,
+      "added": 1,
+      "removed": 1
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 175,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/sfx.js",
+      "loc": 60,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 52,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 516,
+      "added": 9,
+      "removed": 0
+     }
+    ]
+   },
+   "time": "2026-10-29T01:58:14-04:00"
+  },
+  {
+   "id": 9,
+   "label": "Glossary + full-screen 3D",
+   "folder": "live",
+   "summary": "The Figma sitemap's last branch, Quick Reference: a 31-term glossary in Simple and Detailed wording. Terms in descriptions and callouts become dotted links once the text finishes typing; tapping one opens a definition with a jump to the full glossary (searchable, also on G and in the menu), whose entries link to the parts they appear in. Phones get a full-screen 3D toggle. Fixed a regression from v3: the discovery counter now shows progress carried over from earlier visits on load.",
+   "scores": {
+    "discover": 9,
+    "clarity": 10,
+    "explore": 9,
+    "delight": 9,
+    "feedback": 9,
+    "motion": 9,
+    "visual": 9,
+    "access": 9,
+    "mobile": 9,
+    "perf": 8
+   },
+   "critique": [
+    {
+     "dim": "perf",
+     "sev": 1,
+     "note": "The remaining cost is ~700 KB of unbundled three.js modules plus ~3 MB of models. A bundling step would trim it, at the price of adding a build pipeline to a no-build project."
+    },
+    {
+     "dim": "access",
+     "sev": 1,
+     "note": "Needs an end-to-end keyboard-only and reduced-motion run before calling it done."
+    },
+    {
+     "dim": "mobile",
+     "sev": 1,
+     "note": "Needs a real phone-emulation pass through the build and glossary flows."
+    }
+   ],
+   "changes": [
+    {
+     "area": "glossary",
+     "desc": "31 terms × 2 reading levels; regex linking of first mentions after typing; popover; searchable overlay with part links; G shortcut."
+    },
+    {
+     "area": "mobile",
+     "desc": "Full-screen 3D toggle (hides header and panel, stage fills the dynamic viewport)."
+    },
+    {
+     "area": "fix",
+     "desc": "renderFound() had been patched into the wording handler instead of load; moved back."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v9-0.jpg",
+     "label": "CPU with linked terms"
+    },
+    {
+     "src": "shots/v9-1.jpg",
+     "label": "PSU power"
+    },
+    {
+     "src": "shots/v9-2.jpg",
+     "label": "Exploded GPU airflow"
+    },
+    {
+     "src": "shots/v9-3.jpg",
+     "label": "Phone"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 158,
+     "css": 564,
+     "js": 2303
+    },
+    "bytes": 177105,
+    "added": 187,
+    "removed": 8,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 158,
+      "added": 16,
+      "removed": 2
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 87,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 1440,
+      "added": 88,
+      "removed": 6
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 395,
+      "added": 35,
+      "removed": 0
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 175,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/sfx.js",
+      "loc": 60,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 52,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 564,
+      "added": 48,
+      "removed": 0
+     }
+    ]
+   },
+   "time": "2026-10-29T02:01:44-04:00"
+  },
+  {
+   "id": 10,
+   "label": "QA round",
+   "folder": "live",
+   "summary": "End-to-end QA as a first-time visitor on a phone and keyboard-only on desktop. Fixes: the tour card docks full-width at the stage edge away from its target on phones (it was covering the part); drags can start on a hotspot ring (on phones the rings cover much of the part, so the drag step never fired) while a real drag cancels the ring's tap; the 'tap a ring' step points at a ring that's actually facing you; the build tray uses short friendly names ('Graphics card', 'Memory (RAM)') in a 2×3 grid on phones and hides the hotspot card while building; the dev server now sends no-store so edits always reach the browser. Keyboard-only flow verified: Enter starts, Tab reaches rings (even turned-away ones), Enter flies in and counts the discovery.",
+   "scores": {
+    "discover": 9,
+    "clarity": 10,
+    "explore": 9,
+    "delight": 9,
+    "feedback": 9,
+    "motion": 9,
+    "visual": 9,
+    "access": 9,
+    "mobile": 9,
+    "perf": 8
+   },
+   "critique": [
+    {
+     "dim": "perf",
+     "sev": 1,
+     "note": "Unbundled three.js modules (~700 KB) and ~3 MB of models remain; a bundling step is the only big lever left and it adds a build pipeline."
+    },
+    {
+     "dim": "access",
+     "sev": 1,
+     "note": "Everything is reachable by keyboard and described for screen readers; the 3D view itself remains a visual experience."
+    },
+    {
+     "dim": "explore",
+     "sev": 1,
+     "note": "Further depth would need new content (more GLB parts, a case model) rather than new interaction."
+    }
+   ],
+   "changes": [
+    {
+     "area": "tour",
+     "desc": "Phone docking for the coach card; ring step targets a visible ring."
+    },
+    {
+     "area": "input",
+     "desc": "Window-level drag tracking; drags may begin on rings; keyboard activation of rings still works (click detail 0)."
+    },
+    {
+     "area": "build",
+     "desc": "Friendly tray names; 2×3 grid on phones; hotspot card hidden during the build."
+    },
+    {
+     "area": "infra",
+     "desc": "tools/serve.py (no-store); cleaned up stray dev servers holding the port."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v10-0.jpg",
+     "label": "GPU framework"
+    },
+    {
+     "src": "shots/v10-1.jpg",
+     "label": "Build start"
+    },
+    {
+     "src": "shots/v10-2.jpg",
+     "label": "Exploded PSU airflow"
+    },
+    {
+     "src": "shots/v10-3.jpg",
+     "label": "Phone build tray"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 158,
+     "css": 573,
+     "js": 2312
+    },
+    "bytes": 178481,
+    "added": 28,
+    "removed": 10,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 158,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 94,
+      "added": 7,
+      "removed": 0
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 1442,
+      "added": 12,
+      "removed": 10
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 395,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 175,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/sfx.js",
+      "loc": 60,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 52,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 573,
+      "added": 9,
+      "removed": 0
+     }
+    ]
+   },
+   "time": "2026-10-29T02:07:14-04:00"
+  },
+  {
+   "id": 11,
+   "label": "Size line-up",
+   "folder": "live",
+   "summary": "The Figma sitemap's 'Compare Specs' idea as a Size line-up: all seven parts stand on one shelf at true relative scale (longest side, ATX board 30.5 cm down to the 4 cm CPU), each labelled with a friendly name and its real length. Hovering a label turns that part; clicking jumps into it. Reachable from the parts row, the menu, Esc to leave, and ?lineup for screenshots.",
+   "scores": {
+    "discover": 9,
+    "clarity": 10,
+    "explore": 10,
+    "delight": 9,
+    "feedback": 9,
+    "motion": 9,
+    "visual": 9,
+    "access": 9,
+    "mobile": 9,
+    "perf": 8
+   },
+   "critique": [
+    {
+     "dim": "explore",
+     "sev": 1,
+     "note": "Every branch of the Figma sitemap now exists: explore parts, see how it works (power/data/airflow), ready to build (guided build, slot hints), quick reference (glossary, size comparison)."
+    },
+    {
+     "dim": "perf",
+     "sev": 1,
+     "note": "The only notable lever left is bundling three.js; it would change the project from no-build to build-step, which is the owner's call."
+    },
+    {
+     "dim": "delight",
+     "sev": 1,
+     "note": "Further delight would come from new content (a PC case, more real GLBs to replace the four stand-ins) rather than new interactions."
+    }
+   ],
+   "changes": [
+    {
+     "area": "compare",
+     "desc": "Line-up mode: real-mm scaling on a shared shelf, projected labels with sizes, hover-to-spin, click-to-explore."
+    },
+    {
+     "area": "nav",
+     "desc": "Size line-up button in the parts row and menu; parts-row buttons no longer wrap."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v11-0.jpg",
+     "label": "Size line-up"
+    },
+    {
+     "src": "shots/v11-1.jpg",
+     "label": "Finished build"
+    },
+    {
+     "src": "shots/v11-2.jpg",
+     "label": "Exploded GPU x-ray"
+    },
+    {
+     "src": "shots/v11-3.jpg",
+     "label": "Phone"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 162,
+     "css": 595,
+     "js": 2390
+    },
+    "bytes": 184608,
+    "added": 108,
+    "removed": 4,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 162,
+      "added": 4,
+      "removed": 0
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 1517,
+      "added": 79,
+      "removed": 4
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 398,
+      "added": 3,
+      "removed": 0
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 175,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/sfx.js",
+      "loc": 60,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 52,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 595,
+      "added": 22,
+      "removed": 0
+     }
+    ]
+   },
+   "time": "2026-10-29T02:09:55-04:00"
+  },
+  {
+   "id": 12,
+   "label": "Real models + drag-to-build",
+   "summary": "Four new GLBs: the RAM, cooler and PSU stand-ins are replaced with real models, and a Corsair 4000D case joins as part eight (x-ray, airflow, take-apart, five hotspots). 'Build a PC' is now a workshop: drag each part from the bench into a cut-away case at real millimetre scale. It snaps onto a green hologram and clicks in. Every category has three options with live price, game speed, multitasking, memory, storage, power draw and CPU temperature. Hovering an option previews the difference, presets set a whole build, and power-on fails if the PSU is too small.",
+   "scores": {
+    "discover": 9,
+    "clarity": 9,
+    "explore": 10,
+    "delight": 10,
+    "feedback": 10,
+    "motion": 9,
+    "visual": 9,
+    "access": 9,
+    "mobile": 8,
+    "perf": 8
+   },
+   "critique": [
+    {
+     "dim": "delight",
+     "sev": 1,
+     "note": "Dragging a part until it snaps and clicks in, then powering on to RGB light and spinning fans, is the most game-like moment on the site. Kids get a goal, adults get a real cost/performance model."
+    },
+    {
+     "dim": "feedback",
+     "sev": 1,
+     "note": "Snap tick, 'Let go!' label, floating +$/−$ price tags, counting totals and colour-coded bars mean every action answers back."
+    },
+    {
+     "dim": "discover",
+     "sev": 2,
+     "note": "In the whole-case view the CPU socket and M.2 slot are only ~40 px wide. A generous snap radius helps, but the camera should lean in toward small targets while you drag."
+    },
+    {
+     "dim": "mobile",
+     "sev": 2,
+     "note": "Touch dragging works and sideways swipes still scroll the bench, but with the spec strip on top the case gets only about a third of a phone screen."
+    },
+    {
+     "dim": "visual",
+     "sev": 1,
+     "note": "Every option in a category reuses one model (only its size changes), and the SSD is still a simplified stand-in. Both need new GLBs from the owner."
+    }
+   ],
+   "changes": [
+    {
+     "area": "models",
+     "desc": "RAM, cooler and PSU GLBs (optimised 8.4 MB → 0.8 MB) replace three procedural stand-ins; fans spin about their true hubs; new hotspots, explode labels and dirs."
+    },
+    {
+     "area": "case",
+     "desc": "Corsair 4000D as an 8th part (2.1 MB): glass panel, intake and exhaust fans, PSU shroud, airflow x-ray; in the size line-up at 46.6 cm."
+    },
+    {
+     "area": "build",
+     "desc": "Drag-and-drop workshop replaces the quiz build: cut-away case, real-mm mounting for 7 parts, snap hologram, press-in animation, drag parts back out, order rules with friendly refusals."
+    },
+    {
+     "area": "compare",
+     "desc": "21 options with example prices; live totals, six spec bars, hover deltas, option list with price differences, Budget/Balanced/Dream presets, bottleneck/heat/PSU warnings."
+    },
+    {
+     "area": "tooling",
+     "desc": "Screenshots now drive Chrome over DevTools and wait for the page to be ready, so build-mode shots work again."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v12-0.jpg",
+     "label": "Workshop: empty case"
+    },
+    {
+     "src": "shots/v12-1.jpg",
+     "label": "Every part in, live price + specs"
+    },
+    {
+     "src": "shots/v12-2.jpg",
+     "label": "Dream build, powered on"
+    },
+    {
+     "src": "shots/v12-3.jpg",
+     "label": "PC case airflow x-ray"
+    },
+    {
+     "src": "shots/v12-4.jpg",
+     "label": "Phone workshop"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 182,
+     "css": 733,
+     "js": 3214
+    },
+    "bytes": 244190,
+    "added": 1302,
+    "removed": 320,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 182,
+      "added": 28,
+      "removed": 8
+     },
+     {
+      "file": "js/catalog.js",
+      "loc": 110,
+      "added": 110,
+      "removed": 0
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 1383,
+      "added": 95,
+      "removed": 229
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 474,
+      "added": 119,
+      "removed": 43
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 175,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/sfx.js",
+      "loc": 60,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 52,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/workshop.js",
+      "loc": 772,
+      "added": 772,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 733,
+      "added": 178,
+      "removed": 40
+     }
+    ]
+   },
+   "time": "2026-10-29T11:26:03-04:00"
+  },
+  {
+   "id": 13,
+   "label": "Lean-in drag + phone room",
+   "summary": "Second pass on the workshop. While you drag a small part, the camera leans toward where it goes, so the CPU socket grows from about 40 px to over 100 px. It stays close while the part clicks in, then eases back out (keyboard installs lean in too). On phones the spec strip folds onto one line with the total, and the case gets 60% of the screen. The case model's textures drop to 768 px: 2.1 MB → 1.3 MB with no visible change.",
+   "scores": {
+    "discover": 10,
+    "clarity": 9,
+    "explore": 10,
+    "delight": 10,
+    "feedback": 10,
+    "motion": 9,
+    "visual": 9,
+    "access": 9,
+    "mobile": 9,
+    "perf": 8
+   },
+   "critique": [
+    {
+     "dim": "discover",
+     "sev": 1,
+     "note": "With the lean-in, small targets are big enough to hit on a phone without relying on the snap radius."
+    },
+    {
+     "dim": "perf",
+     "sev": 1,
+     "note": "Eight models now total about 5.6 MB, loaded hero-first. Bundling three.js is still the only big lever, and that's a build-step decision for the owner."
+    },
+    {
+     "dim": "visual",
+     "sev": 1,
+     "note": "Every option in a category still shares one model, and the SSD is still a simplified stand-in. Both need new GLBs from the owner."
+    }
+   ],
+   "changes": [
+    {
+     "area": "build",
+     "desc": "Camera leans toward the drop target, scaled by part size (CPU 0.9 … motherboard 0), and holds through the click-in."
+    },
+    {
+     "area": "mobile",
+     "desc": "Spec strip folds total + Details onto one line; workshop stage 60% of the screen."
+    },
+    {
+     "area": "perf",
+     "desc": "Case textures 1024 → 768 px (2.1 → 1.3 MB)."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v13-0.jpg",
+     "label": "Workshop, motherboard in"
+    },
+    {
+     "src": "shots/v13-1.jpg",
+     "label": "Budget build, powered on"
+    },
+    {
+     "src": "shots/v13-2.jpg",
+     "label": "Phone workshop"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 182,
+     "css": 736,
+     "js": 3222
+    },
+    "bytes": 245106,
+    "added": 18,
+    "removed": 7,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 182,
+      "added": 1,
+      "removed": 1
+     },
+     {
+      "file": "js/catalog.js",
+      "loc": 110,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 1383,
+      "added": 1,
+      "removed": 1
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 474,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 175,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/sfx.js",
+      "loc": 60,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 52,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/workshop.js",
+      "loc": 780,
+      "added": 10,
+      "removed": 2
+     },
+     {
+      "file": "styles.css",
+      "loc": 736,
+      "added": 6,
+      "removed": 3
+     }
+    ]
+   },
+   "time": "2026-10-29T11:29:49-04:00"
+  },
+  {
+   "id": 14,
+   "label": "Figma prototype build",
+   "folder": "prototype",
+   "summary": "A new track beside the live build: the final motion mockup (the 23-second EIII P2 video) as a working site on the Figma record's framework, using the real 3D models. It follows the V5.04.01 layout: grayscale photo parts on the white-to-black gradient, title and copy in the footer, a part switcher and side arrows. The motion follows the video: the 1-bit circuit intro; the first part drifting in as the title dissolves; copy eaten from its first letter while parts slide and the title ticks; rings fading in; dissolves into a cyan x-ray with the printing glowing; ruled callouts; a warm scan wipe into a 1-bit pan through the machine; and a glitch to black. The Figma prototype page supplies Overview/Framework/Power/Data with '(1) down, (2) up', plus a parts index.",
+   "scores": {
+    "discover": 8,
+    "clarity": 9,
+    "explore": 8,
+    "delight": 9,
+    "feedback": 8,
+    "motion": 10,
+    "visual": 10,
+    "access": 8,
+    "mobile": 8,
+    "perf": 8
+   },
+   "critique": [
+    {
+     "dim": "motion",
+     "sev": 1,
+     "note": "Side by side with the video, each beat lands within a few frames: start drift, carousel and title tick, copy erase and type, ring fade, x-ray dissolve with the callout after it, exit wipes, 1-bit pan, glitch."
+    },
+    {
+     "dim": "visual",
+     "sev": 1,
+     "note": "The x-ray is unlit glow that adds light without writing alpha, and printed text lights up by its edges, so 'RTX 3080' and 'RYZEN' read as in the comps."
+    },
+    {
+     "dim": "explore",
+     "sev": 1,
+     "note": "Deliberately stays within the mockup's scope (8 parts × 4 views + hotspots). Take-apart, glossary and the drag-to-build workshop live in the live build."
+    },
+    {
+     "dim": "visual",
+     "sev": 1,
+     "note": "The mockup's CPU is an AM5 Ryzen 9 7950X3D; the only CPU model available is the AM4 Ryzen 5 3600."
+    }
+   ],
+   "changes": [
+    {
+     "area": "layout",
+     "desc": "1920×1080 artboard units (--u) with the video's measured positions; header meta, AoC logo with flare lines, menu, side arrows, footer title/copy/part icon, Figma view rail."
+    },
+    {
+     "area": "motion",
+     "desc": "Snapshot-dissolve between photo and x-ray, drift-in start, slide carousel, start-erase typing, staggered ring fade, ruled callout reveal from the ring, two-stage exit wipe, 1-bit Sobel finale (second WebGL context), glitch to black, intro replay."
+    },
+    {
+     "area": "3d",
+     "desc": "Card shown flow-through side up with a roll, PSU lightened to the mockup's grey, front-only textured x-ray for the CPU, per-texture glow materials."
+    },
+    {
+     "area": "tooling",
+     "desc": "Matrix and hub treat the prototype as its own track; diffs against the Figma record."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v14-0.jpg",
+     "label": "GPU, as in the mockup"
+    },
+    {
+     "src": "shots/v14-1.jpg",
+     "label": "Ring → x-ray + callout"
+    },
+    {
+     "src": "shots/v14-2.jpg",
+     "label": "CPU corner tab"
+    },
+    {
+     "src": "shots/v14-3.jpg",
+     "label": "Power view (Figma)"
+    },
+    {
+     "src": "shots/v14-4.jpg",
+     "label": "Phone"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 82,
+     "css": 219,
+     "js": 766
+    },
+    "bytes": 61702,
+    "added": 1015,
+    "removed": 485,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 82,
+      "added": 51,
+      "removed": 72
+     },
+     {
+      "file": "js/proto.js",
+      "loc": 766,
+      "added": 766,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 219,
+      "added": 198,
+      "removed": 413
+     }
+    ]
+   },
+   "time": "2026-10-30T13:14:01-04:00"
+  },
+  {
+   "id": 15,
+   "label": "Mockup CPU + real SSD + credits",
+   "folder": "prototype",
+   "summary": "Two models found and downloaded from Sketchfab (via the owner's signed-in account): the AMD Ryzen 9 7950X3D from the mockup and a Samsung 980 Pro M.2 SSD. The SSD replaces the last simplified stand-in in both the live build and the prototype. The Ryzen 9 is prototype-only, because the live build's board and build options are AM4. The prototype drops its greyscale filter, since the mockup's parts are naturally grey rather than filtered. A credits page lists all nine CC BY 4.0 models, with authors read from each file. A GPU-only x-ray bug (zero-alpha glow) was fixed along the way.",
+   "scores": {
+    "discover": 8,
+    "clarity": 9,
+    "explore": 8,
+    "delight": 9,
+    "feedback": 8,
+    "motion": 10,
+    "visual": 10,
+    "access": 8,
+    "mobile": 8,
+    "perf": 8
+   },
+   "critique": [
+    {
+     "dim": "visual",
+     "sev": 1,
+     "note": "CPU overview and x-ray now match the mockup's 0:14 and 0:17 frames, down to the lid lettering and the corner tab."
+    },
+    {
+     "dim": "visual",
+     "sev": 1,
+     "note": "Options in the build still reuse one model per category, sized to each option."
+    },
+    {
+     "dim": "perf",
+     "sev": 1,
+     "note": "New models optimised to 320 KB (Ryzen 9, from 10.8 MB) and 385 KB (SSD, from 1.2 MB)."
+    }
+   ],
+   "changes": [
+    {
+     "area": "models",
+     "desc": "Ryzen 9 7950X3D (straightened, 1,986 meshes merged) for the prototype; Samsung 980 Pro SSD for both builds; one Sketchfab model skipped for its NoAI tag."
+    },
+    {
+     "area": "visual",
+     "desc": "Prototype parts in natural colour; brighter x-ray outlines; modelled lettering outlined in the CPU x-ray."
+    },
+    {
+     "area": "credits",
+     "desc": "credits.html, linked from the hub, the live menu and the prototype index."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v15-0.jpg",
+     "label": "Ryzen 9 7950X3D, as in the mockup"
+    },
+    {
+     "src": "shots/v15-1.jpg",
+     "label": "CPU corner tab x-ray"
+    },
+    {
+     "src": "shots/v15-2.jpg",
+     "label": "Live: real SSD"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 83,
+     "css": 216,
+     "js": 778
+    },
+    "bytes": 61889,
+    "added": 24,
+    "removed": 14,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 83,
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "file": "js/proto.js",
+      "loc": 778,
+      "added": 22,
+      "removed": 10
+     },
+     {
+      "file": "styles.css",
+      "loc": 216,
+      "added": 1,
+      "removed": 4
+     }
+    ]
+   },
+   "time": "2026-10-30T13:33:15-04:00"
+  },
+  {
+   "id": 16,
+   "label": "Researched power + data paths",
+   "folder": "live",
+   "summary": "Every part's Power and Data views are now labelled maps of the real component, built from manufacturer specs and datasheets. A shared module draws each path between named components (taken from the model where it names them, otherwise placed from board layouts and teardowns), with parallel traces for buses, arrows for direction, and on-screen labels: plain names by default, voltages, bus widths and speeds in 'More detail'. The motherboard is now identified as the ASUS ROG Strix Z370-E Gaming it was modelled on, and the copy was corrected throughout (no vapor chamber on this card, two fans in the case box, real SSD chip layout, the 7950X3D's own copy in the prototype). credits.html gains a Sources section.",
+   "scores": {
+    "discover": 8,
+    "clarity": 10,
+    "explore": 9,
+    "delight": 9,
+    "feedback": 8,
+    "motion": 10,
+    "visual": 10,
+    "access": 8,
+    "mobile": 8,
+    "perf": 8
+   },
+   "critique": [
+    {
+     "dim": "clarity",
+     "sev": 1,
+     "note": "Power and Data now say what flows where: 24-pin vs 8-pin EPS, CPU lanes vs chipset lanes over DMI, the GPU's 320-bit memory bus, the PSU's conversion chain."
+    },
+    {
+     "dim": "clarity",
+     "sev": 2,
+     "note": "The motherboard model is an Intel Z370 board, but the build workshop offers AMD CPUs and AM4 boards; the two stories disagree."
+    },
+    {
+     "dim": "mobile",
+     "sev": 1,
+     "note": "On phones the labels show names only; bus names and voltages are hidden to keep the board readable."
+    }
+   ],
+   "changes": [
+    {
+     "area": "flows",
+     "desc": "flowmap.js: node graphs per part (named nodes, materials or box positions), Manhattan routes on the PCB plane, bus labels, ring-avoiding label layout; shared by live and prototype."
+    },
+    {
+     "area": "content",
+     "desc": "Framework/Power/Data copy and hotspot facts rewritten from sources for all eight parts; five glossary terms added (DMI, Infinity Fabric, chiplet, PWM, PFC) and the socket entry corrected."
+    },
+    {
+     "area": "credits",
+     "desc": "Sources section: 23 manufacturer, datasheet and review links grouped by part, with a note on what is schematic."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v16-0.jpg",
+     "label": "Motherboard data paths: CPU lanes, DMI, chipset"
+    },
+    {
+     "src": "shots/v16-1.jpg",
+     "label": "PSU conversion chain"
+    },
+    {
+     "src": "shots/v16-2.jpg",
+     "label": "Prototype GPU power, flipped card"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 184,
+     "css": 749,
+     "js": 3474
+    },
+    "bytes": 268427,
+    "added": 404,
+    "removed": 137,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 184,
+      "added": 3,
+      "removed": 1
+     },
+     {
+      "file": "js/catalog.js",
+      "loc": 110,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/flowmap.js",
+      "loc": 153,
+      "added": 153,
+      "removed": 0
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 1340,
+      "added": 11,
+      "removed": 54
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 615,
+      "added": 221,
+      "removed": 80
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 175,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/sfx.js",
+      "loc": 60,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 53,
+      "added": 3,
+      "removed": 2
+     },
+     {
+      "file": "js/workshop.js",
+      "loc": 780,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 749,
+      "added": 13,
+      "removed": 0
+     }
+    ]
+   },
+   "time": "2026-10-30T14:11:19-04:00"
+  },
+  {
+   "id": 17,
+   "label": "Real wires, sound, narrative",
+   "folder": "live",
+   "summary": "The power and data maps became real wiring: copper pours for power and thin copper traces for data on every board (45° bends, length-matched DDR serpentines, differential pairs, gold pads), and insulated harnesses in the ATX colour code with connector housings wherever a cable runs (24-pin and EPS into the board, the GPU's 12-pin, the case's harnesses behind the tray, the fan cable, the PSU's mains and DC leads on a bare main board). Light travels inside the copper and insulation; each view draws its wiring on from the source end. Three workers shaped the round: narrative direction ('Follow the Power': the live build now opens on the PSU and runs energy → information → heat, with 26 copy edits), style (an angiogram look, A minor, air not electronics, motion fixes) and hardware accuracy. The stock blips were replaced by a generative A-minor score that adds a layer per view, and real recorded whooshes and taps (CC0 / Pixabay licence, credited).",
+   "scores": {
+    "discover": 8,
+    "clarity": 10,
+    "explore": 9,
+    "delight": 10,
+    "feedback": 9,
+    "motion": 10,
+    "visual": 10,
+    "access": 8,
+    "mobile": 8,
+    "perf": 8
+   },
+   "critique": [
+    {
+     "dim": "visual",
+     "sev": 1,
+     "note": "Wiring reads as physical: real conductor colours, connector housings, cables that stay visible (unlit) in the other view."
+    },
+    {
+     "dim": "motion",
+     "sev": 1,
+     "note": "Power↔Data now draws on instead of swapping; the part you leave keeps its angle; prototype part changes dissolve out of x-ray."
+    },
+    {
+     "dim": "feedback",
+     "sev": 1,
+     "note": "Sound is untested by ear on this side: levels were set from the style spec (whooshes about 5 dB over the bed) and need a listening pass."
+    },
+    {
+     "dim": "clarity",
+     "sev": 2,
+     "note": "Mode backgrounds still hard-cut (CSS gradients); the workshop still pairs AMD parts with the Intel board (I-53)."
+    }
+   ],
+   "changes": [
+    {
+     "area": "wires",
+     "desc": "flowmap.js rebuilt as a wiring renderer (pour, trace, pairs, ddr, cable) with PBR copper, PVC and nylon; harness.js holds conductor-by-conductor cable specs."
+    },
+    {
+     "area": "sound",
+     "desc": "sfx.js: generative A-minor score with per-view layers, ducking, tab-hidden fade, tape-stop exit; six recorded sounds in their roles; prototype gains sound and an M / index switch."
+    },
+    {
+     "area": "narrative",
+     "desc": "Story order PSU → board → CPU → RAM → SSD → GPU → cooler → case; 26 copy edits and 5 fact fixes; 'Click to Follow the Power'."
+    },
+    {
+     "area": "credits",
+     "desc": "Sound credits table; sources section now generated by tools/sources.py."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v17-0.jpg",
+     "label": "Motherboard power: cables, pours, VRM"
+    },
+    {
+     "src": "shots/v17-1.jpg",
+     "label": "RAM data lanes and the fly-by bus"
+    },
+    {
+     "src": "shots/v17-2.jpg",
+     "label": "Case harnesses behind the tray"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 184,
+     "css": 749,
+     "js": 4044
+    },
+    "bytes": 305715,
+    "added": 750,
+    "removed": 180,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 184,
+      "added": 5,
+      "removed": 5
+     },
+     {
+      "file": "js/catalog.js",
+      "loc": 110,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/flowmap.js",
+      "loc": 382,
+      "added": 285,
+      "removed": 56
+     },
+     {
+      "file": "js/harness.js",
+      "loc": 43,
+      "added": 43,
+      "removed": 0
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 1337,
+      "added": 24,
+      "removed": 27
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 644,
+      "added": 83,
+      "removed": 54
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 175,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/sfx.js",
+      "loc": 332,
+      "added": 310,
+      "removed": 38
+     },
+     {
+      "file": "js/text.js",
+      "loc": 53,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/workshop.js",
+      "loc": 780,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 749,
+      "added": 0,
+      "removed": 0
+     }
+    ]
+   },
+   "time": "2026-10-30T18:49:03-04:00"
+  },
+  {
+   "id": 18,
+   "label": "Hardware audit applied",
+   "folder": "live",
+   "summary": "The hardware-accuracy worker's audit (55 sources researched, 43 verified and published) is applied. Corrections: the 4000D ships with one front and one rear fan; the Z370-E's VRM is 10 phases and its memory and chipset rails come from board regulators, not straight from the 24-pin; the RTX 3080 FE has a vapour chamber, 15 + 3 power phases and ten separate 32-bit memory links; the 980 PRO has no sourced PMIC, so the copy now says regulators, with real NAND and DRAM speeds; the PSU's transformer is drawn as an isolation gap that no copper crosses (an opto-coupler carries on/off), at 380–400 V; the 7950X3D gets its two NVMe x4 links and a PCIe 4.0 chipset link; and the case gains the reset lead, a flat black USB 3.0 cable, a separate USB-C cable and a second 8-pin feed for the GPU adapter. The 24-pin harness now includes the brown 3.3 V sense wire in pin 13. Unsourced PSU-internal cables became board copper. Dead AnandTech links were swapped for archived copies.",
+   "scores": {
+    "discover": 8,
+    "clarity": 10,
+    "explore": 9,
+    "delight": 10,
+    "feedback": 9,
+    "motion": 10,
+    "visual": 10,
+    "access": 8,
+    "mobile": 8,
+    "perf": 8
+   },
+   "critique": [
+    {
+     "dim": "clarity",
+     "sev": 1,
+     "note": "Every number on the maps now traces to a verified source on credits.html; unverifiable or paywalled sources are left off."
+    },
+    {
+     "dim": "clarity",
+     "sev": 2,
+     "note": "Still open: the live CPU is an AM4 Ryzen 5 3600 beside an LGA1151 board (I-53); the copy now notes PCIe 3.0 on this board for the GPU and SSD."
+    }
+   ],
+   "changes": [
+    {
+     "area": "accuracy",
+     "desc": "Copy, nodes, link kinds and harnesses corrected from data/direction/hardware.md and wiring.json."
+    },
+    {
+     "area": "wires",
+     "desc": "New 'field' link kind for isolation gaps; harnesses can carry a second wire per pin; reset, flat USB 3.0 and USB-C cables."
+    },
+    {
+     "area": "credits",
+     "desc": "Sources rebuilt from data/direction/sources.json by tools/sources.py: 43 verified entries in 8 groups."
+    }
+   ],
+   "shots": [
+    {
+     "src": "shots/v18-0.jpg",
+     "label": "PSU: the transformer gap"
+    },
+    {
+     "src": "shots/v18-1.jpg",
+     "label": "Case: front I/O cables"
+    }
+   ],
+   "metrics": {
+    "loc": {
+     "html": 184,
+     "css": 749,
+     "js": 4075
+    },
+    "bytes": 308498,
+    "added": 85,
+    "removed": 54,
+    "files": [
+     {
+      "file": "index.html",
+      "loc": 184,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/catalog.js",
+      "loc": 110,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/coach.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/flowmap.js",
+      "loc": 408,
+      "added": 31,
+      "removed": 5
+     },
+     {
+      "file": "js/harness.js",
+      "loc": 43,
+      "added": 10,
+      "removed": 10
+     },
+     {
+      "file": "js/intro.js",
+      "loc": 94,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/main.js",
+      "loc": 1337,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/parts.js",
+      "loc": 649,
+      "added": 44,
+      "removed": 39
+     },
+     {
+      "file": "js/procedural.js",
+      "loc": 175,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/sfx.js",
+      "loc": 332,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/text.js",
+      "loc": 53,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "js/workshop.js",
+      "loc": 780,
+      "added": 0,
+      "removed": 0
+     },
+     {
+      "file": "styles.css",
+      "loc": 749,
+      "added": 0,
+      "removed": 0
+     }
+    ]
+   },
+   "time": "2026-10-30T19:07:58-04:00"
+  }
+ ],
+ "issues": [
+  {
+   "id": "I-01",
+   "dim": "discover",
+   "sev": 3,
+   "title": "No cue that parts and hotspots are interactive",
+   "found": 0,
+   "fixed": 2
+  },
+  {
+   "id": "I-02",
+   "dim": "explore",
+   "sev": 3,
+   "title": "Flat images: can't rotate, zoom or inspect parts",
+   "found": 0,
+   "fixed": 1
+  },
+  {
+   "id": "I-03",
+   "dim": "explore",
+   "sev": 2,
+   "title": "4 of 7 parts are placeholders",
+   "found": 0,
+   "fixed": 1
+  },
+  {
+   "id": "I-04",
+   "dim": "motion",
+   "sev": 2,
+   "title": "Intro lacks the video's pixel-mosaic circuit resolve",
+   "found": 0,
+   "fixed": 1
+  },
+  {
+   "id": "I-05",
+   "dim": "motion",
+   "sev": 3,
+   "title": "Part change lacks carousel slide, title ticker, typewriter",
+   "found": 0,
+   "fixed": 1
+  },
+  {
+   "id": "I-06",
+   "dim": "motion",
+   "sev": 2,
+   "title": "Mode change lacks light↔dark flash and drawn-on callouts",
+   "found": 0,
+   "fixed": 1
+  },
+  {
+   "id": "I-07",
+   "dim": "clarity",
+   "sev": 3,
+   "title": "No plain-language layer for younger visitors",
+   "found": 0,
+   "fixed": 2
+  },
+  {
+   "id": "I-08",
+   "dim": "access",
+   "sev": 2,
+   "title": "Tiny callout text and low-contrast body copy",
+   "found": 0,
+   "fixed": 1
+  },
+  {
+   "id": "I-09",
+   "dim": "discover",
+   "sev": 2,
+   "title": "View-mode labels hidden until hover",
+   "found": 0,
+   "fixed": 1
+  },
+  {
+   "id": "I-10",
+   "dim": "delight",
+   "sev": 2,
+   "title": "No reward or goal for exploring",
+   "found": 0,
+   "fixed": 3
+  },
+  {
+   "id": "I-11",
+   "dim": "feedback",
+   "sev": 1,
+   "title": "Airflow legend and connection web are dead controls",
+   "found": 0,
+   "fixed": 1
+  },
+  {
+   "id": "I-12",
+   "dim": "mobile",
+   "sev": 1,
+   "title": "Hotspots small and art cropped on phones",
+   "found": 0,
+   "fixed": 2
+  },
+  {
+   "id": "I-13",
+   "dim": "discover",
+   "sev": 3,
+   "title": "No hint that parts can be dragged/zoomed or hotspots opened",
+   "found": 1,
+   "fixed": 2
+  },
+  {
+   "id": "I-14",
+   "dim": "feedback",
+   "sev": 2,
+   "title": "Default hotspot can face away from the viewer",
+   "found": 1,
+   "fixed": 2
+  },
+  {
+   "id": "I-15",
+   "dim": "explore",
+   "sev": 2,
+   "title": "No exploded view to see how a part is put together",
+   "found": 1,
+   "fixed": 4
+  },
+  {
+   "id": "I-16",
+   "dim": "perf",
+   "sev": 1,
+   "title": "Renders continuously even when idle",
+   "found": 1,
+   "fixed": 2
+  },
+  {
+   "id": "I-17",
+   "dim": "delight",
+   "sev": 1,
+   "title": "No sound or haptic feedback",
+   "found": 1,
+   "fixed": 3
+  },
+  {
+   "id": "I-18",
+   "dim": "delight",
+   "sev": 3,
+   "title": "Nothing counts or rewards the features you've found",
+   "found": 2,
+   "fixed": 3
+  },
+  {
+   "id": "I-19",
+   "dim": "clarity",
+   "sev": 2,
+   "title": "No sense of the parts' real-world size",
+   "found": 2,
+   "fixed": 3
+  },
+  {
+   "id": "I-20",
+   "dim": "access",
+   "sev": 1,
+   "title": "3D scene has no text summary for screen readers",
+   "found": 2,
+   "fixed": 3
+  },
+  {
+   "id": "I-21",
+   "dim": "visual",
+   "sev": 2,
+   "title": "Header right and bottom panel getting crowded",
+   "found": 3,
+   "fixed": 4
+  },
+  {
+   "id": "I-22",
+   "dim": "motion",
+   "sev": 1,
+   "title": "Video's glitch/noise exit and finale flourish missing",
+   "found": 3,
+   "fixed": 6
+  },
+  {
+   "id": "I-23",
+   "dim": "explore",
+   "sev": 2,
+   "title": "No guided build: how the parts fit together (Figma 'Assembly Guide')",
+   "found": 4,
+   "fixed": 5
+  },
+  {
+   "id": "I-24",
+   "dim": "feedback",
+   "sev": 1,
+   "title": "Exploded layer labels aren't interactive",
+   "found": 4,
+   "fixed": 6
+  },
+  {
+   "id": "I-25",
+   "dim": "feedback",
+   "sev": 2,
+   "title": "Build: next slot isn't highlighted and can be hidden by installed parts",
+   "found": 5,
+   "fixed": 6
+  },
+  {
+   "id": "I-26",
+   "dim": "mobile",
+   "sev": 1,
+   "title": "Build tray cramped on phones",
+   "found": 5,
+   "fixed": 6
+  },
+  {
+   "id": "I-27",
+   "dim": "discover",
+   "sev": 2,
+   "title": "Guided build under-promoted",
+   "found": 6,
+   "fixed": 7
+  },
+  {
+   "id": "I-28",
+   "dim": "access",
+   "sev": 2,
+   "title": "No keyboard rotate/zoom for the 3D model",
+   "found": 6,
+   "fixed": 7
+  },
+  {
+   "id": "I-29",
+   "dim": "visual",
+   "sev": 1,
+   "title": "Final calm pass on bottom panel density and header cluster",
+   "found": 7,
+   "fixed": 8
+  },
+  {
+   "id": "I-29",
+   "dim": "visual",
+   "sev": 1,
+   "title": "Final calm pass on bottom panel density and header cluster",
+   "found": 7,
+   "fixed": 8
+  },
+  {
+   "id": "I-29",
+   "dim": "visual",
+   "sev": 1,
+   "title": "Final calm pass on bottom panel density and header cluster",
+   "found": 7,
+   "fixed": 8
+  },
+  {
+   "id": "I-30",
+   "dim": "clarity",
+   "sev": 2,
+   "title": "No glossary for terms (Figma 'Quick Reference' branch)",
+   "found": 8,
+   "fixed": 9
+  },
+  {
+   "id": "I-31",
+   "dim": "mobile",
+   "sev": 1,
+   "title": "No full-screen 3D view on phones",
+   "found": 8,
+   "fixed": 9
+  },
+  {
+   "id": "I-32",
+   "dim": "access",
+   "sev": 1,
+   "title": "End-to-end keyboard-only + reduced-motion QA",
+   "found": 9,
+   "fixed": 10
+  },
+  {
+   "id": "I-33",
+   "dim": "mobile",
+   "sev": 1,
+   "title": "End-to-end phone QA of build and glossary",
+   "found": 9,
+   "fixed": 10
+  },
+  {
+   "id": "I-36",
+   "dim": "delight",
+   "sev": 2,
+   "title": "RAM, cooler and PSU were simplified stand-in models",
+   "found": 12,
+   "fixed": 12
+  },
+  {
+   "id": "I-37",
+   "dim": "explore",
+   "sev": 3,
+   "title": "Building meant answering a quiz; you never placed a part yourself",
+   "found": 12,
+   "fixed": 12
+  },
+  {
+   "id": "I-38",
+   "dim": "clarity",
+   "sev": 2,
+   "title": "No sense of what parts cost or how choices trade off",
+   "found": 12,
+   "fixed": 12
+  },
+  {
+   "id": "I-39",
+   "dim": "explore",
+   "sev": 2,
+   "title": "No PC case: parts floated with nothing to build into",
+   "found": 12,
+   "fixed": 12
+  },
+  {
+   "id": "I-40",
+   "dim": "visual",
+   "sev": 1,
+   "title": "Bulky new models overflowed the explorer view",
+   "found": 12,
+   "fixed": 12
+  },
+  {
+   "id": "I-41",
+   "dim": "feedback",
+   "sev": 1,
+   "title": "Drop-target hologram burned out to white over shiny parts",
+   "found": 12,
+   "fixed": 12
+  },
+  {
+   "id": "I-42",
+   "dim": "clarity",
+   "sev": 1,
+   "title": "Option arrows wrapped from the priciest part back to the cheapest",
+   "found": 12,
+   "fixed": 12
+  },
+  {
+   "id": "I-43",
+   "dim": "perf",
+   "sev": 1,
+   "title": "Matrix screenshots gave up before eight models had loaded",
+   "found": 12,
+   "fixed": 12
+  },
+  {
+   "id": "I-44",
+   "dim": "discover",
+   "sev": 2,
+   "title": "Small targets (CPU socket, M.2) are tiny in the whole-case view",
+   "found": 12,
+   "fixed": 13
+  },
+  {
+   "id": "I-45",
+   "dim": "mobile",
+   "sev": 2,
+   "title": "On phones the case gets about a third of the screen in the workshop",
+   "found": 12,
+   "fixed": 13
+  },
+  {
+   "id": "I-46",
+   "dim": "visual",
+   "sev": 1,
+   "title": "Options in a category reuse one 3D model (sized to each option)",
+   "found": 12,
+   "fixed": null
+  },
+  {
+   "id": "I-47",
+   "dim": "motion",
+   "sev": 1,
+   "title": "Callout appeared over the photo before the x-ray dissolve finished",
+   "found": 14,
+   "fixed": 14
+  },
+  {
+   "id": "I-48",
+   "dim": "visual",
+   "sev": 2,
+   "title": "X-ray laid a grey veil over the background (lit sheen, alpha writes)",
+   "found": 14,
+   "fixed": 14
+  },
+  {
+   "id": "I-49",
+   "dim": "visual",
+   "sev": 1,
+   "title": "Graphics card shown from the opposite side to the mockup",
+   "found": 14,
+   "fixed": 14
+  },
+  {
+   "id": "I-50",
+   "dim": "mobile",
+   "sev": 1,
+   "title": "Parts overflowed phone screens and the callout covered them",
+   "found": 14,
+   "fixed": 14
+  },
+  {
+   "id": "I-51",
+   "dim": "visual",
+   "sev": 1,
+   "title": "Mockup shows an AM5 Ryzen 9; only an AM4 Ryzen 5 model is available",
+   "found": 14,
+   "fixed": 15
+  },
+  {
+   "id": "I-52",
+   "dim": "visual",
+   "sev": 3,
+   "title": "Prototype x-ray invisible on GPU-composited browsers (glow wrote zero alpha)",
+   "found": 14,
+   "fixed": 14
+  },
+  {
+   "id": "I-53",
+   "dim": "clarity",
+   "sev": 2,
+   "title": "Workshop pairs AMD CPUs and AM4 boards with an Intel Z370 board model",
+   "found": 16,
+   "fixed": null
+  },
+  {
+   "id": "I-54",
+   "dim": "motion",
+   "sev": 1,
+   "title": "Mode backgrounds hard-cut between views (CSS gradients can't transition)",
+   "found": 17,
+   "fixed": null
+  },
+  {
+   "id": "I-55",
+   "dim": "feedback",
+   "sev": 1,
+   "title": "Listening pass on sound levels and the score's per-view layers",
+   "found": 17,
+   "fixed": null
+  }
+ ],
+ "timeline": [
+  {
+   "t": "2026-10-29T00:15:00-04:00",
+   "who": "user",
+   "kind": "prompt",
+   "phase": "Session 1",
+   "text": "Revisit the Elements III P2 Figma file and code a working website from its iterations.",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T00:16:00-04:00",
+   "who": "claude",
+   "kind": "tool",
+   "phase": "Research",
+   "text": "Mapped 17 Figma pages: wireframes, V1–V5 comps, prototype, final style frames (video timecodes).",
+   "tools": {
+    "figma": 8
+   }
+  },
+  {
+   "t": "2026-10-29T00:19:00-04:00",
+   "who": "claude",
+   "kind": "decision",
+   "phase": "Research",
+   "text": "Final direction = V5 style frames (greyscale, AoC header) + V4 prototype interactions (4 view modes).",
+   "tools": {
+    "figma": 12
+   }
+  },
+  {
+   "t": "2026-10-29T00:23:00-04:00",
+   "who": "claude",
+   "kind": "tool",
+   "phase": "Assets",
+   "text": "Pulled design context + 32 assets (icons, renders, circuit textures) from Figma.",
+   "tools": {
+    "figma": 7,
+    "bash": 6
+   }
+  },
+  {
+   "t": "2026-10-29T00:27:00-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Build",
+   "text": "Static site built: intro, 7-part carousel, 4 view modes, hotspots, index overlay, compact layout.",
+   "tools": {
+    "write": 4,
+    "edit": 8
+   }
+  },
+  {
+   "t": "2026-10-29T00:33:00-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Verify",
+   "text": "Verified desktop + mobile in browser pane; fixed letterbox, ghost text, deep links.",
+   "tools": {
+    "browser": 16,
+    "edit": 7
+   }
+  },
+  {
+   "t": "2026-10-29T00:46:00-04:00",
+   "who": "user",
+   "kind": "prompt",
+   "phase": "Session 2",
+   "text": "Heavy task: 3D progress matrix, video-driven motion, GLB models, critique-and-improve loop; keep a Figma record + a live version.",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T00:50:00-04:00",
+   "who": "claude",
+   "kind": "tool",
+   "phase": "Research",
+   "text": "Broke the 23s prototype video into 92 frames; wrote a motion spec (pixel-mosaic intro, carousel slide, title ticker, typewriter, x-ray flash, band wipe, glitch out).",
+   "tools": {
+    "bash": 4,
+    "read": 4
+   }
+  },
+  {
+   "t": "2026-10-29T00:59:00-04:00",
+   "who": "claude",
+   "kind": "decision",
+   "phase": "Assets",
+   "text": "Optimised GLBs 31.4 MB → 3.0 MB (meshopt geometry, WebP textures, motherboard flattened + instanced).",
+   "tools": {
+    "bash": 8
+   }
+  },
+  {
+   "t": "2026-10-29T01:02:00-04:00",
+   "who": "claude",
+   "kind": "decision",
+   "phase": "Setup",
+   "text": "Froze Figma build as /baseline; live iterations go in /live; progress recorder feeds /matrix.",
+   "tools": {
+    "bash": 2,
+    "write": 1
+   }
+  },
+  {
+   "t": "2026-10-29T01:02:31-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Setup",
+   "text": "Testing headless screenshots of the Figma baseline",
+   "tools": {
+    "bash": 1
+   }
+  },
+  {
+   "t": "2026-10-29T01:03:22-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v0 recorded: Figma baseline",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T01:04:06-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Matrix",
+   "text": "Building the 3D progress matrix (score grid, issue arcs, code skyline, chat helix)",
+   "tools": {
+    "bash": 6,
+    "write": 2,
+    "edit": 1,
+    "read": 1
+   }
+  },
+  {
+   "t": "2026-10-29T01:08:15-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Matrix",
+   "text": "3D build matrix online: score grid, issue arcs, code skyline, chat helix, screenshot cards, live beacon (polls every 3s).",
+   "tools": {
+    "write": 3,
+    "browser": 4,
+    "bash": 2
+   }
+  },
+  {
+   "t": "2026-10-29T01:08:15-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Live v1",
+   "text": "Porting the site to real-time 3D: loading the three GLB models into the Figma layout",
+   "tools": {
+    "bash": 1
+   }
+  },
+  {
+   "t": "2026-10-29T01:21:46-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Live v1",
+   "text": "Tuning model orientation, x-ray look and hotspot anchors; reviewing every part and view",
+   "tools": {
+    "write": 6,
+    "edit": 6,
+    "bash": 10,
+    "browser": 6
+   }
+  },
+  {
+   "t": "2026-10-29T01:25:41-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v1 recorded: Real-time 3D + video motion",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T01:26:53-04:00",
+   "who": "claude",
+   "kind": "decision",
+   "phase": "Live v1",
+   "text": "v1 critique: biggest gaps are discoverability (no cues) and clarity for kids. v2 = onboarding coach, Simple/Detailed copy, facing-aware default hotspot, phone callout card, idle frame throttle.",
+   "tools": {
+    "bash": 8,
+    "edit": 5,
+    "browser": 10,
+    "read": 6,
+    "write": 2
+   }
+  },
+  {
+   "t": "2026-10-29T01:26:53-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Live v2",
+   "text": "Writing plain-language copy for 7 parts x 5 views + 26 hotspots; building the coach-mark tour",
+   "tools": {
+    "bash": 1
+   }
+  },
+  {
+   "t": "2026-10-29T01:31:25-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v2 recorded: Discoverability + plain words",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T01:32:34-04:00",
+   "who": "claude",
+   "kind": "decision",
+   "phase": "Live v2",
+   "text": "v2 critique: easy to start, no reason to keep going. v3 = discovery tracker with badges, real-world size comparisons, synthesized UI sound + mute, screen-reader scene summary. Exploded view held for v4.",
+   "tools": {
+    "bash": 6,
+    "write": 3,
+    "edit": 2,
+    "browser": 8,
+    "read": 2
+   }
+  },
+  {
+   "t": "2026-10-29T01:32:34-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Live v3",
+   "text": "Building the discovery tracker (24 features), badges, size comparisons and WebAudio sound",
+   "tools": {
+    "bash": 1
+   }
+  },
+  {
+   "t": "2026-10-29T01:34:54-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v3 recorded: Discoveries, size, sound",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T01:36:56-04:00",
+   "who": "claude",
+   "kind": "decision",
+   "phase": "Live v3",
+   "text": "v3 critique: the missing idea is taking parts apart. v4 = exploded view (GPU by its named meshes, motherboard by component materials, stand-ins by tagged pieces) with layer labels; calmer layout; mosaic finale.",
+   "tools": {
+    "bash": 8,
+    "write": 5,
+    "edit": 2,
+    "browser": 8,
+    "read": 3
+   }
+  },
+  {
+   "t": "2026-10-29T01:36:56-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Live v4",
+   "text": "Building the exploded view: layering GPU nodes, lifting motherboard components, tagging stand-in pieces",
+   "tools": {
+    "bash": 1
+   }
+  },
+  {
+   "t": "2026-10-29T01:40:15-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v4 recorded: Exploded view",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T01:40:23-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Live v5",
+   "text": "Designing the guided build (Figma 'Assembly Guide'): install parts onto the motherboard in the right order",
+   "tools": {
+    "bash": 6,
+    "write": 4,
+    "edit": 0,
+    "browser": 6,
+    "read": 2
+   }
+  },
+  {
+   "t": "2026-10-29T01:47:52-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v5 recorded: Guided build",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T01:48:18-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Matrix v2",
+   "text": "Critiquing the 3D matrix itself: clutter, label overload, what the data is actually saying",
+   "tools": {
+    "bash": 8,
+    "write": 4,
+    "edit": 0,
+    "browser": 10,
+    "read": 4
+   }
+  },
+  {
+   "t": "2026-10-29T01:50:17-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Matrix v2",
+   "text": "Matrix v2: stretched colour ramp, screenshot wall above the bars, elevated camera, per-dimension sparklines with click-to-highlight, time-by-phase, headline trend. Added a hub page at the root.",
+   "tools": {
+    "write": 3,
+    "bash": 3,
+    "browser": 2,
+    "read": 1
+   }
+  },
+  {
+   "t": "2026-10-29T01:52:00-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Live v6",
+   "text": "Polish round: build slot glow, tappable exploded labels, glitch exit, phone build tray, perf (no rendering behind the intro)",
+   "tools": {
+    "bash": 4,
+    "write": 3,
+    "browser": 3,
+    "read": 3
+   }
+  },
+  {
+   "t": "2026-10-29T01:53:01-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v6 recorded: Polish: slots, layers, glitch",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T01:53:10-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Live v7",
+   "text": "Promote the guided build up front; keyboard rotate/zoom; power-on finale",
+   "tools": {
+    "bash": 3,
+    "write": 3,
+    "browser": 4,
+    "read": 1
+   }
+  },
+  {
+   "t": "2026-10-29T01:56:02-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v7 recorded: Build up front + keyboard 3D",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T01:56:19-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v7 recorded: Build up front + keyboard 3D",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T01:56:27-04:00",
+   "who": "claude",
+   "kind": "decision",
+   "phase": "Live v7",
+   "text": "Caught a syntax error from my own one-line comment after recording v7; fixed, re-checked with tools/check.sh, re-recorded v7. New rule: check.sh runs before every recording.",
+   "tools": {
+    "bash": 3
+   }
+  },
+  {
+   "t": "2026-10-29T01:56:41-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v7 recorded: Build up front + keyboard 3D",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T01:57:05-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Live v8",
+   "text": "Holistic visual review at laptop size; calm pass on panel density and header",
+   "tools": {
+    "bash": 4,
+    "write": 2,
+    "browser": 3,
+    "read": 1
+   }
+  },
+  {
+   "t": "2026-10-29T01:58:14-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v8 recorded: Calm pass + preload",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T01:58:23-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Live v9",
+   "text": "Building the Glossary (Figma 'Quick Reference') and a full-screen 3D view for phones",
+   "tools": {
+    "bash": 4,
+    "write": 2,
+    "browser": 0,
+    "read": 2
+   }
+  },
+  {
+   "t": "2026-10-29T02:01:44-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v9 recorded: Glossary + full-screen 3D",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T02:01:52-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "QA",
+   "text": "End-to-end QA: phone flows, keyboard-only, reduced motion",
+   "tools": {
+    "bash": 3,
+    "write": 3,
+    "browser": 3,
+    "read": 1
+   }
+  },
+  {
+   "t": "2026-10-29T02:07:14-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v10 recorded: QA round",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T02:08:16-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Live v11",
+   "text": "Size line-up (Figma 'Compare Specs'): every part side by side at real scale",
+   "tools": {
+    "bash": 6,
+    "write": 2,
+    "browser": 14,
+    "read": 0
+   }
+  },
+  {
+   "t": "2026-10-29T02:09:55-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v11 recorded: Size line-up",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T02:10:20-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Review",
+   "text": "Final review of the matrix and live site; deciding whether another round is worth it",
+   "tools": {
+    "bash": 5,
+    "write": 1,
+    "browser": 8,
+    "read": 0
+   }
+  },
+  {
+   "t": "2026-10-29T02:10:38-04:00",
+   "who": "claude",
+   "kind": "decision",
+   "phase": "Review",
+   "text": "Stopping the loop at v11: every branch of the Figma sitemap exists, all 35 logged issues are fixed, and the remaining levers are new content (real GLBs for the four stand-ins, a case) or adding a build step for performance — owner decisions, not UX fixes.",
+   "tools": {
+    "bash": 3,
+    "browser": 2,
+    "read": 1
+   }
+  },
+  {
+   "t": "2026-10-29T02:10:39-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Complete",
+   "text": "12 iterations, avg UX score 5.3 → 9.1, 35/35 issues fixed. Figma record at /baseline, live build at /live, this matrix at /matrix.",
+   "tools": {
+    "bash": 1
+   }
+  },
+  {
+   "t": "2026-10-29T11:12:26-04:00",
+   "who": "user",
+   "kind": "prompt",
+   "phase": "Complete",
+   "text": "New models (case, PSU, RAM, cooler) + drag parts into a PC case, with options, live price total and spec differences",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T11:12:26-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "v12: real models + drag-to-build workshop",
+   "text": "Optimised 4 new GLBs (27 MB to 3 MB); building the case workshop",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T11:26:03-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "v12: real models + drag-to-build workshop",
+   "text": "Workshop tested: drag, snap, touch, keyboard, power-on, PSU failure; recording v12",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T11:26:03-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v12 recorded: Real models + drag-to-build",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T11:29:49-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v13 recorded: Lean-in drag + phone room",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-29T11:31:08-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Complete",
+   "text": "v13: lean-in drag, phone room, lighter case model",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T13:14:00-04:00",
+   "who": "user",
+   "kind": "prompt",
+   "phase": "Complete",
+   "text": "Build out the Figma record prototype with the 3D models, using the framework and motion of the Figma file and the final motion mockup video",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T13:14:00-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "v14: Figma prototype build",
+   "text": "Mockup studied beat by beat; prototype built and compared frame by frame",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T13:14:01-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v14 recorded: Figma prototype build",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T13:14:27-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Complete",
+   "text": "v14: the motion mockup as a working site at /prototype/",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T13:20:02-04:00",
+   "who": "user",
+   "kind": "prompt",
+   "phase": "Complete",
+   "text": "Bug: the 3D part disappears in every view except Overview; can you fetch 3D models yourself?",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T13:20:02-04:00",
+   "who": "claude",
+   "kind": "fix",
+   "phase": "Complete",
+   "text": "Prototype x-ray now writes premultiplied alpha; verified Framework/Power/Data in a GPU browser",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T13:20:02-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Complete",
+   "text": "v14 fix: x-ray visible on GPU browsers",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T13:23:10-04:00",
+   "who": "user",
+   "kind": "prompt",
+   "phase": "Complete",
+   "text": "Find an SSD and a CPU model online",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T13:23:11-04:00",
+   "who": "claude",
+   "kind": "research",
+   "phase": "Complete",
+   "text": "Sketchfab shortlist: Ryzen 9 7950X3D, bare M.2 SSD, Samsung 980 Pro (all CC BY; download needs a signed-in account)",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T13:33:15-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Complete",
+   "text": "Downloaded Ryzen 9 7950X3D + Samsung 980 Pro from Sketchfab (owner signed in); credits page added",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T13:33:15-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v15 recorded: Mockup CPU + real SSD + credits",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T13:33:30-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Complete",
+   "text": "v15: mockup CPU, real SSD, model credits",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T14:11:19-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v16 recorded: Researched power + data paths",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T14:11:38-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Complete",
+   "text": "v16: researched power and data paths, sources",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T18:49:03-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v17 recorded: Real wires, sound, narrative",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T18:49:20-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Complete",
+   "text": "v17: real wiring, sound, narrative order",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T19:07:58-04:00",
+   "who": "claude",
+   "kind": "milestone",
+   "phase": "Iteration",
+   "text": "v18 recorded: Hardware audit applied",
+   "tools": {}
+  },
+  {
+   "t": "2026-10-30T19:08:09-04:00",
+   "who": "claude",
+   "kind": "status",
+   "phase": "Complete",
+   "text": "v18: hardware audit applied, 43 verified sources",
+   "tools": {}
+  }
+ ],
+ "tools": {
+  "figma": 27,
+  "bash": 128,
+  "read": 44,
+  "write": 57,
+  "edit": 31,
+  "browser": 107,
+  "skill": 1
+ }
+}

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Anatomy of a Computer — Erick Wittmann</title>
-<meta name="description" content="Anatomy of a Computer: an interactive website concept by Erick Wittmann that explains PC hardware visually. Research, sitemap, wireframes, four concepts and a prototype film.">
+<meta name="description" content="Anatomy of a Computer: an interactive website concept by Erick Wittmann that explains PC hardware visually. Research, sitemap, wireframes, four concepts, a prototype film, and the playable site with its build record.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
@@ -74,9 +74,53 @@
     </div>
   </section>
 
+  <!-- The working site, built after the course. It lives in anatomy/ and loads only when Play is pressed (js/aoc-player.js). -->
+  <section class="fmt aoc-play" id="play" aria-labelledby="play-title">
+    <div class="fmt-head reveal">
+      <span class="cs-num">02</span>
+      <h2 id="play-title">Play the Experience</h2>
+      <p>After the course, the prototype became a working website, and both builds run right here: the full live build, with all eight parts in real-time 3D, and the prototype, which rebuilds the motion mockup as a working site.</p>
+      <p class="aoc-made">I built both with Claude Code, working from my Figma layouts and the prototype film. How it got there is logged under <a href="#process">Building It</a>.</p>
+    </div>
+    <div class="aoc-player reveal">
+      <div class="aoc-tabs" role="group" aria-label="Choose a build">
+        <button type="button" data-build="live" aria-selected="true">Live build</button>
+        <button type="button" data-build="proto" aria-selected="false">Prototype</button>
+      </div>
+      <div class="aoc-screen">
+        <img class="aoc-poster" src="../anatomy/shots/live.jpg" alt="" loading="lazy">
+        <button type="button" class="aoc-start">
+          <span class="aoc-start-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>
+          <span class="aoc-start-label">Play the live build</span>
+        </button>
+      </div>
+      <div class="aoc-bar">
+        <p class="aoc-hint">Drag to turn a part · ← → change parts · 1–5 switch views · sound starts on your first click inside</p>
+        <div class="aoc-actions">
+          <button type="button" class="aoc-full">Fullscreen</button>
+          <a class="aoc-open" href="../anatomy/live/index.html" target="_blank" rel="noopener">New tab <span aria-hidden="true">↗</span></a>
+          <button type="button" class="aoc-stop">Stop</button>
+        </div>
+      </div>
+    </div>
+    <figure class="cs-media fmt-item fmt-item--wide aoc-below reveal" style="--ar:1600 / 866">
+      <video src="../assets/work/anatomy/aoc-modes.mp4" poster="../assets/work/anatomy/aoc-modes.jpg" muted loop playsinline preload="none" aria-label="Recorded in the live build: the CPU cooler and the graphics card switching between the Framework, Power, Data and Airflow views" onerror="this.remove()"></video>
+    </figure>
+    <ol class="sb-grid aoc-parts reveal" aria-label="The eight parts, in the order the power takes">
+      <li><figure class="cs-media" style="--ar:1280 / 738"><img src="../assets/work/anatomy/aoc-part-psu.jpg" alt="The live build's Overview of an ATX power supply" loading="lazy"></figure><span>Power supply</span></li>
+      <li><figure class="cs-media" style="--ar:1280 / 738"><img src="../assets/work/anatomy/aoc-part-mthr.jpg" alt="The live build's Overview of the ASUS ROG Strix Z370-E Gaming motherboard" loading="lazy"></figure><span>Motherboard</span></li>
+      <li><figure class="cs-media" style="--ar:1280 / 738"><img src="../assets/work/anatomy/aoc-part-cpu.jpg" alt="The live build's Overview of the AMD Ryzen 5 3600 processor" loading="lazy"></figure><span>CPU</span></li>
+      <li><figure class="cs-media" style="--ar:1280 / 738"><img src="../assets/work/anatomy/aoc-part-ram.jpg" alt="The live build's Overview of a DDR4 memory stick" loading="lazy"></figure><span>Memory (RAM)</span></li>
+      <li><figure class="cs-media" style="--ar:1280 / 738"><img src="../assets/work/anatomy/aoc-part-storage.jpg" alt="The live build's Overview of the Samsung 980 Pro NVMe SSD" loading="lazy"></figure><span>Storage (SSD)</span></li>
+      <li><figure class="cs-media" style="--ar:1280 / 738"><img src="../assets/work/anatomy/aoc-part-gpu.jpg" alt="The live build's Overview of the Nvidia RTX 3080 graphics card" loading="lazy"></figure><span>Graphics card</span></li>
+      <li><figure class="cs-media" style="--ar:1280 / 738"><img src="../assets/work/anatomy/aoc-part-cooler.jpg" alt="The live build's Overview of the Cooler Master Compact Tower CPU cooler" loading="lazy"></figure><span>CPU cooler</span></li>
+      <li><figure class="cs-media" style="--ar:1280 / 738"><img src="../assets/work/anatomy/aoc-part-case.jpg" alt="The live build's Overview of the Corsair 4000D Airflow case" loading="lazy"></figure><span>Case</span></li>
+    </ol>
+  </section>
+
   <section class="fmt reveal" aria-labelledby="research-title">
     <div class="fmt-head">
-      <span class="cs-num">02</span>
+      <span class="cs-num">03</span>
       <h2 id="research-title">Research</h2>
       <p>Where people go today to learn about PC parts, and what each leaves out.</p>
     </div>
@@ -108,7 +152,7 @@
 
   <section class="fmt reveal" aria-labelledby="map-title">
     <div class="fmt-head">
-      <span class="cs-num">03</span>
+      <span class="cs-num">04</span>
       <h2 id="map-title">Sitemap &amp; Content Flow</h2>
       <p>Four ways in: explore the parts, see how power, data and air flow through them, get ready to build, or look something up. Parts can be explored in any order, with chevrons for a linear path and a menu for direct access.</p>
     </div>
@@ -122,7 +166,7 @@
 
   <section class="fmt reveal" aria-labelledby="wire-title">
     <div class="fmt-head">
-      <span class="cs-num">04</span>
+      <span class="cs-num">05</span>
       <h2 id="wire-title">Wireframes</h2>
       <p>The landing page and a part page, each built around an interactive 3D model you can spin, with the navigation condensed until you hover.</p>
     </div>
@@ -140,7 +184,7 @@
 
   <section class="fmt reveal" aria-labelledby="dir-title">
     <div class="fmt-head">
-      <span class="cs-num">05</span>
+      <span class="cs-num">06</span>
       <h2 id="dir-title">Visual Direction</h2>
       <p>Two boards pulled in opposite directions: precise, clean product pages, and a technical “computer console”, asking what the computer would see as its parts talk to each other.</p>
     </div>
@@ -165,7 +209,7 @@
   <!-- The four concepts, in order, each with the critique that led to the next. -->
   <section class="fmt reveal aoc-concepts-head" aria-labelledby="concepts-title">
     <div class="fmt-head">
-      <span class="cs-num">06</span>
+      <span class="cs-num">07</span>
       <h2 id="concepts-title">Four Concepts</h2>
       <p>Each round was critiqued and the next one answered it. AI tools played a small part along the way, helping restyle part renders into the blueprint hologram look.</p>
     </div>
@@ -223,7 +267,7 @@
   <!-- Stills exported from the After Effects prototype, in order. -->
   <section class="fmt reveal" aria-labelledby="frames-title">
     <div class="fmt-head">
-      <span class="cs-num">07</span>
+      <span class="cs-num">08</span>
       <h2 id="frames-title">Final Frames</h2>
       <p>Stills from the prototype film. Click any frame to see it larger.</p>
     </div>
@@ -241,9 +285,61 @@
 
   <section class="cs-overview reveal" aria-labelledby="next-title">
     <div class="fmt-head">
-      <span class="cs-num">08</span>
+      <span class="cs-num">09</span>
       <h2 id="next-title">Scope</h2>
       <p>The prototype covers the part pages: the start screen, the power supply, graphics card and CPU, and the light-to-hologram interaction. The flow pages, build guide, compatibility check and quick reference in the sitemap are the planned rest of the system.</p>
+    </div>
+  </section>
+
+  <!-- The build record: the critique-and-improve loop that made the live build, logged in
+       assets/work/anatomy/process/progress.json and drawn by js/aoc-process.js. The containers are here so they
+       fade in with .reveal; every number inside them is computed from the JSON. -->
+  <section class="fmt aoc-process" id="process" aria-labelledby="process-title" data-src="../assets/work/anatomy/process/">
+    <div class="fmt-head reveal">
+      <span class="cs-num">10</span>
+      <h2 id="process-title">Building It</h2>
+      <p>The live build was made in a critique-and-improve loop. Each version was built, screenshotted, critiqued against ten qualities and logged, and the next version answered the critique. This is that log, version by version.</p>
+      <p class="aoc-made">The scores are self-critique, not user testing: after each version, Claude scored it from 0 to 10 on each quality.</p>
+    </div>
+    <p class="aoc-status" data-aoc="status">Loading the build record…</p>
+    <dl class="aoc-stats reveal" data-aoc="stats"></dl>
+
+    <div class="aoc-block reveal">
+      <h3 class="aoc-sub">Scores by version</h3>
+      <p class="aoc-hint">Each square is one quality in one version: the brighter, the higher the score. Hover or tap one to read that version's critique of it; a dot means a note was logged. The line above is the average.</p>
+      <div class="aoc-scroll" tabindex="0" role="region" aria-label="Score matrix (scrolls sideways on small screens)">
+        <table class="aoc-matrix" data-aoc="matrix"></table>
+      </div>
+      <p class="aoc-note" aria-live="polite" data-aoc="note"><span class="aoc-note-body">Hover or tap a square to read the critique.</span></p>
+    </div>
+
+    <div class="aoc-block reveal">
+      <h3 class="aoc-sub">Versions</h3>
+      <div class="aoc-scroll aoc-strip-wrap"><ol class="aoc-strip" data-aoc="versions" aria-label="Pick a version"></ol></div>
+      <article class="aoc-ver" data-aoc="version" aria-live="polite"></article>
+    </div>
+
+    <div class="aoc-block reveal">
+      <h3 class="aoc-sub">Issues</h3>
+      <p class="aoc-hint">Every issue the critiques logged, by severity. A filled square was fixed in a later version; an outlined one is still open.</p>
+      <div class="aoc-ledger" data-aoc="issues"></div>
+    </div>
+
+    <div class="aoc-block reveal">
+      <h3 class="aoc-sub">Three review passes</h3>
+      <div class="cs-spec-grid">
+        <div><h3>Narrative</h3><p>Follow the power: the parts were put in three acts (energy, information, heat), with one idea per view and a plain voice for younger visitors, with more detail for adults.</p></div>
+        <div><h3>Visual style</h3><p>Wires drawn like an angiogram: real copper, PVC and nylon inside the cyan x-ray, with the flow as light inside the conductor. Sound made from air and breath over one slow ambient bed.</p></div>
+        <div><h3>Hardware accuracy</h3><p>A source-by-source audit of the wiring and the copy, applied in the last version, so every number on the maps traces to a credited source.</p></div>
+      </div>
+    </div>
+
+    <div class="aoc-block reveal">
+      <h3 class="aoc-sub">After the record</h3>
+      <ol class="aoc-after" data-aoc="after">
+        <li><span>Nov 3, 2026</span>Both builds became playable on this page (Play the Experience, above).</li>
+        <li><span>Nov 3, 2026</span>Recent Updates added, with screenshots and recordings of the finished build (below).</li>
+      </ol>
     </div>
   </section>
 
@@ -251,9 +347,9 @@
        the hotspot clip is a screen recording of the motherboard's Framework view. -->
   <section class="fmt reveal" aria-labelledby="updates-title">
     <div class="fmt-head">
-      <span class="cs-num">09</span>
+      <span class="cs-num">11</span>
       <h2 id="updates-title">Recent Updates</h2>
-      <p>After the course, the prototype became a working website. The part pages are real-time 3D now, and most of the sitemap's planned pages got built: the flow views, the build guide and the quick reference.</p>
+      <p>Where the build stands now. The part pages are real-time 3D, and most of the sitemap's planned pages got built: the flow views, the build guide and the quick reference.</p>
     </div>
     <figure class="cs-media fmt-item fmt-item--wide" style="--ar:1600 / 866">
       <video src="../assets/work/anatomy/aoc-upd-hotspot.mp4" poster="../assets/work/anatomy/aoc-upd-hotspot.jpg" muted loop playsinline preload="none" aria-label="The motherboard in its Framework x-ray view: a hotspot is clicked, the camera moves in on the M.2 slot and it counts as a discovery" onerror="this.remove()"></video>
@@ -278,37 +374,6 @@
       <li><figure class="cs-media" style="--ar:1570 / 905"><img src="../assets/work/anatomy/aoc-upd-build-drag.jpg" alt="Build a PC: half the parts are in the case, and the SSD is waiting to be dragged onto its slot" loading="lazy"></figure><span>Drag each part into the case</span></li>
       <li><figure class="cs-media" style="--ar:1570 / 905"><img src="../assets/work/anatomy/aoc-upd-build-on.jpg" alt="Build a PC: the finished computer running, with its price, game speed, power use and CPU temperature" loading="lazy"></figure><span>Power it on and watch the numbers</span></li>
     </ol>
-  </section>
-
-  <!-- The working site, built after the course. It lives in anatomy/ and loads only when Play is pressed (js/aoc-player.js). -->
-  <section class="fmt aoc-play" id="play" aria-labelledby="play-title">
-    <div class="fmt-head reveal">
-      <span class="cs-num">10</span>
-      <h2 id="play-title">Play the Experience</h2>
-      <p>Both builds run right here: the full live build, and the prototype, which rebuilds the motion mockup as a working site.</p>
-      <p class="aoc-made">I built both with Claude Code, working from my Figma layouts and the prototype film.</p>
-    </div>
-    <div class="aoc-player reveal">
-      <div class="aoc-tabs" role="group" aria-label="Choose a build">
-        <button type="button" data-build="live" aria-selected="true">Live build</button>
-        <button type="button" data-build="proto" aria-selected="false">Prototype</button>
-      </div>
-      <div class="aoc-screen">
-        <img class="aoc-poster" src="../anatomy/shots/live.jpg" alt="" loading="lazy">
-        <button type="button" class="aoc-start">
-          <span class="aoc-start-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>
-          <span class="aoc-start-label">Play the live build</span>
-        </button>
-      </div>
-      <div class="aoc-bar">
-        <p class="aoc-hint">Drag to turn a part · ← → change parts · 1–5 switch views · sound starts on your first click inside</p>
-        <div class="aoc-actions">
-          <button type="button" class="aoc-full">Fullscreen</button>
-          <a class="aoc-open" href="../anatomy/live/index.html" target="_blank" rel="noopener">New tab <span aria-hidden="true">↗</span></a>
-          <button type="button" class="aoc-stop">Stop</button>
-        </div>
-      </div>
-    </div>
   </section>
 
   <a class="next-case" href="beyond-fashion.html">
@@ -349,5 +414,6 @@
 <script src="../js/lightbox.js"></script>
 <script src="../js/chroma.js"></script>
 <script src="../js/aoc-player.js"></script>
+<script src="../js/aoc-process.js"></script>
 </body>
 </html>

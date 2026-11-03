@@ -129,9 +129,9 @@
   });
   addEventListener('resize', function () { if (open && !open.closing) place(target(open.el, open.fig)); });
 
-  Array.prototype.forEach.call(figs, function (f) {
+  function bind(f) {
     // Carousels get their class from js/carousel.js (loaded before this file).
-    if (!usable(f)) return;
+    if (f.classList.contains('lb-able') || !usable(f)) return;
     f.classList.add('lb-able');
     f.tabIndex = 0; f.setAttribute('role', 'button');
     var el = media(f);
@@ -140,7 +140,10 @@
     f.addEventListener('keydown', function (e) {
       if (e.target === f && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); if (usable(f)) show(f); }
     });
-  });
+  }
+  Array.prototype.forEach.call(figs, bind);
 
-  window.Lightbox = { open: show, close: hide, isOpen: function () { return !!open; } };
+  // bind(root): hook up frames added after load (e.g. js/aoc-process.js renders its screenshots from JSON).
+  window.Lightbox = { open: show, close: hide, isOpen: function () { return !!open; },
+    bind: function (root) { Array.prototype.forEach.call(root.querySelectorAll('.cs-hero, .cs-media'), bind); } };
 })();

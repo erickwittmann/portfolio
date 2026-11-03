@@ -247,12 +247,46 @@
     </div>
   </section>
 
+  <!-- What changed after the course. Stills are screenshots of the live build (anatomy/live/, opened by deep link);
+       the hotspot clip is a screen recording of the motherboard's Framework view. -->
+  <section class="fmt reveal" aria-labelledby="updates-title">
+    <div class="fmt-head">
+      <span class="cs-num">09</span>
+      <h2 id="updates-title">Recent Updates</h2>
+      <p>After the course, the prototype became a working website. The part pages are real-time 3D now, and most of the sitemap's planned pages got built: the flow views, the build guide and the quick reference.</p>
+    </div>
+    <figure class="cs-media fmt-item fmt-item--wide" style="--ar:1600 / 866">
+      <video src="../assets/work/anatomy/aoc-upd-hotspot.mp4" poster="../assets/work/anatomy/aoc-upd-hotspot.jpg" muted loop playsinline preload="none" aria-label="The motherboard in its Framework x-ray view: a hotspot is clicked, the camera moves in on the M.2 slot and it counts as a discovery" onerror="this.remove()"></video>
+    </figure>
+    <div class="cs-spec-grid aoc-research">
+      <div><h3>Eight parts in 3D</h3><p>Real-time models of all eight parts. Drag one to turn it, or take it apart into an exploded view.</p></div>
+      <div><h3>Five views</h3><p>Overview, then Framework, Power, Data and Airflow x-rays. Power and data run along each part's real cables and copper traces.</p></div>
+      <div><h3>Follow the power</h3><p>The parts are in the order the power takes: energy, then information, then heat. Thirty hotspots, and the site remembers which ones you've found.</p></div>
+    </div>
+    <ol class="sb-grid aoc-views">
+      <li><figure class="cs-media" style="--ar:1570 / 905"><img src="../assets/work/anatomy/aoc-upd-power.jpg" alt="The power supply in the Power view, with its transformer, filters and cables labelled" loading="lazy"></figure><span>Power: power supply</span></li>
+      <li><figure class="cs-media" style="--ar:1570 / 905"><img src="../assets/work/anatomy/aoc-upd-data.jpg" alt="The graphics card in the Data view, with data lines running from the slot fingers to the graphics chip and screen ports" loading="lazy"></figure><span>Data: graphics card</span></li>
+      <li><figure class="cs-media" style="--ar:1570 / 905"><img src="../assets/work/anatomy/aoc-upd-airflow.jpg" alt="The CPU cooler in the Airflow view, as a blue x-ray" loading="lazy"></figure><span>Airflow: CPU cooler</span></li>
+      <li><figure class="cs-media" style="--ar:1570 / 905"><img src="../assets/work/anatomy/aoc-upd-apart.jpg" alt="The graphics card taken apart, each layer labelled from the backplate to the fan frame" loading="lazy"></figure><span>Taken apart: graphics card</span></li>
+    </ol>
+    <div class="cs-spec-grid aoc-research">
+      <div><h3>Build a PC</h3><p>Drag parts from the bench into a real-scale case, swap options and power it on. Price, game speed, power draw and CPU temperature update as you go.</p></div>
+      <div><h3>Words for everyone</h3><p>Plain language by default, with more detail one tap away. Terms open a glossary, and a size line-up shows every part at its real size.</p></div>
+      <div><h3>Sound and sources</h3><p>An ambient score with soft transitions, starting on your first click. The specs come from 43 hardware sources, all credited.</p></div>
+    </div>
+    <ol class="sb-grid aoc-pair">
+      <li><figure class="cs-media" style="--ar:1570 / 905"><img src="../assets/work/anatomy/aoc-upd-build-drag.jpg" alt="Build a PC: half the parts are in the case, and the SSD is waiting to be dragged onto its slot" loading="lazy"></figure><span>Drag each part into the case</span></li>
+      <li><figure class="cs-media" style="--ar:1570 / 905"><img src="../assets/work/anatomy/aoc-upd-build-on.jpg" alt="Build a PC: the finished computer running, with its price, game speed, power use and CPU temperature" loading="lazy"></figure><span>Power it on and watch the numbers</span></li>
+    </ol>
+  </section>
+
   <!-- The working site, built after the course. It lives in anatomy/ and loads only when Play is pressed (js/aoc-player.js). -->
   <section class="fmt aoc-play" id="play" aria-labelledby="play-title">
     <div class="fmt-head reveal">
-      <span class="cs-num">09</span>
+      <span class="cs-num">10</span>
       <h2 id="play-title">Play the Experience</h2>
-      <p>After the course, the prototype became a working website. All eight parts are real-time 3D models; the x-ray views trace power and data along each part's actual wiring; and the planned build guide and quick reference are in it as a drag-and-drop build and a glossary.</p>
+      <p>Both builds run right here: the full live build, and the prototype, which rebuilds the motion mockup as a working site.</p>
+      <p class="aoc-made">I built both with Claude Code, working from my Figma layouts and the prototype film.</p>
     </div>
     <div class="aoc-player reveal">
       <div class="aoc-tabs" role="group" aria-label="Choose a build">

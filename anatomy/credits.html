@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Credits and Sources — Anatomy of a Computer</title>
+  <meta name="description" content="Credits and licences for the 3D models and sounds used in Anatomy of a Computer, and the sources behind its power and data breakdowns.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Cormorant+Garamond:wght@500&family=Courier+Prime&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0b0b0c; --ink: #ececec; --dim: #8d8d8d; --line: rgba(255,255,255,.1); --accent: #3dff9a; }
+    @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --bg: #f4f4f4; --ink: #121212; --dim: #666; --line: rgba(0,0,0,.12); --accent: #0f8a52; } }
+    :root[data-theme="light"] { --bg: #f4f4f4; --ink: #121212; --dim: #666; --line: rgba(0,0,0,.12); --accent: #0f8a52; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.5 "Inter", system-ui, sans-serif; }
+    main { width: min(880px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0 72px; }
+    .eyebrow { margin: 0; font: 400 12px/1 "Courier Prime", monospace; letter-spacing: .3em; text-transform: uppercase; color: var(--dim); }
+    h1 { margin: 12px 0 8px; font: 500 clamp(34px, 6vw, 56px)/1 "Cormorant Garamond", serif; letter-spacing: -.04em; text-transform: uppercase; }
+    p.lede { margin: 0 0 28px; max-width: 640px; color: var(--dim); }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px 10px 12px 0; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { font: 600 11px/1 "Courier Prime", monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+    td small { display: block; color: var(--dim); font-size: 12.5px; }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    .note { margin-top: 26px; font-size: 13px; color: var(--dim); }
+    .back { display: inline-block; margin-bottom: 28px; font-size: 13px; }
+    h2 { margin: 64px 0 8px; font: 500 clamp(28px, 4.6vw, 42px)/1 "Cormorant Garamond", serif; letter-spacing: -.03em; text-transform: uppercase; }
+    .src { padding: 18px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 160px 1fr; gap: 8px 24px; }
+    .src h3 { margin: 2px 0 0; font: 600 11px/1.4 "Courier Prime", monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+    .src ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+    .src small { display: block; color: var(--dim); font-size: 12.5px; }
+    @media (max-width: 640px) { .src { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { th:nth-child(3), td:nth-child(3) { display: none; } }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="index.html">← All builds</a>
+    <p class="eyebrow">Anatomy of a Computer</p>
+    <h1>Credits</h1>
+    <h2 id="models" style="margin-top:28px">3D models</h2>
+    <p class="lede">Every 3D model on this site comes from Sketchfab under the Creative Commons Attribution 4.0 licence (CC BY 4.0), which allows reuse and changes as long as the creator is credited.</p>
+    <table>
+      <thead><tr><th>Model</th><th>Creator</th><th>Used in</th><th>Licence</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://sketchfab.com/3d-models/motherboard-components-3bc94057328243d4b341a55f59160f8a">MotherBoard + Components</a></td><td><a href="https://sketchfab.com/DanielCardonaArt">Daniel Cardona</a></td><td>Live build, prototype</td><td><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></td></tr>
+        <tr><td><a href="https://sketchfab.com/3d-models/geforce-rtx-3080-graphics-card-8b947ee1bf7a4e3d8ffa1c24893ac160">GeForce RTX 3080 Graphics Card</a></td><td><a href="https://sketchfab.com/samuelsurovic">_surovic_</a></td><td>Live build, prototype</td><td><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></td></tr>
+        <tr><td><a href="https://sketchfab.com/3d-models/cpu-ryzen-5-3600-249fb5e8c1e94686a2c2b1cd6df72bc5">CPU Ryzen 5 3600</a></td><td><a href="https://sketchfab.com/bazyaev08">Fochdog</a></td><td>Live build</td><td><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></td></tr>
+        <tr><td><a href="https://sketchfab.com/3d-models/amd-ryzentm-9-7950x3d-fb96f1d7c65347988b6d41159046ce3d">AMD Ryzen™ 9 7950X3D</a></td><td><a href="https://sketchfab.com/Txy2u">Txy2u</a></td><td>Prototype</td><td><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></td></tr>
+        <tr><td><a href="https://sketchfab.com/3d-models/random-access-memory-ram-stick-pc-ab2b1c25c31b44c1a757911734bdf942">Random Access Memory - RAM Stick - PC</a></td><td><a href="https://sketchfab.com/empty_mirror">Diego G.</a></td><td>Live build, prototype</td><td><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></td></tr>
+        <tr><td><a href="https://sketchfab.com/3d-models/samsung-980-pro-nvme-1tb-1f386c8d782d4b208717bc64474b98b3">Samsung 980 Pro NVMe 1tb</a></td><td><a href="https://sketchfab.com/BlenderFace1">BlenderFace</a></td><td>Live build, prototype</td><td><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></td></tr>
+        <tr><td><a href="https://sketchfab.com/3d-models/cooler-master-cpu-cooler-e54651982f524644a2144b52a6b36e89">Cooler Master CPU Cooler</a></td><td><a href="https://sketchfab.com/BlenderFace1">BlenderFace</a></td><td>Live build, prototype</td><td><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></td></tr>
+        <tr><td><a href="https://sketchfab.com/3d-models/power-supply-basic-02db33d66a784c82a6202a3ec6850498">Power Supply - Basic</a></td><td><a href="https://sketchfab.com/alexlh2003">Up1x</a></td><td>Live build, prototype</td><td><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></td></tr>
+        <tr><td><a href="https://sketchfab.com/3d-models/corsair-4000d-pc-case-bc15e007d6634579bc0e8ffdf238e665">Corsair 4000D PC case</a></td><td><a href="https://sketchfab.com/SzaBa">SzaBa</a></td><td>Live build, prototype</td><td><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></td></tr>
+      </tbody>
+    </table>
+    <p class="note">Changes: every model was optimised for the web (geometry compressed, textures converted to WebP and resized). The RAM file's three sticks were cut down to one, the Ryzen 9 model was straightened and its parts merged, and some colours are adjusted on the prototype to match the motion mockup. Product names and logos belong to their owners; the models are fan-made representations.</p>
+    <h2 id="sound">Sound</h2>
+    <p class="lede">The music is an original generative score written for this site in Web Audio (A minor, 72 bpm), so it changes with each view and never repeats. The transitions and taps are real recordings, free to use in a website without attribution; they're credited here anyway.</p>
+    <table>
+      <thead><tr><th>Recording</th><th>Creator</th><th>Used for</th><th>Licence</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://freesound.org/people/xkeril/sounds/701104/">Whoosh stereo light (transition)</a></td><td><a href="https://freesound.org/people/xkeril/">xkeril</a></td><td>Part slides</td><td><a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a></td></tr>
+        <tr><td><a href="https://pixabay.com/sound-effects/film-special-effects-airy-whoosh-windy-slow-228321/">Airy Whoosh Windy Slow</a></td><td>RescopicSound</td><td>Photograph ↔ x-ray</td><td><a href="https://pixabay.com/service/license-summary/">Pixabay licence</a></td></tr>
+        <tr><td><a href="https://freesound.org/people/Mikes-MultiMedia/sounds/349698/">light slow swoosh</a></td><td><a href="https://freesound.org/people/Mikes-MultiMedia/">Mikes-MultiMedia</a></td><td>Hotspots</td><td><a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a></td></tr>
+        <tr><td><a href="https://pixabay.com/sound-effects/film-special-effects-whoosh-whisper-2-404221/">Whoosh Whisper - 2</a></td><td>Virtual_Vibes</td><td>Take it apart, line-up, badges</td><td><a href="https://pixabay.com/service/license-summary/">Pixabay licence</a></td></tr>
+        <tr><td><a href="https://pixabay.com/sound-effects/film-special-effects-slow-cinematic-air-rush-8-557957/">Slow cinematic air rush #8</a></td><td>Sdanezis</td><td>Start</td><td><a href="https://pixabay.com/service/license-summary/">Pixabay licence</a></td></tr>
+        <tr><td><a href="https://freesound.org/people/Squirrel_404/sounds/716245/">Light Taps</a></td><td><a href="https://freesound.org/people/Squirrel_404/">Squirrel_404</a></td><td>Taps and discoveries</td><td><a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a></td></tr>
+      </tbody>
+    </table>
+    <p class="note">Changes: each recording was trimmed, faded at both ends, loudness-matched and converted to Opus; the Freesound files come from Freesound's high-quality previews; the taps file was cut into two single taps, and the air rush was shortened to six seconds and softened.</p>
+    <!-- sources:start (generated by tools/sources.py from data/direction/sources.json) -->
+    <h2 id="sources">Sources</h2>
+    <p class="lede">The power and data breakdowns, the wiring and the copy follow these 43 manufacturer specifications, standards, datasheets and reviews, each opened and checked for the claim it backs. Where a chip is hidden under a label, lid or casing in the 3D model, its position is drawn schematically; the connections, wire colours, voltages and speeds come from the sources.</p>
+      <section class="src">
+        <h3>Power supply</h3>
+        <ul>
+          <li><a href="https://www.onsemi.com/download/application-notes/pdf/and8474-d.pdf">AND8474: Implementing a 310 W Power Supply with the NCP1027, NCP1910 and NCP4303</a><small>ATX supplies use 12 V as the main rail, with 5 V and 3.3 V made by DC-DC step-down converters; LLC power stage with synchronous rectification; CCM PFC regulates the bulk voltage; LLC stays off until the PFC has done so; a secondary-side supervisor handles power-good timing and OCP/OVP/UVP; power-good / enable crosses the isolation through an opto-coupler; 5 Vsb flyback works with the PFC off — onsemi</small></li>
+          <li><a href="https://pinouts.ru/Power/atx_v2.shtml">ATX 24-pin power connector pinout</a><small>pin signals and colours 1-19 and 21-24 match Intel; PS_ON# pin 16, PWR_OK pin 8 — pinouts.ru · also motherboard</small></li>
+          <li><a href="https://xDevs.com/doc/xDevs.com/Neutron/pdf/ATX12V_PSDG_2_2_public_br2.pdf">ATX12V Power Supply Design Guide, Version 2.2 (March 2005)</a><small>24-pin: Molex 39-01-2240, contacts 44476-1112, board 44206-0007; 18 AWG, with 22 AWG for the pin-13 sense wire; 16 AWG recommended for 300 W configurations; 24-pin pin/signal/colour table; PS_ON# active low, TTL, internal pull-up and debounce, no effect on +5VSB; PWR_OK delay 100 ms &lt; T3 &lt; 500 ms; SATA power: 5 wires orange/black/red/black/yellow, 18 AWG, Molex 88751 — Intel (mirrored by xDevs) · also motherboard, case</small></li>
+          <li><a href="https://cdrdv2-public.intel.com/336521/336521_Rev2p1a.pdf">ATX Version 3 Multi Rail Desktop Platform Power Supply Design Guide, Rev 2.1a (doc 336521)</a><small>24-pin Table 5-1 (pins, signals, colours; pin 20 reserved/NC); 18 AWG, and 22 AWG for the +3.3 V supply and sense wires combined in pin 13; EPS 8-pin Table 5-9: 1-4 COM black, 5-8 +12V2 yellow, 18 AWG; PCIe 2x3 Table 5-4 and 2x4 Table 5-5, with sense decoding Table 5-6; 2x3 rated 8.0 A/pin, 2x4 7.0 A/pin; cards draw at most 6.75 A / 13.5 A; 12V-2x6: 3.0 mm pitch vs 4.2 mm for 2x3/2x4; pins 1-6 +12 V, 7-12 COM; 9.2 A/pin; 16 AWG; 6-8 A per pin with 18 AWG; 24-32 A for a 2x4; SATA Table 5-10; +3.3 V dropped from SATA 3.2 but still recommended — Intel · also motherboard, graphics card, case</small></li>
+          <li><a href="https://hwbusters.com/psus/corsair-rm850x-review/">Corsair RM850x (2021) review</a><small>transient filter 4 Y caps, 2 X caps, 2 CM chokes, MOV, NTC + relay; 2x GBU1506 bridge; 2 APFC MOSFETs + boost diode; 2x 400 V 470 uF bulk caps; half-bridge LLC (2x IPA60R190P6); 6x NTMFS5C430N 12 V synchronous rectifiers; DC-DC for 5 V/3.3 V (UBIQ + uP3861P); 5VSB with OB5282 controller; Weltrend WT7502R supervisor (OVP, UVP, SCP, PG); cable set incl. 4x PCIe 6+2 on 2 cables and in-cable capacitors — Hardware Busters</small></li>
+          <li><a href="https://www.infineon.com/assets/row/public/documents/24/42/infineon-technicaldescription-eval-800w-pfc-c7-v2-applicationnotes-en.pdf">800 W PFC evaluation board, user guide</a><small>PFC output 380 V DC nominal; the boost topology is chosen because it supplies a DC bus of 380 V or more — Infineon</small></li>
+          <li><a href="https://en.wikipedia.org/wiki/SATA">SATA (power connector section)</a><small>15-pin power pin functions and mating order; pin 3 PWDIS since SATA 3.3; pins 1-2 retired; three pins per voltage, 1.5 A each; five ground pins; pin 11 staggered spin-up / activity, open collector, pulled low on most cable connectors — Wikipedia · also case</small></li>
+        </ul>
+      </section>
+      <section class="src">
+        <h3>Motherboard</h3>
+        <ul>
+          <li><a href="https://sketchfab.com/3d-models/motherboard-components-3bc94057328243d4b341a55f59160f8a">MotherBoard + Components (model description, Daniel Cardona)</a><small>identifies the board as an ASUS ROG Strix Z370-E Gaming with a Core i7-9700K and a Samsung M.2 SSD (claim carried over from credits.html) — Sketchfab</small></li>
+          <li><a href="https://rog.asus.com/motherboards/rog-strix/rog-strix-z370-e-gaming-model/spec/">ROG STRIX Z370-E GAMING specifications</a><small>LGA1151, Z370, 4 DIMMs dual-channel DDR4; 2x PCIe 3.0 x16 (x16 or x8/x8) + 1x PCIe x16 (max x4) + 4x PCIe x1; M.2_1 shares SATA_1 in SATA mode; M.2_2 in x4 PCIe mode shares SATA_5/6; front USB 3.1 Gen 2 header shares bandwidth with PCIE_x1_2 and PCIE_x1_4; ASMedia USB 3.1 Gen 2 controller for rear Type-A + Type-C; Intel I219V LAN; Wi-Fi 802.11ac + Bluetooth 4.2; SupremeFX S1220A codec; rear I/O incl. DVI-D, DP, HDMI, optical S/PDIF, 2x USB 3.1 Gen 1, 2x USB 2.0; 1x 24-pin EATX + 1x 8-pin ATX 12V; no VRM phase count published — ASUS · also case</small></li>
+          <li><a href="https://pchardware.org/chipsets/intel-z370/">Intel Z370 chipset</a><small>24 PCIe 3.0 lanes from the chipset; DMI 3.0 link; no native USB 3.1/3.2 Gen 2 ports; 10 Gen 1; 6 SATA III — PCHardware</small></li>
+          <li><a href="https://www.techspot.com/trivia/27-how-much-power-can-pcie-x16-graphics-card/">How much power can a PCIe x16 graphics card draw from the motherboard alone?</a><small>75 W from an x16 slot = 3.3 V x 3 A + 12 V x 5.5 A; 6-pin 75 W, 8-pin 150 W, 12VHPWR up to 600 W — TechSpot · also graphics card</small></li>
+          <li><a href="https://cdrdv2-public.intel.com/600569/600569-fpio-dg-rev1p1.pdf">Front Panel I/O Connectivity Design Guide, Rev 1.1 (doc 600569)</a><small>2x5 switch/LED header pin table (HD_LED, PLED, RST_SW, PWR_SW, pull-ups); power switch must close for at least 50 ms; USB 2.0 2x5 header pinout and cable (20 AWG red/black/blue, 28 AWG green/white twisted pairs, shielded); front-audio cable: 4 shielded twisted pairs of 26 AWG, at most 18 in (AC&#x27;97-era header) — Intel · also case</small></li>
+          <li><a href="https://www.intel.com.au/content/dam/www/public/us/en/documents/technical-specifications/usb3-internal-connector-cable-specification.pdf">USB 3.0 Internal Connector and Cable Specification, Rev 1.0 (2010)</a><small>19-pin header pin assignment (pin 10 ID / over-current); cable makeup: shielded SuperSpeed pairs with drain wires, USB 2.0 differential wires, discrete power/ground/over-current wires; motherboard pin n goes to daughter-card pin 20-n; raw cable 90 +/- 7 ohm; mated connector 78-105 ohm; intra-pair skew &lt; 15 ps; Vbus at least 1.5 A per pin; cable at most 457.2 mm — Intel · also case</small></li>
+          <li><a href="https://dlcdnets.asus.com/pub/ASUS/mb/LGA1151/ROG_STRIX_Z370-E_GAMING/F13238_ROG_STRIX_Z370-E_GAMING_UM_WEB.pdf">ROG STRIX Z370-E GAMING user manual (French edition, F13238)</a><small>20-3 pin PANEL header: HDD_LED+/-, Ground, RSTCON#, PLED+/-, PWRBTN#, GND, SPEAKER, CHASSIS; 10-1 pin AAFP HD Audio pinout (pin 4 NC); U31G1 19-pin pinout; U31G2_E3 Type-C header signal list; fan header order GND / PWR / IN / PWM; CPU_FAN 1 A (12 W); line up the black wire with ground; M.2_1 PCIe x4 + SATA, M.2_2 PCIe x4 only; SATA sharing; board will not boot without the 8-pin EATX12V; power button: more than 4 s to force off — ASUS · also cooler and fans, case</small></li>
+          <li><a href="https://www.kitguru.net/components/motherboard/ryan-martin/asus-rog-strix-z370-e-gaming-motherboard-review/all/1/">ASUS ROG Strix Z370-E Gaming Motherboard Review</a><small>10-phase CPU VRM, 10 high-side + 10 low-side MOSFETs; controller marked DIGI+ VRM EPU ASP1400BT; two aluminium VRM heatsinks, no heat pipe; 8-pin EPS input; front USB 3.1 header shares two PCIe x1 slots; 3x USB 3.1 Gen 2 via dual ASM3142; isolated audio PCB, shielded ALC1220; Realtek RTL8822BE Wi-Fi; Bluetooth 4.1 — KitGuru</small></li>
+          <li><a href="https://www.bit-tech.net/reviews/tech/motherboards/asus-rog-strix-z370-e-gaming/1/">Asus ROG Strix Z370-E Gaming Review</a><small>the USB 3.1 Gen 2 front header sits next to the 24-pin ATX connector; two 12 V RGB headers plus one 5 V addressable header — bit-tech · also case</small></li>
+          <li><a href="http://web.archive.org/web/20250201045603/https://www.anandtech.com/show/11860/z370-motherboards-asus-asrock-ecs-evga-biostar-msi-gigabyte/4">Analyzing Z370 for Intel&#x27;s 8th Generation Coffee Lake: ASUS ROG STRIX Z370-E &amp; Z370-F Gaming</a><small>top slot x16 or x8 from the CPU, second x8 from the CPU, bottom x4 from the chipset; ASUS &#x27;T-Topology&#x27; memory routing: parallel, equal-length traces from CPU to DIMMs; Intel I219-V LAN, Realtek ALC1220 codec; bottom M.2 heatsink linked to the chipset heatsink — AnandTech (Internet Archive copy)</small></li>
+          <li><a href="https://cdrdv2-public.intel.com/337344/337344_8th-gen-core-family-datasheet-vol-1_Rev009.pdf">8th and 9th Generation Intel Core Processor Families Datasheet, Volume 1 of 2 (337344, Rev 009)</a><small>power rails VCC, VccGT, VccSA, VccIO, VccST, VccPLL, VccPLL_OC, VDDQ, with SVID or fixed control; three-signal SVID interface; connect power pins to their planes; use multiple power and ground planes to reduce I*R drop; PEG Gen 3 (8 GT/s) x16, bifurcation 1x16 / 2x8 / 1x8+2x4; 8 GT/s DMI to the PCH; two DDR4 channels, up to two DIMMs per channel — Intel · also graphics card</small></li>
+          <li><a href="https://en.wikipedia.org/wiki/PCI_Express">PCI Express</a><small>a lane is two one-way differential pairs (four wires); x16 edge pinout: +12 V on B1-B3 and A2-A3; REFCLK differential pair; PRSNT pins shorter — Wikipedia · also storage, graphics card</small></li>
+          <li><a href="https://docs.amd.com/r/en-US/ug583-ultrascale-pcb-design/DDR3/DDR4-DIMM-Data-DQ-and-DQS-Routing">UG583 UltraScale Architecture PCB Design: DDR3/DDR4 DIMM Data (DQ and DQS) Routing</a><small>DIMM data routed as stripline; DQ 50 ohm in breakout, 39 ohm +/-10% on the main PCB; DQS 66 ohm differential; 6 mil DQ traces; 15 mil spacing within a byte, 30 mil byte to byte, 21 mil DQ-to-DQS — AMD (Xilinx) · also memory</small></li>
+          <li><a href="https://docs.amd.com/r/en-US/ug583-ultrascale-pcb-design/DDR4-UDIMM/RDIMM/SODIMM/LRDIMM-Routing-Constraints">UG583: DDR4 UDIMM/RDIMM/SODIMM/LRDIMM Routing Constraints</a><small>data group = DQ + DM_n/DBI_n matched to DQS within +/-10 ps (+/-58 mil); DQS P/N within 2 ps; address/command to CK +/-8 ps; maximum data length 6.0 in — AMD (Xilinx) · also memory</small></li>
+          <li><a href="https://docs.amd.com/r/en-US/ug583-ultrascale-pcb-design/General-Memory-Routing-Guidelines">UG583: General Memory Routing Guidelines</a><small>how the skew constraints are defined; the wide CK-to-DQS window lets write levelling cover every chip on a fly-by chain — AMD (Xilinx) · also memory</small></li>
+          <li><a href="https://www.ti.com/lit/an/spraar7j/spraar7j.pdf">High-Speed Interface Layout Guidelines (SPRAAR7J, rev. Feb 2023)</a><small>match lengths within each differential pair with serpentines near the mismatched end; TX and RX pairs need not match each other; route over a solid ground plane, never across splits; AC-coupling capacitors in line, 0402 or smaller, placed symmetrically; example impedances for TI SoCs: USB 90 ohm, PCIe 90-110 ohm, SATA 85-115 ohm differential — Texas Instruments · also storage, graphics card</small></li>
+        </ul>
+      </section>
+      <section class="src">
+        <h3>Processors</h3>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Zen_2">Zen 2</a><small>chiplet processes and package (claim carried over from credits.html) — Wikipedia</small></li>
+          <li><a href="https://www.cpu-monkey.com/en/cpu-amd_ryzen_5_3600">AMD Ryzen 5 3600 specifications</a><small>cores, cache, DDR4-3200, 65 W (claims carried over from credits.html) — CPU Monkey</small></li>
+          <li><a href="https://www.notebookcheck.net/AMD-Ryzen-9-7950X3D-Processor-Benchmarks-and-Specs.714449.0.html">AMD Ryzen 9 7950X3D Processor - Benchmarks and Specs</a><small>two CCDs, 3D V-Cache, 128 MB L3, 120 W (claims carried over from credits.html) — Notebookcheck</small></li>
+          <li><a href="https://www.tomshardware.com/news/amd-intros-zen-4-ryzen-7000-cpus-and-600-series-chipset-up-to-55-ghz-15-performance-rdna-2-igpus-pcie-5-ddr5">AMD intros Zen 4 Ryzen 7000 CPUs and 600-series chipset</a><small>RDNA 2 graphics in the I/O die, PCIe 5.0, DDR5 (claims carried over from credits.html) — Tom&#x27;s Hardware</small></li>
+          <li><a href="https://en.wikipedia.org/wiki/Socket_AM5">Socket AM5</a><small>LGA 1718 contacts; DDR5 in dual-channel configuration; chipset link PCIe 4.0 x4 (600/800-series); primary slot 1x16 or 2x8 on some chipsets — Wikipedia</small></li>
+        </ul>
+      </section>
+      <section class="src">
+        <h3>Memory</h3>
+        <ul>
+          <li><a href="https://www.kingston.com/dataSheets/KVR24N17S8L_8.pdf">KVR24N17S8L/8 DDR4-2400 8GB 1Rx8 VLP UDIMM datasheet</a><small>288-pin DIMM; 1Rx8, eight 1G x 8 FBGA chips, 64-bit; VDD = VDDQ = 1.2 V, VPP = 2.5 V, VDDSPD 2.2-3.6 V; fly-by topology; on-die termination; I2C serial presence detect EEPROM — Kingston Technology</small></li>
+        </ul>
+      </section>
+      <section class="src">
+        <h3>Storage</h3>
+        <ul>
+          <li><a href="https://download.semiconductor.samsung.com/resources/data-sheet/Samsung-NVMe-SSD-980-PRO-Data-Sheet_Rev.2.1_10129504060695.pdf">Samsung NVMe SSD 980 PRO Data Sheet Rev 2.1</a><small>Elpis controller, V-NAND 3-bit MLC, LPDDR4 cache, PCIe 4.0 x4 NVMe, 7,000/5,000 MB/s (claims carried over from credits.html) — Samsung Semiconductor</small></li>
+          <li><a href="https://www.techpowerup.com/ssd-specs/samsung-980-pro-1-tb.d47">Samsung 980 PRO 1 TB Specs (SSD database)</a><small>M.2 2280 single-sided; Elpis S4LV003, 8 nm, 5-core Cortex-R8; 8 flash channels at 1,400 MT/s, 8 chip enables; 2 NAND packages x 4 Tbit, 16 dies of 256 Gbit each, 128-layer V6 TLC, Toggle 4.0; 1 GB LPDDR4-1866 (K4F8E3D4HF, 8Gx32); NVMe 1.3, PCIe 4.0 x4; 7,000 / 5,000 MB/s — TechPowerUp</small></li>
+        </ul>
+      </section>
+      <section class="src">
+        <h3>Graphics card</h3>
+        <ul>
+          <li><a href="https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3080-3080ti/">GeForce RTX 3080 family specifications</a><small>8,704 CUDA cores, 10 GB GDDR6X on 320-bit, HDMI 2.1 + 3x DP 1.4a, 12-pin, 320 W, PCIe 4.0 (claims carried over from credits.html) — NVIDIA</small></li>
+          <li><a href="https://www.techpowerup.com/review/nvidia-geforce-rtx-3080-founders-edition/4.html">NVIDIA GeForce RTX 3080 Founders Edition Review: Pictures &amp; Teardown</a><small>29 x 11 cm, dual slot; 3x DP 1.4a + 1x HDMI 2.1; 12-pin carries up to 300 W; 375 W available with the slot; 2x 8-pin to 12-pin adapter in every box; left fan exhausts through the bracket; the second fan pulls air from below and pushes it out above the card; vapour-chamber base, four heat pipes, an 85 mm fan on each side; fan-to-PCB cables J802, J801, J804 — TechPowerUp · also case</small></li>
+          <li><a href="https://www.techpowerup.com/review/nvidia-geforce-rtx-3080-founders-edition/5.html">NVIDIA GeForce RTX 3080 Founders Edition Review: Circuit Board Analysis</a><small>GPU VRM 15 phases with MPS MP2884B / MP2886B / MP2888B controllers; MP86957 DrMOS; memory VRM 3 phases, uPI uS5650Q, placed among the GPU phases; Micron GDDR6X D8BGW = MT61K256M32JE-19, 19 Gbps, PAM4; GA102: Samsung 8 nm, 28 billion transistors, 628 mm2 — TechPowerUp</small></li>
+          <li><a href="https://www.hexus.net/tech/reviews/graphics/145342-nvidia-geforce-rtx-3080-founders-edition/?page=4">Review: Nvidia GeForce RTX 3080 Founders Edition (page 4)</a><small>18 power phases in total; the PCB ends where the 12-pin connector is; small 12-pin connector — HEXUS</small></li>
+          <li><a href="https://videocardz.com/newz/pcie-gen5-power-connector-is-compatible-with-geforce-rtx-30-founders-edition">PCIe Gen5 power connector is compatible with GeForce RTX 30 Founders Edition</a><small>the FE 12-pin (&#x27;Molex MicroFit 3.0 dual row, 12 circuits&#x27;) is physically identical to the Gen5 12-pin and supplies the same power; 12VHPWR adds four sideband signals (SENSE0/1, CARD_PWR_STABLE, CARD_CBL_PRES) — VideoCardz (reporting HardwareLuxx)</small></li>
+          <li><a href="https://www.cable-sleeving.com/nvidia-fe-12pin-connector">nVidia FE 12-pin connector (CO-NV-FE)</a><small>Micro-Fit 3.0 12-pin, 3.00 mm pitch vs 4.20 mm for ATX/PCIe; recommended power wire: high-quality 17 AWG, at most 2.0 mm OD (2.7 mm with the crimp); 16 AWG often crimps badly; do not use 18 AWG; fits FE 3060-3090 — MDPC-X</small></li>
+          <li><a href="https://help.moddiy.com/en/article/why-there-are-only-6-wires-for-the-rtx30-cable-3ytxl8/">Why there are only 6 wires for the RTX30 cable?</a><small>RTX 3080/3090 use all 12 pins and need two 8-pin connectors (6 wires from each); 3050/3060/3070 FE use only 6 of the 12 pins — MODDIY · also case</small></li>
+          <li><a href="https://thepcenthusiast.com/seasonic-nvidia-micro-fit-3-0-pcie-connector/">Seasonic NVIDIA Micro-Fit 3.0 8-Pin to 12-Pin PCIe Connector Pictured</a><small>Seasonic&#x27;s cable joins two 8-pin PSU connectors into one &#x27;12-pin PCIe Molex Micro-Fit 3.0&#x27; connector; recommended PSU 850 W or more — ThePCEnthusiast</small></li>
+        </ul>
+      </section>
+      <section class="src">
+        <h3>Cooler and fans</h3>
+        <ul>
+          <li><a href="https://www.noctua.at/en/support/faqs/what-pin-configuration-do-noctua-fans-use">FAQ: What pin configuration do Noctua fans use?</a><small>the standard Intel/AMD pin assignment; 4-pin: blue PWM, green RPM, yellow +12 V, black GND; 3-pin: yellow RPM, red +12 V, black GND; chromax.black: all wires black, told apart by position — Noctua · also case</small></li>
+        </ul>
+      </section>
+      <section class="src">
+        <h3>Case</h3>
+        <ul>
+          <li><a href="https://www.corsair.com/us/en/p/pc-cases/cc-9011200-ww/4000d-airflow-tempered-glass-mid-tower-atx-case-black-cc-9011200-ww">4000D AIRFLOW Tempered Glass Mid-Tower ATX Case product page</a><small>equipped with two 120 mm AirGuide fans (positions not stated); front I/O: 1x USB 3.1 Type-C, 1x USB 3.0, 1x audio in/out combo jack; fan support: front 3x 120 / 2x 140, rear 1x 120, top 2x 120/140; 466 x 230 x 453 mm; replacement part listed as &#x27;4000D/4000D AIRFLOW 120MM 3-PIN FAN, BLACK, 1200 RPM&#x27; — Corsair</small></li>
+          <li><a href="https://www.techpowerup.com/review/corsair-4000d-airflow/3.html">Corsair 4000D Airflow Review: Introduction and A Closer Look - Outside</a><small>ships with one 120 mm intake fan at the front (room for two more) and one 120 mm exhaust fan at the rear: two fans in total; spec table (page 1): front 3x 120 mm with 1 pre-installed, rear 1x 120 mm with 1 pre-installed; front I/O: USB 3.0, USB-C, combo audio jack, with the power and reset buttons either side — TechPowerUp</small></li>
+          <li><a href="https://www.techpowerup.com/review/corsair-4000d-airflow/4.html">Corsair 4000D Airflow Review: A Closer Look - Inside</a><small>all cables in the case are black; the USB 3.0 cable is flat; no HDD activity LED; 120 mm exhaust fan at the top of the rear wall, height adjustable — TechPowerUp</small></li>
+        </ul>
+      </section>
+    <!-- sources:end -->
+  </main>
+</body>
+</html>

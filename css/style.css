@@ -713,3 +713,37 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 .aoc-concepts-head .fmt-head { margin-bottom:0; }
 @media (max-width:900px) { .aoc-principles { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media (max-width:760px) { .aoc-principles { grid-template-columns:1fr; } }
+
+/* ---------- Anatomy of a Computer: the playable site (js/aoc-player.js) ----------
+   A 16:9 screen that holds anatomy/ in an iframe once Play is pressed; tabs pick the build. Taller on
+   phones, where the experience lays itself out in portrait. Fullscreen fills the display. */
+.aoc-jump { display:inline-flex; gap:.6em; margin-top:clamp(28px,3vw,44px); padding:12px 22px; border:1px solid var(--line); border-radius:999px;
+  font-size:11px; font-weight:500; letter-spacing:.32em; text-transform:uppercase; transition:background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease); }
+.aoc-jump:hover, .aoc-jump:focus-visible { background:var(--fg); color:var(--bg); border-color:var(--fg); }
+.aoc-player { display:grid; gap:16px; }
+.aoc-tabs { display:flex; flex-wrap:wrap; gap:8px; }
+.aoc-tabs button { padding:9px 18px; border:1px solid var(--line); border-radius:999px; background:none; cursor:pointer;
+  font-size:11px; font-weight:500; letter-spacing:.24em; text-transform:uppercase; color:var(--dim); transition:color .25s, background .25s, border-color .25s; }
+.aoc-tabs button:hover { color:var(--fg); border-color:rgba(255,255,255,.4); }
+.aoc-tabs button[aria-selected="true"] { color:var(--bg); background:var(--fg); border-color:var(--fg); }
+.aoc-screen { position:relative; aspect-ratio:16 / 9; overflow:hidden; background:#000; outline:1px solid var(--line); outline-offset:-1px; }
+.aoc-poster { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.5; transition:opacity .5s var(--ease); }
+.aoc-start { position:absolute; inset:0; z-index:1; display:grid; place-content:center; justify-items:center; gap:18px; width:100%; border:0; cursor:pointer;
+  background:radial-gradient(ellipse at center, rgba(0,0,0,.15) 0%, rgba(0,0,0,.6) 100%);
+  font-size:11px; font-weight:500; letter-spacing:.32em; text-transform:uppercase; }
+.aoc-start-icon { display:grid; place-items:center; width:clamp(64px,6.4vw,96px); aspect-ratio:1; border:1px solid rgba(255,255,255,.75); border-radius:50%;
+  transition:transform .5s var(--ease), background .5s var(--ease); }
+.aoc-start-icon svg { width:34%; margin-left:6%; fill:currentColor; }
+.aoc-start:hover .aoc-start-icon, .aoc-start:focus-visible .aoc-start-icon { transform:scale(1.07); background:rgba(255,255,255,.1); }
+.aoc-start:hover ~ .aoc-poster, .aoc-screen:hover .aoc-poster { opacity:.62; }
+.aoc-screen iframe { position:absolute; inset:0; z-index:2; display:block; width:100%; height:100%; border:0; background:#000; }
+.aoc-player.is-playing .aoc-start, .aoc-player.is-playing .aoc-poster { display:none; }
+.aoc-screen:fullscreen { aspect-ratio:auto; width:100vw; height:100vh; outline:0; }
+.aoc-bar { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:12px 28px; }
+.aoc-hint { margin:0; max-width:70ch; font-size:13px; color:var(--dim); }
+.aoc-actions { display:flex; gap:24px; }
+.aoc-actions button, .aoc-actions a { padding:0; border:0; background:none; cursor:pointer; font-size:11px; font-weight:500; letter-spacing:.24em; text-transform:uppercase; }
+.aoc-actions button:hover, .aoc-actions a:hover { color:var(--dim); }
+.aoc-player:not(.is-playing) .aoc-stop { display:none; }
+@media (max-width:760px) { .aoc-screen { aspect-ratio:auto; height:min(78svh, 700px); } .aoc-actions { gap:20px; } }
+@media (prefers-reduced-motion:reduce) { .aoc-start-icon, .aoc-poster, .aoc-jump { transition:none; } }

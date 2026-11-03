@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anatomy of a Computer</title>
+<meta name="description" content="Eight real PC parts in 3D, with their real power and data wiring, x-ray views, sound and the EIII P2 motion prototype.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Cormorant+Garamond:wght@500&family=Courier+Prime&display=swap" rel="stylesheet">
+<style>
+  /* Layout: one column on the site's black x-ray field: the name, two large build entries, the route the power takes, then how to explore.
+     A single dark look by choice (the experience itself is dark), so every colour is set explicitly. */
+  :root {
+    color-scheme: dark;
+    --bg: #060708; --panel: #0d0f11; --ink: #ececec; --dim: #8e9296; --line: rgba(236, 242, 246, .11);
+    --xray: #3fd2ff; --power: #fff200; --data: #ff53e2;
+    --display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "Courier Prime", "Courier New", monospace;
+  }
+  body { background: var(--bg); color: var(--ink); font: 400 15px/1.55 var(--body); -webkit-font-smoothing: antialiased; }
+  main {
+    max-width: 1060px; margin: 0 auto; display: grid; gap: 40px;
+    padding-block: 48px 64px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .eyebrow, .label { margin: 0; font: 400 12px/1.2 var(--mono); letter-spacing: .3em; text-transform: uppercase; color: var(--dim); }
+  h1 { margin: 12px 0 16px; font: 500 clamp(44px, 8.4vw, 92px)/.9 var(--display); letter-spacing: -.035em; text-transform: uppercase; text-wrap: balance; }
+  .lede { margin: 0; max-width: 62ch; color: var(--dim); }
+
+  .builds { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 20px; }
+  .build {
+    display: grid; grid-template-rows: auto 1fr; overflow: hidden; color: inherit; text-decoration: none;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 6px; transition: border-color .2s, transform .2s;
+  }
+  .build:hover { border-color: var(--xray); transform: translateY(-2px); }
+  .build:focus-visible { outline: 2px solid var(--xray); outline-offset: 3px; }
+  .build img { display: block; width: 100%; max-width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-bottom: 1px solid var(--line); }
+  .build__body { display: grid; gap: 8px; align-content: start; padding: 18px 20px 22px; min-width: 0; }
+  .build h2 { margin: 0; font: 500 30px/1 var(--display); letter-spacing: -.02em; text-transform: uppercase; }
+  .build p { margin: 0; color: var(--dim); font-size: 14px; }
+  .go { margin-top: 6px; font: 400 12px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--xray); }
+
+  /* the story order is a real sequence: the route the power takes */
+  .route { display: grid; gap: 14px; }
+  .acts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+  .act { display: grid; gap: 8px; padding: 14px 16px; border-top: 2px solid var(--c); background: var(--panel); border-radius: 0 0 6px 6px; }
+  .act--energy { --c: var(--power); } .act--info { --c: var(--data); } .act--heat { --c: var(--xray); }
+  .act b { font: 600 13px/1.2 var(--body); }
+  .act ol { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0; padding: 0; list-style: none; color: var(--dim); font-size: 14px; }
+  .act li { white-space: nowrap; }
+  .act li + li::before { content: "→"; margin-right: 14px; color: var(--c); }
+
+  .notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 18px 28px; margin: 0; }
+  .notes div { display: grid; gap: 4px; min-width: 0; }
+  .notes dt { font: 400 11px/1.2 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--dim); }
+  .notes dd { margin: 0; font-size: 14px; }
+  kbd { display: inline-block; min-width: 20px; padding: 1px 5px; border: 1px solid var(--line); border-radius: 3px; font: 12px var(--mono); text-align: center; color: var(--ink); }
+
+  footer { padding-top: 22px; border-top: 1px solid var(--line); color: var(--dim); font-size: 13px; }
+  footer a { color: var(--xray); text-underline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .build { transition: none; } .build:hover { transform: none; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">EIII P2 · Interactive</p>
+    <h1>Anatomy of a Computer</h1>
+    <p class="lede">Eight real PC parts in 3D. Turn them, take them apart, and x-ray them to follow the power and data along their actual wires, from the wall socket to the pixels on your screen.</p>
+  </header>
+
+  <section class="builds" aria-label="Builds">
+    <a class="build" href="live/index.html">
+      <img src="shots/live.jpg" alt="The motherboard in the Power view: the 24-pin and 8-pin cables arriving, and copper pours carrying power to the CPU and slots." width="960" height="600">
+      <div class="build__body">
+        <p class="label">Full experience</p>
+        <h2>Live build</h2>
+        <p>All eight parts with five views each, real cables and copper traces, hotspots, a glossary, the size line-up and a drag-and-drop Build a PC workshop.</p>
+        <span class="go">Open the live build →</span>
+      </div>
+    </a>
+    <a class="build" href="prototype/index.html">
+      <img src="shots/prototype.jpg" alt="The prototype showing the AMD Ryzen 9 7950X3D in its photographic overview, as in the motion mockup." width="960" height="600">
+      <div class="build__body">
+        <p class="label">Motion mockup, built</p>
+        <h2>Prototype</h2>
+        <p>The designer's 23-second motion mockup as a working site: the intro, sliding parts, hotspot rings, x-ray dissolves and the 1-bit exit.</p>
+        <span class="go">Open the prototype →</span>
+      </div>
+    </a>
+  </section>
+
+  <section class="route" aria-labelledby="routeTitle">
+    <p class="label" id="routeTitle">The live build follows the power</p>
+    <ol class="acts">
+      <li class="act act--energy"><b>Energy</b><ol><li>Power supply</li><li>Motherboard</li></ol></li>
+      <li class="act act--info"><b>Information</b><ol><li>CPU</li><li>RAM</li><li>SSD</li><li>GPU</li></ol></li>
+      <li class="act act--heat"><b>Heat</b><ol><li>CPU cooler</li><li>Case</li></ol></li>
+    </ol>
+  </section>
+
+  <dl class="notes" aria-label="How to explore">
+    <div><dt>Start</dt><dd>Click the start screen. Sound begins after that click; turn it off from the speaker icon, or with <kbd>M</kbd> in the prototype.</dd></div>
+    <div><dt>Parts</dt><dd><kbd>←</kbd> <kbd>→</kbd> or the side arrows. Drag a part to turn it.</dd></div>
+    <div><dt>Views</dt><dd>Live: <kbd>1</kbd>–<kbd>5</kbd> for Overview, Framework, Power, Data, Airflow. Prototype: <kbd>1</kbd> down, <kbd>2</kbd> up.</dd></div>
+    <div><dt>Best on</dt><dd>A laptop or desktop with a graphics card. It also works on phones.</dd></div>
+  </dl>
+
+  <footer>
+    3D models from Sketchfab (CC BY 4.0), sounds under CC0 and the Pixabay licence, and 43 hardware sources: <a href="credits.html">credits and sources</a>.
+  </footer>
+</main>
+</body>
+</html>

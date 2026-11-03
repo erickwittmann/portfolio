@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Anatomy of a Computer</title>
+  <meta name="description" content="Spin, x-ray and explore the parts inside a computer: what they are, how they're built, and how power, data and air move through them.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,200;0,300;0,400;0,600;0,700;1,300;1,700&family=Cormorant+Garamond:wght@500&family=Courier+Prime&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="modulepreload" href="../vendor/three/three.module.min.js">
+  <link rel="preload" href="../assets/models/psu.glb?v=5" as="fetch" crossorigin>
+  <script type="importmap">
+    { "imports": { "three": "../vendor/three/three.module.min.js", "three/addons/": "../vendor/three/addons/" } }
+  </script>
+</head>
+<body data-mode="overview">
+
+  <!-- ===== Intro (video: 1-bit circuit mosaic resolves, dissolves to title) ===== -->
+  <section class="intro" id="intro" aria-label="Start">
+    <canvas class="intro__fx" id="introFx" aria-hidden="true"></canvas>
+    <div class="intro__content">
+      <h1 class="intro__title" id="introTitle">Anatomy of a Computer</h1>
+      <button class="intro__start" id="start" disabled><span id="startText">Loading parts</span><span class="caret" aria-hidden="true"></span></button>
+      <button class="intro__build" id="startBuild" disabled>or build a computer from scratch →</button>
+      <div class="intro__load" aria-hidden="true"><i id="loadBar"></i></div>
+    </div>
+  </section>
+
+  <!-- ===== Explorer ===== -->
+  <main class="app" id="app" aria-hidden="true">
+    <div class="bg" id="bg" aria-hidden="true"><div class="bg__circuit"></div></div>
+    <p class="ghost" id="ghost" aria-hidden="true">PSU</p>
+
+    <div class="stage" id="stage">
+      <canvas class="gl" id="gl" aria-label="3D model. Drag, or press W A S D, to rotate. Scroll, or press plus and minus, to zoom. Zero resets." tabindex="0"></canvas>
+      <div class="flowlabels" id="flowLabels" aria-hidden="true"></div>
+      <div class="hotspots" id="hotspots"></div>
+      <svg class="callout-line" id="calloutLine" aria-hidden="true"><path d=""/></svg>
+      <div class="callout" id="callout" role="dialog" aria-live="polite" hidden>
+        <p class="callout__title"></p>
+        <p class="callout__text"></p>
+        <button class="callout__close" aria-label="Close detail">×</button>
+      </div>
+      <button class="side-nav side-nav--prev" id="prev" aria-label="Previous part"><img src="../assets/icons/chevron-circle.svg" alt=""></button>
+      <button class="side-nav side-nav--next" id="next" aria-label="Next part"><img src="../assets/icons/chevron-circle.svg" alt=""></button>
+      <p class="model-note" id="modelNote"></p>
+      <button class="help" id="help" aria-label="Show the tour again">?</button>
+      <button class="full-btn" id="fullBtn" aria-label="Full-screen 3D" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+      <div class="exlabels" id="exLabels" aria-hidden="true"></div>
+      <div class="linelabels" id="lineLabels"></div>
+      <button class="lineup-exit" id="lineupExit">← Back to the parts</button>
+      <span class="ws-target" id="wsTarget" aria-hidden="true" hidden></span>
+      <aside class="ws-spec" id="wsSpec" aria-label="Your PC" hidden>
+        <p class="ws-spec__eyebrow">Your PC <button class="ws-spec__more" id="wsSpecToggle" aria-expanded="false" aria-controls="wsStats">Details</button></p>
+        <p class="ws-total"><b id="wsTotal">$0</b><em class="ws-total__delta" id="wsDelta"></em></p>
+        <p class="ws-spec__planned" id="wsPlanned"></p>
+        <ul class="ws-stats" id="wsStats"></ul>
+        <ul class="ws-warn" id="wsWarn"></ul>
+        <button class="ws-power" id="wsPower" hidden></button>
+        <p class="sr-only" id="wsSr" aria-live="polite"></p>
+      </aside>
+      <button class="explode" id="explode" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="9" width="16" height="6" rx="1"/><path d="M12 2v4M12 18v4M9 4l3-2 3 2M9 20l3 2 3-2"/></svg>
+        <span>Take it apart</span>
+      </button>
+    </div>
+
+    <header class="header">
+      <div class="header__meta">
+        <strong>Anatomy of a Computer</strong>
+        <span>EIII P2&nbsp;&nbsp;&nbsp;Live build</span>
+      </div>
+      <button class="header__logo" id="home" aria-label="Back to start">
+        <img src="../assets/icons/logo-chip.svg" alt="">
+      </button>
+      <div class="header__right">
+        <button class="found" id="found" aria-label="Discoveries">
+          <svg viewBox="0 0 36 36" aria-hidden="true"><circle class="found__track" cx="18" cy="18" r="15"/><circle class="found__bar" id="foundBar" cx="18" cy="18" r="15"/></svg>
+          <span id="foundText">0/30</span>
+        </button>
+        <button class="sound" id="sound" aria-label="Sound on" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path class="sound__body" d="M4 9h4l5-4v14l-5-4H4z"/><path class="sound__waves" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/><path class="sound__x" d="M16 9l6 6M22 9l-6 6"/></svg>
+        </button>
+        <button class="header__menu" id="menuBtn" aria-label="Open parts index" aria-expanded="false"><span></span><span></span></button>
+      </div>
+    </header>
+
+    <section class="panel" aria-label="Part details">
+      <img class="divider" src="../assets/icons/divider.svg" alt="" aria-hidden="true">
+      <nav class="modes" id="modes" aria-label="View mode"></nav>
+
+      <div class="m-callout" id="mCallout" aria-live="polite" hidden><b></b><p></p></div>
+      <div class="info">
+        <span class="info__dash" aria-hidden="true"></span>
+        <h2 class="info__title" id="title"><span class="roll"><span class="roll__item"><b>POWER</b> SUPPLY UNIT</span></span></h2>
+        <p class="info__desc" id="desc"></p>
+        <nav class="parts" aria-label="Parts">
+          <button class="parts__arrow" id="partPrev" aria-label="Previous part"><img src="../assets/icons/chevron-left.svg" alt=""></button>
+          <div class="parts__list" id="parts"></div>
+          <button class="parts__arrow parts__arrow--next" id="partNext" aria-label="Next part"><img src="../assets/icons/chevron-left.svg" alt=""></button>
+          <button class="build-btn" id="buildBtn">Build a PC <span aria-hidden="true">→</span></button>
+          <button class="lineup-btn" id="lineupBtn">Size line-up</button>
+        </nav>
+      </div>
+
+      <div class="spec">
+        <p class="spec__model" id="model"></p>
+        <p class="spec__size" id="size"></p>
+        <ul class="spec__legend" id="legend">
+          <li><button data-mode-link="power">Power <img src="../assets/icons/line-power.svg" alt=""></button></li>
+          <li><button data-mode-link="data">Data <img src="../assets/icons/line-data.svg" alt=""></button></li>
+          <li><button data-mode-link="airflow">Airflow <img src="../assets/icons/line-airflow.svg" alt=""></button></li>
+        </ul>
+        <div class="lang" role="group" aria-label="Wording">
+          <button data-lang="simple" aria-pressed="true">Simple words</button>
+          <button data-lang="detailed" aria-pressed="false">More detail</button>
+        </div>
+      </div>
+      <div class="web" id="web" aria-label="Jump to a connected part"></div>
+      <div class="ws-bench" id="wsBench" hidden>
+        <div class="ws-bench__head">
+          <h2 class="ws-bench__title"><b>BUILD</b> A PC</h2>
+          <p class="ws-bench__hint" id="wsHint" aria-live="polite"></p>
+          <div class="ws-bench__tools">
+            <div class="ws-presets" role="group" aria-label="Pick a whole set of parts">
+              <button data-preset="budget">Budget</button><button data-preset="balanced">Balanced</button><button data-preset="dream">Dream</button>
+            </div>
+            <button class="ws-tool" id="wsReset">Start over</button>
+            <button class="ws-tool" id="wsExit">Exit</button>
+          </div>
+        </div>
+        <div class="ws-cards" id="wsCards" role="list" aria-label="Parts bench"></div>
+      </div>
+    </section>
+
+    <div class="index" id="index" hidden>
+      <div class="index__inner">
+        <p class="index__eyebrow">Explore Parts</p>
+        <ol class="index__list" id="indexList"></ol>
+        <div class="index__actions">
+          <button class="index__build" id="buildFromIndex">Build a PC from scratch <span aria-hidden="true">→</span></button>
+          <button class="index__gloss" id="lineupFromIndex">Size line-up</button>
+          <button class="index__gloss" id="glossaryBtn">Glossary</button>
+          <a class="index__gloss" href="../credits.html">Credits &amp; sources</a>
+          <a class="index__gloss" href="../index.html">All builds</a>
+        </div>
+        <div class="index__help">
+          <p><kbd>←</kbd><kbd>→</kbd> change part</p>
+          <p><kbd>↑</kbd><kbd>↓</kbd> or <kbd>1</kbd>–<kbd>5</kbd> change view</p>
+          <p>Drag or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> to spin · <kbd>+</kbd><kbd>−</kbd> zoom · <kbd>0</kbd> reset</p>
+          <p><kbd>E</kbd> take apart · <kbd>G</kbd> glossary</p>
+          <p><kbd>Esc</kbd> close</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <p class="sr-only" id="srScene" aria-live="polite"></p>
+  <div class="glossary" id="glossary" role="dialog" aria-modal="true" aria-labelledby="glossaryTitle" hidden>
+    <div class="glossary__inner">
+      <div class="glossary__head">
+        <h2 id="glossaryTitle">Glossary</h2>
+        <button class="glossary__close" id="glossaryClose" aria-label="Close glossary">×</button>
+      </div>
+      <input class="glossary__q" id="glossaryQ" type="search" placeholder="Look up a word… (try “PCIe” or “brain”)" aria-label="Search the glossary">
+      <dl class="glossary__list" id="glossaryList"></dl>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <div class="ws-chip" id="wsChip" aria-hidden="true" hidden></div>
+  <div class="ws-pop" id="wsPop" role="listbox" aria-label="Options" hidden></div>
+  <div class="celebrate" id="celebrate" role="dialog" aria-modal="true" aria-labelledby="celebrateTitle" hidden>
+    <canvas class="celebrate__fx" id="celebrateFx" aria-hidden="true"></canvas>
+    <div class="celebrate__card">
+      <p class="celebrate__eyebrow">Every feature found</p>
+      <h2 id="celebrateTitle">You're a Computer Anatomist!</h2>
+      <p>You've opened every part and found every feature. Final challenge: in the X-ray views, trace the power from wall to screen.</p>
+      <div class="celebrate__row"><button data-close>Keep exploring</button><button data-reset>Start the hunt again</button></div>
+    </div>
+  </div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

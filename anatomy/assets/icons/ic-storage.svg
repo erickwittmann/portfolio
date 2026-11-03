@@ -1,0 +1,11 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="26.4" height="26.4" viewBox="0 0 26.4 26.4" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 52">
+<path id="Ellipse 20" opacity="0.56" d="M25.8 13.2C25.8 20.1588 20.1588 25.8 13.2 25.8C6.24121 25.8 0.6 20.1588 0.6 13.2C0.6 6.24121 6.24121 0.6 13.2 0.6C20.1588 0.6 25.8 6.24121 25.8 13.2Z" fill="white" fill-opacity="0.29" stroke-width="1.2" stroke="white"/>
+<g id="PSU Icon">
+<path id="Vector 29" d="M5.51259 17.625V8.77499C5.51259 8.11225 6.04985 7.57499 6.71259 7.57499H19.6876C20.3503 7.57499 20.8876 8.11225 20.8876 8.77499V17.625C20.8876 18.2877 20.3503 18.825 19.6876 18.825H13.3876H10.7626H6.71259C6.04985 18.825 5.51259 18.2877 5.51259 17.625Z" stroke-width="1.2" stroke-linecap="round" stroke="#CECECE"/>
+<circle id="Ellipse 4" cx="16.0126" cy="15.825" r="0.75" fill="#CECECE"/>
+<circle id="Ellipse 3" cx="14.5127" cy="13.575" r="0.75" fill="#CECECE"/>
+<circle id="Ellipse 5" cx="17.5127" cy="13.575" r="0.75" fill="#CECECE"/>
+</g>
+</g>
+</svg>

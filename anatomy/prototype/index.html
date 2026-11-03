@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Anatomy of a Computer — Prototype</title>
+  <meta name="description" content="The EIII P2 motion prototype as a working site: real-time 3D parts, x-ray views and the transitions of the final motion mockup.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,700;0,800;1,300;1,700&family=Cormorant+Garamond:wght@500&family=Courier+Prime&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="modulepreload" href="../vendor/three/three.module.min.js">
+  <script type="importmap">
+    { "imports": { "three": "../vendor/three/three.module.min.js", "three/addons/": "../vendor/three/addons/" } }
+  </script>
+</head>
+<body data-mode="overview">
+
+  <!-- 0:00–0:03  1-bit circuit resolves, title, "Click to Start Experience" -->
+  <section class="intro" id="intro" aria-label="Start">
+    <canvas class="intro__fx" id="introFx" aria-hidden="true"></canvas>
+    <div class="intro__content">
+      <h1 class="intro__title">Anatomy of a Computer</h1>
+      <button class="intro__start" id="start" disabled>
+        <span id="startText">Loading parts</span>
+      </button>
+    </div>
+  </section>
+
+  <main class="app" id="app" aria-hidden="true">
+    <div class="bg bg--light" aria-hidden="true"></div>
+    <div class="bg bg--dark" aria-hidden="true"><div class="bg__circuit"></div></div>
+
+    <div class="stage" id="stage">
+      <canvas class="gl" id="gl" tabindex="0" aria-label="3D part. Drag to turn it. Left and right arrows change part; 1 and 2 step through the views."></canvas>
+      <canvas class="snap" id="snap" aria-hidden="true"></canvas>
+      <div class="flowlabels" id="flowLabels" aria-hidden="true"></div>
+      <div class="hotspots" id="hotspots"></div>
+      <div class="callout" id="callout" hidden>
+        <p class="callout__title" id="calloutTitle"></p>
+        <p class="callout__text" id="calloutText"></p>
+      </div>
+      <button class="side side--prev" id="prev" aria-label="Previous part"><svg viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="26"/><path d="M31 21l-7 7 7 7"/></svg></button>
+      <button class="side side--next" id="next" aria-label="Next part"><svg viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="26"/><path d="M25 21l7 7-7 7"/></svg></button>
+    </div>
+
+    <header class="header">
+      <p class="header__meta"><strong>Anatomy of a Computer</strong><span>EIII P2<i></i>V5.04.01</span></p>
+      <button class="header__logo" id="home" aria-label="Back to start"><img src="../assets/icons/logo-aoc.svg" alt=""></button>
+      <button class="header__menu" id="menu" aria-label="Open the parts index" aria-expanded="false"><i></i><i></i></button>
+    </header>
+
+    <footer class="foot">
+      <nav class="modes" id="modes" aria-label="View"></nav>
+      <h2 class="title" id="title"><span class="roll"></span></h2>
+      <p class="desc" id="desc" aria-live="polite"></p>
+      <div class="partnav">
+        <button class="partnav__arrow" id="partPrev" aria-label="Previous part"><svg viewBox="0 0 12 20" aria-hidden="true"><path d="M9 3L3 10l6 7"/></svg></button>
+        <span class="partnav__icon" id="partIcon"><img alt=""></span>
+        <button class="partnav__arrow" id="partNext" aria-label="Next part"><svg viewBox="0 0 12 20" aria-hidden="true"><path d="M3 3l6 7-6 7"/></svg></button>
+      </div>
+    </footer>
+
+    <div class="index" id="index" hidden>
+      <div class="index__inner">
+        <p class="index__eyebrow">Explore parts</p>
+        <ol class="index__list" id="indexList"></ol>
+        <p class="index__keys"><kbd>←</kbd><kbd>→</kbd> part &nbsp; <kbd>1</kbd> down &nbsp; <kbd>2</kbd> up &nbsp; <kbd>M</kbd> sound &nbsp; <kbd>Esc</kbd> close</p>
+        <p class="index__keys"><button class="index__sound" id="soundToggle" aria-pressed="true">Sound on</button></p>
+        <p class="index__keys"><a href="../credits.html">Credits, sound &amp; sources</a> · <a href="../index.html">All builds</a></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- 0:18–0:23  scan wipes into a 1-bit pan of the whole machine, then a glitch to black -->
+  <div class="exit" id="exit" aria-hidden="true">
+    <div class="exit__warm" id="exitWarm"><canvas id="exitSnap"></canvas></div>
+    <canvas class="exit__bit" id="bit"></canvas>
+    <div class="exit__glitch" id="glitch"></div>
+  </div>
+
+  <p class="sr-only" id="sr" aria-live="polite"></p>
+  <script type="module" src="js/proto.js"></script>
+</body>
+</html>

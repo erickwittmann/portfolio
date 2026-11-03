@@ -39,6 +39,7 @@
       <div><dt>Role</dt><dd>Solo: research, UX, visual design, motion</dd></div>
       <div><dt>When</dt><dd>Spring 2026</dd></div>
     </dl>
+    <a class="aoc-jump reveal" href="#play">Play the experience <span aria-hidden="true">↓</span></a>
   </header>
 
   <figure class="cs-hero reveal" style="--ar:16 / 9">
@@ -246,6 +247,36 @@
     </div>
   </section>
 
+  <!-- The working site, built after the course. It lives in anatomy/ and loads only when Play is pressed (js/aoc-player.js). -->
+  <section class="fmt aoc-play" id="play" aria-labelledby="play-title">
+    <div class="fmt-head reveal">
+      <span class="cs-num">09</span>
+      <h2 id="play-title">Play the Experience</h2>
+      <p>After the course, the prototype became a working website. All eight parts are real-time 3D models; the x-ray views trace power and data along each part's actual wiring; and the planned build guide and quick reference are in it as a drag-and-drop build and a glossary.</p>
+    </div>
+    <div class="aoc-player reveal">
+      <div class="aoc-tabs" role="group" aria-label="Choose a build">
+        <button type="button" data-build="live" aria-selected="true">Live build</button>
+        <button type="button" data-build="proto" aria-selected="false">Prototype</button>
+      </div>
+      <div class="aoc-screen">
+        <img class="aoc-poster" src="../anatomy/shots/live.jpg" alt="" loading="lazy">
+        <button type="button" class="aoc-start">
+          <span class="aoc-start-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>
+          <span class="aoc-start-label">Play the live build</span>
+        </button>
+      </div>
+      <div class="aoc-bar">
+        <p class="aoc-hint">Drag to turn a part · ← → change parts · 1–5 switch views · sound starts on your first click inside</p>
+        <div class="aoc-actions">
+          <button type="button" class="aoc-full">Fullscreen</button>
+          <a class="aoc-open" href="../anatomy/live/index.html" target="_blank" rel="noopener">New tab <span aria-hidden="true">↗</span></a>
+          <button type="button" class="aoc-stop">Stop</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <a class="next-case" href="beyond-fashion.html">
     <span class="eyebrow">Next case study</span>
     <span class="next-title">Beyond Fashion 2025 <span aria-hidden="true">→</span></span>
@@ -283,5 +314,6 @@
 <script src="../js/hover-audio.js"></script>
 <script src="../js/lightbox.js"></script>
 <script src="../js/chroma.js"></script>
+<script src="../js/aoc-player.js"></script>
 </body>
 </html>

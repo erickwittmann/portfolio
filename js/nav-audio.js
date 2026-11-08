@@ -5,7 +5,8 @@
 //   sound on a case study.
 // - Back/skip only appear where there's a playlist (the homepage).
 // - The lines are the music's spectrum (js/spectrum.js), the same lines the stage's visualizer
-//   draws: nothing but the audio moves them. Silence = a flat line.
+//   draws: nothing but the audio moves them. Silence = a flat line. They're drawn OP-1 style:
+//   bass to highs from left to right, all the lines pinched together at both ends.
 // Load after js/page-audio.js and js/spectrum.js.
 (function () {
   var PA = window.PageAudio, nav = document.getElementById('nav');
@@ -50,6 +51,13 @@
     canvas.width = Math.max(1, Math.round(W * dpr)); canvas.height = Math.max(1, Math.round(H * dpr));
   }
   size(); addEventListener('resize', size);
+  // Points along each line, and how far each may leave the centre: 0 at both ends (where all the
+  // lines meet), rising quickly to 1. Fixed, so it's worked out once.
+  var PTS = 30, ENV = new Float32Array(PTS + 1);
+  // Each band's recent peak and usual level (see the drawing below). SPAN: the share of the spectrum
+  // drawn, bass upward; the very top is near-silent in most songs, so it's left off.
+  var PEAK = new Float32Array(48), AVG = new Float32Array(48), SPAN = 0.72;
+  for (var ei = 0; ei <= PTS; ei++) { var ex = ei / PTS, ea = Math.min(1, ex / 0.16, (1 - ex) / 0.16); ENV[ei] = ea * ea * (3 - 2 * ea); }
 
   var freq = null, spec = window.SpectrumLines ? SpectrumLines(48, LINES) : null;
   var live = 0, last = performance.now(), wasPlaying = null, drawnStill = '';
@@ -91,20 +99,29 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
     ctx.lineWidth = 1.4; ctx.lineJoin = ctx.lineCap = 'round';
-    // Mirrored: the bass sits in the middle, the highs toward both ends. Peaks rise from a baseline
-    // that drops a little while music plays, so they have room; the lines spread apart slightly.
-    var base = H / 2 + H * 0.22 * live, gap = 2.4 * live, amp = H * 0.62, N = Math.max(32, Math.round(W / 3)), bins = spec.bins;
+    // OP-1 style: bass on the left, highs on the right (not mirrored). Every line leaves from one
+    // point at the left end and comes back to one point at the right; in between they fan apart and
+    // swing above and below the centre on smooth curves. Each line reads the spectrum a little
+    // further along than the one above it, so they move like separate strands, not copies.
+    var mid = H / 2, gap = H * 0.085 * live, amp = H * 0.75 * live, bins = spec.bins, x0 = 2, xw = W - 4;
+    // Each band swings around its own usual level (a slow average), scaled by its recent peak, so
+    // the quieter highs on the right move as much as the bass on the left. Silent bands stay level.
+    var top = spec.rows[0], ka = Math.min(1, dt * 0.8);
+    for (var pb = 0; pb < bins; pb++) { AVG[pb] += (top[pb] - AVG[pb]) * ka; PEAK[pb] = Math.max(top[pb], PEAK[pb] - dt * 0.12); }
     for (var l = 0; l < LINES; l++) {
-      var c = COLORS[l], wh = 1 - live, row = spec.rows[l];   // colours fade to white as the line goes still
+      var c = COLORS[l], wh = 1 - live, row = spec.rows[l], off = (l - (LINES - 1) / 2) * gap, shift = l * 0.018;
       ctx.strokeStyle = 'rgb(' + Math.round(c[0] + (255 - c[0]) * wh) + ',' + Math.round(c[1] + (255 - c[1]) * wh) + ',' + Math.round(c[2] + (255 - c[2]) * wh) + ')';
-      ctx.beginPath();
-      for (var i = 0; i <= N; i++) {
-        var x = i / N, d = Math.abs(x - 0.5) * 2, f = d * (bins - 1), b0 = Math.floor(f), b1 = Math.min(bins - 1, b0 + 1);
+      ctx.beginPath(); ctx.moveTo(x0, mid);
+      var px = x0, py = mid;
+      for (var i = 1; i <= PTS; i++) {
+        var x = i / PTS, e = ENV[i], f = Math.min(1, x * 0.94 + shift) * (bins * SPAN - 1), b0 = Math.floor(f), b1 = Math.min(bins - 1, b0 + 1);
         var v = row[b0] + (row[b1] - row[b0]) * (f - b0);
-        v *= 1 - Math.pow(d, 6);   // ease the ends down to the baseline
-        var y = Math.max(1, base + (l - (LINES - 1) / 2) * gap - v * amp);
-        if (i) ctx.lineTo(x * W, y); else ctx.moveTo(0, y);
+        v = (v - AVG[b0]) / Math.max(PEAK[b0], 0.05);   // above / below its band's usual level
+        var nx = x0 + x * xw, ny = Math.min(H - 1.5, Math.max(1.5, mid + (off - v * amp) * e));
+        ctx.quadraticCurveTo(px, py, (px + nx) / 2, (py + ny) / 2);   // through the midpoints: rounded, no corners
+        px = nx; py = ny;
       }
+      ctx.lineTo(x0 + xw, mid);
       ctx.stroke();
     }
   })(last);

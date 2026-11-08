@@ -144,7 +144,8 @@
       if (el.paused) { userPaused = false; var p = el.play(); if (p && p.catch) p.catch(function () {}); rampTo(level(), 400); }
       else { userPaused = true; rampTo(0, 300, function () { el.pause(); }); }
     },
-    title: function () { return decodeURIComponent(src.split('/').pop().replace(/\.[a-z0-9]+$/i, '')); }
+    title: function () { return decodeURIComponent(src.split('/').pop().replace(/\.[a-z0-9]+$/i, '')); },
+    src: function () { return src; }   // for the now-playing card (js/now-playing.js)
   });
   PageAudio.onVolume(function () { if (started && !el.paused) rampTo(ducked ? level() * 0.12 : level(), 150); });
 })();

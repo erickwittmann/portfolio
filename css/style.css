@@ -599,7 +599,7 @@ html.lenis, html.lenis body { height:auto; }
 .na-wave canvas { display:block; width:100%; height:100%; }
 .na-skip:focus-visible, .na-wave:focus-visible { outline:1px dashed rgba(255,255,255,.6); outline-offset:4px; }
 /* Volume: a black bar under the player, slides down while the player is hovered or focused. */
-.na-vol { position:absolute; left:-10px; right:-10px; top:100%; padding:14px 0 0; opacity:0; visibility:hidden;
+.na-vol { position:absolute; z-index:2; left:auto; right:-10px; width:max(calc(100% + 20px), 250px); top:100%; padding:14px 0 0; opacity:0; visibility:hidden;
   transform:translateY(-6px); transition:opacity .25s var(--ease), transform .25s var(--ease), visibility 0s .25s; }
 .nav-audio:hover .na-vol, .nav-audio:focus-within .na-vol { opacity:1; visibility:visible; transform:none; transition-delay:0s; }
 .na-vol-in { display:block; padding:10px 14px; background:#000; }
@@ -610,6 +610,28 @@ html.lenis, html.lenis body { height:auto; }
 .na-vol input::-webkit-slider-thumb { -webkit-appearance:none; width:11px; height:11px; margin-top:-5px; border:0; border-radius:50%; background:#fff; }
 .na-vol input::-moz-range-thumb { width:11px; height:11px; border:0; border-radius:50%; background:#fff; }
 .na-vol input:focus-visible { outline:1px dashed rgba(255,255,255,.6); outline-offset:4px; }
+/* Now playing (js/now-playing.js): the song at the top of the dropdown, linking out to Spotify.
+   It sits inside .nav, so it undoes the nav links' caps, tracking and hover underline. */
+.na-vol.has-song .na-vol-in { padding-top:8px; }
+.nav .na-song { --track:0; display:flex; align-items:center; gap:12px; margin:0; padding:12px 14px 10px; background:#000;
+  font-size:13px; font-weight:400; line-height:1.25; letter-spacing:0; text-transform:none; white-space:normal; text-align:left; }
+.nav .na-song[hidden] { display:none; }
+.nav .na-song::after { display:none; }
+.na-song .sound-bars { flex:none; height:12px; }
+.na-song.is-paused .sound-bars i { animation:none; transform:scaleY(.2); }
+.na-song-text { display:flex; flex-direction:column; flex:1; min-width:0; }
+.na-song-label { margin-bottom:3px; font-size:9px; font-weight:500; letter-spacing:.3em; text-transform:uppercase; color:var(--dim); }
+.na-song-title { font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.na-song-artist { font-size:12px; color:var(--dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.na-song-artist[hidden] { display:none; }
+.na-spotify { flex:none; width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; opacity:.7;
+  transition:opacity .25s, color .25s; }
+.na-spotify circle { stroke-width:1.2; }
+.na-song:hover .na-spotify, .na-song:focus-visible .na-spotify { opacity:1; color:#1ed760; }
+.na-song:focus-visible { outline:1px dashed rgba(255,255,255,.6); outline-offset:-4px; }
+.na-song.is-swap .na-song-text { animation:na-swap .5s var(--ease); }
+@keyframes na-swap { from { opacity:0; transform:translateY(4px); } }
+@media (prefers-reduced-motion:reduce) { .na-song.is-swap .na-song-text { animation:none; } }
 @media (max-width:760px) {
   .nav .nav-name { flex:1 1 auto; flex-basis:auto; text-align:left; }
   .nav-audio { order:1; }
@@ -721,6 +743,25 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 .ab-gallery { columns:3 300px; column-gap:12px; }
 .ab-item { break-inside:avoid; margin:0 0 12px; }
 .ab-cta { border-top:1px solid var(--line); }
+/* Experience (about.html): date | role + organisation + notes | place, one hairline row each. */
+.xp { list-style:none; margin:0; padding:0; border-bottom:1px solid var(--line); }
+.xp-row { display:grid; grid-template-columns:minmax(120px,2fr) minmax(0,7fr) minmax(0,2fr); gap:clamp(16px,3vw,48px);
+  padding:clamp(18px,2vw,28px) 0; border-top:1px solid var(--line); }
+.xp-when, .xp-where { padding-top:.35em; font-size:11px; font-weight:500; letter-spacing:.24em; text-transform:uppercase; color:var(--dim); }
+.xp-where { text-align:right; }
+.xp-what h3 { margin:0; font-size:clamp(18px,1.6vw,24px); font-weight:600; line-height:1.2; }
+.xp-org { margin:4px 0 0; color:var(--dim); }
+.xp-notes { margin:14px 0 0; padding:0; list-style:none; max-width:62ch; color:#c9c9c9; font-size:15px; }
+.xp-notes li { position:relative; padding-left:18px; margin-bottom:6px; }
+.xp-notes li::before { content:""; position:absolute; left:0; top:.72em; width:8px; height:1px; background:var(--dim); }
+.xp-sub { margin:clamp(40px,4.5vw,64px) 0 clamp(14px,1.5vw,20px); font-size:10px; font-weight:500; letter-spacing:.3em; text-transform:uppercase; color:var(--dim); }
+.xp-more { color:#fff; white-space:nowrap; border-bottom:1px solid rgba(255,255,255,.35); transition:border-color .25s; }
+.xp-more:hover, .xp-more:focus-visible { border-color:#fff; }
+@media (max-width:760px) {
+  .xp-row { grid-template-columns:1fr auto; row-gap:10px; }
+  .xp-what { grid-column:1 / -1; grid-row:2; }
+  .xp-when, .xp-where { padding-top:0; letter-spacing:.18em; }
+}
 @media (max-width:760px) { .ab-hero { grid-template-columns:1fr; } .ab-hero .portrait { max-width:78%; } }
 
 /* Anatomy of a Computer: extra text grids under the research / visual direction media, and the

@@ -23,14 +23,14 @@ window.INTRO_SEED = 392357;
 // 'art:<name>' entries are placeholder artwork: delete them once your own media is in.
 window.INTRO_MEDIA = [
   { src: 'assets/hero.mp4#t=3', caption: 'Motion Reel 2025–26' },
-  { src: 'assets/Beyond Fashion Compressed.mp4', caption: 'Beyond Fashion — VJ Set', href: 'work/beyond-fashion.html' },
-  { src: 'assets/EtchaSketch rec.mp4', caption: 'Multiplayer Etch-a-Sketch' },
-  { src: 'assets/1920x1080 Fred Again.mp4', caption: 'Boiler Room Audiovisuals' },
-  { src: 'assets/imagineritposter.png', caption: 'Imagine RIT Poster' },
-  { src: 'assets/ErickWittmannEveryday_16.gif', caption: '20 Days of Motion' },
-  { src: 'assets/caed red.jpg'},
-  { src: 'assets/TD Viz.mp4', caption: 'TouchDesigner' },
-  { src: 'assets/Digital Graffiti Cropped.mp4', caption: 'Projection Mapping', aspect: 3.13 }
+  { src: 'assets/Beyond Fashion-grid.mp4', caption: 'Beyond Fashion — VJ Set', href: 'work/beyond-fashion.html' },
+  { src: 'assets/EtchaSketch rec-720.mp4', caption: 'Multiplayer Etch-a-Sketch' },
+  { src: 'assets/Fred Again-grid.mp4', caption: 'Boiler Room Audiovisuals' },
+  { src: 'assets/imagineritposter.webp', caption: 'Imagine RIT Poster' },
+  { src: 'assets/ErickWittmannEveryday_16.webp', caption: '20 Days of Motion' },
+  { src: 'assets/caed red.webp'},
+  { src: 'assets/TD Viz-grid.mp4', caption: 'TouchDesigner' },
+  { src: 'assets/Digital Graffiti-grid.mp4', caption: 'Projection Mapping', aspect: 3.13 }
 ];
 
 // The name tile (name, portrait, the links below) is off: the opening screen shows the name now.
@@ -53,5 +53,5 @@ window.INTRO_PORTRAITS = [
   'assets/portrait2.png',
   'assets/portrait3.png',
   'assets/portrait4.png',
-  'assets/portrait5.png'
+  'assets/portrait5.webp'
 ];

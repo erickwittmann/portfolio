@@ -384,7 +384,8 @@
       toggle: togglePlay,
       next: function () { nextTrack(1); },
       prev: function () { nextTrack(-1); },
-      title: function () { var tr = TRACKS[trackIndex]; return tr.artist + ' — ' + tr.title; }
+      title: function () { var tr = TRACKS[trackIndex]; return tr.artist + ' — ' + tr.title; },
+      src: function () { return TRACKS[trackIndex].src; }   // for the now-playing card (js/now-playing.js)
     });
     PA.onVolume(function (v) { audio.volume = v; audio.muted = false; applyVolume(); });
   }

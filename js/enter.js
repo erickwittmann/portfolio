@@ -1,10 +1,10 @@
-// Opening screen (homepage): the media grid shows straight away, slightly dimmed (it still flexes
-// around the cursor), with a black bar across the middle: "erickwittmann.com", "headphones
-// recommended", Instagram and LinkedIn, and "click to enter". Clicking anywhere (or pressing
-// Enter/Space, or trying to scroll) enters: the bar collapses to a line and closes, the dim lifts, the
-// sound starts (browsers only allow sound after a click/key, so this click is the one that unlocks it)
-// and the camera pulls back from the LED screen to the whole stage on its own, over DURATION ms.
-// After that the page scrolls as normal. The two social links open in a new tab without entering.
+// Opening screen: the media grid shows straight away, slightly dimmed (it still flexes around the
+// cursor), with a bar across the middle: "erickwittmann.com", "headphones recommended", Instagram
+// and LinkedIn, and "click to enter". Clicking anywhere (or pressing Enter/Space, or trying to
+// scroll) enters: the bar collapses to a line and closes, the dim lifts and the sound starts
+// (browsers only allow sound after a click/key, so this click is the one that unlocks it).
+// - Homepage (splash): after that the page scrolls as normal.
+// - stage.html: the camera then pulls back from the LED screen to the whole stage, over DURATION ms. The two social links open in a new tab without entering.
 // - Arriving part-way down the page (a #about link, reloading lower down) skips the opening.
 // - Reduced motion: no camera move; entering jumps straight to the stage.
 // Load after js/intro.js (needs window.StageSeq).
@@ -24,7 +24,7 @@
   var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var root = document.documentElement;
   var y0 = window.scrollY || window.pageYOffset;
-  if (location.hash || y0 > 10) return;   // not starting at the top: no opening screen
+  if (location.hash || y0 > 10) { root.classList.remove('is-gated'); return; }   // not starting at the top: no opening screen
 
   var gate = document.createElement('div');
   gate.className = 'enter';
@@ -73,6 +73,11 @@
     root.classList.remove('is-gated');
     gate.classList.add('is-out');
     setTimeout(function () { gate.remove(); }, CLOSE + 100);
+    if (!SEQ.stage) {   // splash: no camera move, the page is simply free to scroll once the bar has gone
+      if (lenis) lenis.start();
+      setTimeout(done, CLOSE);
+      return;
+    }
     var end = SEQ.end();
     if (lenis) {   // let the smooth scroller play the move, so it hands over seamlessly to normal scrolling
       lenis.start();

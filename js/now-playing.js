@@ -5,7 +5,7 @@
 //
 // ---------- The song list: the one place to edit ----------
 // One line per audio file, keyed by its path from the site's main folder (the same path as in
-// TRACKS in js/hero.js or js/page-music.js). spotify: the song's open.spotify.com/track link.
+// js/tracks.js or js/page-music.js). spotify: the song's open.spotify.com/track link.
 // Leave spotify '' and the card links to a Spotify search for the artist and title instead.
 // A file not listed here still shows, named from its file name ("Artist - Title.mp3").
 window.SONGS = {

@@ -1,13 +1,13 @@
 // Music across pages.
 // - Each page can have its own track, set in js/page-music.js (or, per page, <body data-music="...">
-//   with a path relative to that page). The homepage's music is the stage playlist (js/hero.js).
+//   with a path relative to that page). The homepage's music is the playlist (js/tracks.js, played by js/playlist.js).
 // - Leaving for another page on this site (clicking a link) fades the music out first, then goes.
 //   Coming back with the Back button fades it back in.
 // - Volume and mute carry over from page to page (saved in this browser).
 // - A page with its own track gets a small sound on/off button, so it can always be silenced.
 // - Browsers only allow sound after the visitor has clicked/tapped/pressed a key; until then the
 //   track waits and fades in on that first gesture.
-// Load this before js/hero.js on the homepage, and on every page that has (or may get) music.
+// Load this before js/playlist.js on the homepage, and on every page that has (or may get) music.
 (function () {
   // ('ew-audio-2': the levels were rebalanced, so volumes saved under the old key start over at 50%.)
   var KEY = 'ew-audio-2', FADE_OUT = 700, FADE_IN = 1500;
@@ -22,7 +22,7 @@
   //   page music      about -24 LUFS  (the track behind a case study)
   // These assume songs mastered like normal releases (about -10 LUFS) and videos whose sound was
   // levelled to -16 LUFS (the Boiler Room web videos are). A song or video that's louder or quieter
-  // than that can get its own trim: `gain` on a line in TRACKS (js/hero.js), data-gain="0.5" on a
+  // than that can get its own trim: `gain` on a line in js/tracks.js, data-gain="0.5" on a
   // video's <figure>. Raise or lower a number here to move that whole group.
   var LEVEL = { stage: 0.5, media: 0.8, music: 0.4 };
 

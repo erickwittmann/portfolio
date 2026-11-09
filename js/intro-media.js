@@ -25,7 +25,7 @@ window.INTRO_MEDIA = [
   { src: 'assets/hero.mp4#t=3', caption: 'Motion Reel 2025–26' },
   { src: 'assets/Beyond Fashion-grid.mp4', caption: 'Beyond Fashion — VJ Set', href: 'work/beyond-fashion.html' },
   { src: 'assets/EtchaSketch rec-720.mp4', caption: 'Multiplayer Etch-a-Sketch' },
-  { src: 'assets/Fred Again-grid.mp4', caption: 'Boiler Room Audiovisuals' },
+  { src: 'assets/Beyond Fashion Titles-grid.mp4', caption: 'Beyond Fashion — Designer Titles', href: 'work/beyond-fashion.html' },   // 1760×880, from the edit reel
   { src: 'assets/imagineritposter.webp', caption: 'Imagine RIT Poster' },
   { src: 'assets/ErickWittmannEveryday_16.webp', caption: '20 Days of Motion' },
   { src: 'assets/caed red.webp'},

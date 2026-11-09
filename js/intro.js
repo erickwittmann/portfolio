@@ -1,16 +1,20 @@
-// Intro: a modular grid of Erick's images and video loops that is also the stage's LED screen.
-// - On load it fills the window. Scrolling pulls the camera back out of the screen (js/hero.js warps
-//   this grid onto the screen in 3D each frame), the nav and lighting deck fade in, and once the
-//   whole stage is in view the page carries on to the about section.
+// Intro: a modular grid of Erick's images and video loops.
+// Two modes, from the section's class:
+// - Splash (the homepage, section.splash): the grid fills the first screen and the page scrolls on
+//   normally to the about strip and the work.
+// - Stage (stage.html, section.stage-seq): the grid is the 3D stage's LED screen. Scrolling pulls the
+//   camera back out of the screen (js/stage/hero.js warps this grid onto it each frame) and the nav
+//   fades in.
 // - The layout comes from a seed: shuffled until one is locked with INTRO_SEED (js/intro-media.js).
 // - The grid flexes around the cursor: columns and rows near it swell, the rest give way.
 // - One tile carries the name, socials and a portrait. Media lists: js/intro-media.js.
 (function () {
-  var section = document.getElementById('top'), pin = section && section.querySelector('.stage-pin');
+  var section = document.getElementById('top'), pin = section && section.querySelector('.stage-pin, .intro-pin');
   var frame = document.getElementById('intro-frame'), grid = document.getElementById('intro-grid');
   var nav = document.getElementById('nav');
   if (!section || !pin || !frame || !grid) return;
-  document.documentElement.classList.add('has-seq');
+  var STAGE = section.classList.contains('stage-seq');   // stage mode (stage.html); otherwise splash
+  if (STAGE) document.documentElement.classList.add('has-seq');
   var MEDIA = (window.INTRO_MEDIA || []).map(function (m) { return typeof m === 'string' ? { src: m } : m; });
   var LINKS = window.INTRO_LINKS || [], PORTRAITS = window.INTRO_PORTRAITS || [];
   var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -70,7 +74,8 @@
   // so nothing has to appear twice. +1 for the name tile.
   var distinct = MEDIA.filter(function (m) { return !isVideo(m.src); }).length +
     Math.min(MAX_VIDEOS, MEDIA.filter(function (m) { return isVideo(m.src); }).length);
-  maxTiles = Math.max(2, Math.min(maxTiles, distinct + 1));
+  // (+1 for the name tile only when it's on; otherwise every tile needs its own piece of media.)
+  maxTiles = Math.max(2, Math.min(maxTiles, distinct + (TEXT_TILE ? 1 : 0)));
   minTiles = Math.min(minTiles, maxTiles);
 
   function subdivide() {
@@ -242,7 +247,10 @@
       if (!want && !v.paused) v.pause();
     });
   }
-  if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { onScreen = en[0].isIntersecting; syncVideos(); }).observe(section);
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (en) {
+    onScreen = en[0].isIntersecting; syncVideos();
+    if (onScreen && touch && !reduced && typeof wake === 'function') wake();   // the touch drift restarts when the grid comes back
+  }).observe(section);
   document.addEventListener('visibilitychange', syncVideos);
   syncVideos();
 
@@ -252,18 +260,20 @@
   function seqStart() { return section.getBoundingClientRect().top + (window.scrollY || window.pageYOffset); }
   function seqEnd() { return seqStart() + section.offsetHeight - pin.clientHeight; }
   function progress() {
+    if (!STAGE) return 0;   // splash: there is no camera move
     var y = window.scrollY || window.pageYOffset, s = seqStart();
     return clamp((y - s) / Math.max(1, section.offsetHeight - pin.clientHeight), 0, 1);
   }
   // past(): how far the page has scrolled beyond the full-stage view, in window heights (0 there,
   // 1 = one window further down). The content scrolls over the fixed stage from that point on.
-  function past() { return Math.max(0, ((window.scrollY || window.pageYOffset) - seqEnd()) / Math.max(1, pin.clientHeight)); }
+  function past() { if (!STAGE) return 0; return Math.max(0, ((window.scrollY || window.pageYOffset) - seqEnd()) / Math.max(1, pin.clientHeight)); }
   window.StageSeq = {
-    progress: progress, past: past, end: seqEnd, frame: frame, pin: pin,
+    stage: STAGE, progress: progress, past: past, end: seqEnd, frame: frame, pin: pin,
     setGridHidden: function (h) { if (h !== gridHidden) { gridHidden = h; syncVideos(); } }
   };
   var shownP = -1;
   function onScroll() {
+    if (!STAGE) return;   // splash: the nav stays put and nothing follows the scroll
     var p = progress();
     // Past the full-stage view: darken the stage behind the content (more toward the bottom of the
     // window, where the text is) and put the stage controls away.
@@ -321,10 +331,11 @@
     if (mc) grid.style.gridTemplateColumns = tracks(curC);
     if (mr) grid.style.gridTemplateRows = tracks(curR);
     var p2 = progress();
-    if (mc || mr || (pointer.inside && p2 < FLEX_UNTIL) || (touch && !reduced && p2 < 0.02)) requestAnimationFrame(tick); else running = false;
+    if (mc || mr || (pointer.inside && p2 < FLEX_UNTIL) || (touch && !reduced && p2 < 0.02 && onScreen)) requestAnimationFrame(tick); else running = false;
   }
   grid.style.gridTemplateColumns = tracks(curC);
   grid.style.gridTemplateRows = tracks(curR);
   requestAnimationFrame(function () { section.classList.add('is-built'); });
-  onScroll();   // sets the nav/deck for the current scroll position (and starts the touch drift at the top)
+  onScroll();   // stage: sets the nav for the current scroll position (and starts the touch drift at the top)
+  if (!STAGE && touch && !reduced) wake();
 })();

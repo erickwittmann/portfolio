@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Backstage — Erick Wittmann</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="description" content="Backstage: the 3D concert stage that used to be Erick Wittmann's homepage, an ongoing experiment in WebGL and web UX, with its code.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Instrument+Sans:wght@600&family=Silkscreen&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="case backstage">
+<!--
+  Backstage: the easter egg page. js/backstage.js unlocks a "go backstage" button once a visitor has
+  opened all four case studies; the page itself is open to anyone with the link (noindex).
+  It writes up the archived 3D stage (stage.html) and shows its code, loaded live from js/stage/ by
+  js/backstage-code.js, so it's always the current version. Still image: assets/backstage/.
+-->
+
+<nav class="nav" id="nav">
+  <ul>
+    <li class="nav-name"><a href="index.html">Erick Wittmann</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="index.html#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <header class="cs-head">
+    <p class="eyebrow reveal"><span class="bs-badge">unlocked</span> Backstage — Experiment · Ongoing</p>
+    <h1 class="reveal">Backstage</h1>
+    <dl class="cs-facts reveal">
+      <div><dt>What</dt><dd>3D concert stage, playable in the browser</dd></div>
+      <div><dt>Built with</dt><dd>three.js, WebGL, GLSL</dd></div>
+      <div><dt>Model</dt><dd>My own stage, glTF</dd></div>
+      <div><dt>Status</dt><dd>Ongoing, since Oct 2026</dd></div>
+    </dl>
+  </header>
+
+  <figure class="cs-hero bs-hero reveal" style="--ar:16 / 9">
+    <img src="assets/backstage/stage-still.webp" alt="The 3D stage: trusses, green moving-head beams and a DJ booth in front of an LED wall playing the homepage grid" width="1600" height="900">
+    <a class="bs-enter" href="stage.html"><span class="px-flower" aria-hidden="true"></span>enter the stage <span aria-hidden="true">→</span></a>
+  </figure>
+
+  <section class="cs-overview reveal" aria-labelledby="bs-overview">
+    <div class="fmt-head">
+      <span class="cs-num">01</span>
+      <h2 id="bs-overview">You found the backstage</h2>
+      <p>Thanks for looking through everything. This is where the 3D stage lives now. It used to be my homepage: the work played on the LED wall of a concert stage I modelled, and scrolling pulled the camera back from the screen to the whole stage, with lights and pyro running to the music.</p>
+      <p>It’s an ongoing experiment in two things: how far <b>3D WebGL</b> can live inside an ordinary website without getting in the way, and what <b>web UX</b> feels like when the interface is a place instead of a page. It came off the homepage because the work should come first. Back here it can stay strange and keep changing.</p>
+    </div>
+  </section>
+
+  <section class="cs-spec reveal" aria-labelledby="bs-tests">
+    <div class="fmt-head">
+      <span class="cs-num">02</span>
+      <h2 id="bs-tests">What it’s testing</h2>
+    </div>
+    <div class="cs-spec-grid bs-tests">
+      <div>
+        <h3><span class="bs-chip" aria-hidden="true">3D × HTML</span>The screen is a web page</h3>
+        <p>The LED wall isn’t a video texture. The homepage grid stays real HTML, so its videos, hovers and links keep working. Every frame it’s warped with a CSS <code>matrix3d</code> onto wherever the 3D screen lands, and the stage draws a see-through hole for it.</p>
+      </div>
+      <div>
+        <h3><span class="bs-chip" aria-hidden="true">UX</span>The stage is the interface</h3>
+        <p>No control panel. Hover the light bar to pick a colour, click the DJ booth to change the track, and the speakers hold the volume. Each part has an invisible button kept on top of it, so mouse, touch and keyboard all work.</p>
+      </div>
+      <div>
+        <h3><span class="bs-chip" aria-hidden="true">Perf</span>Keeping it light</h3>
+        <p>Quality tiers for phones, a resolution that adapts to the frame rate, a compressed model and a one-cube fallback. The visualizer is a shader built like a TouchDesigner network. Reduced motion is respected.</p>
+      </div>
+    </div>
+
+    <h3 class="bs-sub">Open questions</h3>
+    <ul class="cs-list bs-open">
+      <li>Does a 3D entrance help people find the work, or just make them wait for it? <span>testing</span></li>
+      <li>Controls you discover vs. controls you’re told about. <span>testing</span></li>
+      <li>Phones: heat, battery and frame rate on a full scene. <span>open</span></li>
+      <li>Music on by default, or only when asked? <span>open</span></li>
+    </ul>
+  </section>
+
+  <section class="cs-spec bs-code-sec reveal" aria-labelledby="bs-code-title">
+    <div class="fmt-head">
+      <span class="cs-num">03</span>
+      <h2 id="bs-code-title">The code</h2>
+      <p>The real files, loaded live from the site, so this is always the current version. Comments are left in: they’re the notes I wrote while building it.</p>
+    </div>
+    <div class="bs-code" id="bs-code">
+      <div class="bs-files" role="tablist" aria-label="Stage files">
+        <button type="button" role="tab" data-src="js/stage/hero.js" aria-selected="true"><b>hero.js</b><i>The stage: renderer, the model, lights, beams, pyro and the LED wall.</i></button>
+        <button type="button" role="tab" data-src="js/stage/visualizer.js"><b>visualizer.js</b><i>Audio-reactive shader: spectrum, mirrors, feedback, threshold, grit.</i></button>
+        <button type="button" role="tab" data-src="js/stage/stage-ui.js"><b>stage-ui.js</b><i>The stage as the control surface: light bar, DJ booth, speakers.</i></button>
+        <button type="button" role="tab" data-src="js/stage/stage-cube.js"><b>stage-cube.js</b><i>Lightweight stand-in: one unlit cube, same controls.</i></button>
+        <button type="button" role="tab" data-src="js/stage/deck.js"><b>deck.js</b><i>The first version: a lighting deck with four dials.</i></button>
+        <button type="button" role="tab" data-src="css/stage.css"><b>stage.css</b><i>Scroll sequence and the road-case controls.</i></button>
+      </div>
+      <div class="bs-win" role="tabpanel">
+        <div class="bs-win-bar">
+          <span class="bs-win-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="bs-win-name">js/stage/hero.js</span>
+          <span class="bs-win-meta"></span>
+          <a class="bs-win-raw" href="js/stage/hero.js" target="_blank" rel="noopener">raw ↗</a>
+        </div>
+        <div class="bs-win-body" data-lenis-prevent tabindex="0" aria-label="Source code">
+          <pre class="bs-gutter" aria-hidden="true"></pre>
+          <pre class="bs-src"><code>loading…</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <a class="next-case" href="stage.html">
+    <span class="eyebrow">Ready? Headphones on · works best on a laptop</span>
+    <span class="next-title">Enter the stage <span aria-hidden="true">→</span></span>
+  </a>
+</main>
+
+<footer id="contact">
+  <div class="col">
+    <div class="brand">Erick Wittmann</div>
+  </div>
+  <div class="col">
+    <h4>Contact</h4>
+    <a href="mailto:erickwittmann@gmail.com">erickwittmann@gmail.com</a>
+  </div>
+  <div class="col">
+    <h4>Elsewhere</h4>
+    <a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+  <div class="col">
+    <h4>&nbsp;</h4>
+    <span>© 2026 Erick Wittmann. All rights reserved.</span>
+  </div>
+</footer>
+
+<script src="js/vendor/lenis.min.js"></script>
+<script src="js/smooth-scroll.js"></script>
+<script src="js/page-music.js"></script>
+<script src="js/page-audio.js"></script>
+<script src="js/spectrum.js"></script>
+<script src="js/nav-audio.js"></script>
+<script src="js/now-playing.js"></script>
+<script src="js/site.js"></script>
+<script src="js/chroma.js"></script>
+<script src="js/backstage-code.js"></script>
+<script src="js/backstage.js"></script>
+<script src="js/reels.js"></script>
+</body>
+</html>

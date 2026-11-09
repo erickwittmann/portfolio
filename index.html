@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Opening screen: mark the page as gated before it paints, so the about strip never flashes in.
+     js/enter.js takes it off again if the visit skips the opening (a #link, or reloaded lower down). -->
+<script>if (!location.hash) document.documentElement.classList.add('is-gated');</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>erick wittmann</title>
-<link rel="icon" href="favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="assets/favicon-32.png">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<meta name="description" content="Erick Wittmann is a motion graphics and audiovisual designer. Step onto the stage and run the lights.">
+<meta name="description" content="Erick Wittmann is a motion graphics and audiovisual designer: live visuals, interactive work and motion.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Instrument+Sans:wght@600&family=Silkscreen&display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -24,105 +27,103 @@
   </ul>
 </nav>
 
+<!--
+  Homepage: the splash grid (js/intro.js, splash mode) with the opening screen over it (js/enter.js),
+  then it scrolls normally: the hello strip, the selected works, the footer.
+  The 3D stage that used to be here is archived in stage.html.
+-->
 <main>
-  <!-- One scroll sequence: the media grid fills the window and is also the stage's LED screen.
-       Scrolling pulls the camera back out of the screen to the whole stage (js/hero.js), then the
-       page carries on. .stage-pin stays in the window while the section scrolls past behind it. -->
-  <section class="stage-seq intro" id="top" aria-label="Selected visuals and interactive stage">
+  <section class="splash intro" id="top" aria-label="Selected visuals">
     <h1 class="sr-only">Erick Wittmann — Motion &amp; Audiovisual Designer</h1>
-    <div class="stage-pin">
+    <div class="intro-pin">
       <div class="intro-frame" id="intro-frame"><div class="intro-grid" id="intro-grid"></div></div>
-      <div id="wrap"></div>
-      <div id="status" aria-live="polite"></div>
     </div>
   </section>
-  <script src="js/vendor/lenis.min.js"></script>
-  <script src="js/smooth-scroll.js"></script>
-  <script src="js/sfx.js"></script>
-  <script src="js/page-music.js"></script>
-  <script src="js/page-audio.js"></script>
-  <script src="js/spectrum.js"></script>
-  <script src="js/nav-audio.js"></script>
-  <script src="js/now-playing.js"></script>
-  <script src="js/intro-media.js"></script>
-  <script src="js/intro.js"></script>
-  <script src="js/enter.js"></script>
 
-  <section class="about" id="about">
-    <!-- A black bar across the stage, in the same layout as the opening screen (js/enter.js): the
-         portrait, the copy and the social icons sit between two hairlines, with the links underneath.
-         The portrait is a yellow disc with a cursor pixel trail behind a cut-out (transparent PNG),
-         clipped to the circle at the bottom only, so the head breaks out of the top of the bar. -->
-    <div class="about-bar">
-      <div class="about-box">
-        <figure class="portrait reveal">
-          <canvas class="pixel-trail" aria-hidden="true"></canvas>
-          <div class="cutout"><img src="assets/portrait5.webp" alt="Erick Wittmann" onerror="this.remove()"></div>
-        </figure>
-        <div class="about-copy reveal">
-          <h2>Hi, I’m <em class="px-word">Erick</em></h2>
-          <p class="lead">I’m a <em class="px-word">motion graphics</em> and <em class="px-word">audiovisual designer</em>.</p>
-          <p class="body">I’m a senior New Media Design student graduating in Spring 2027, looking for work at creative digital agencies or event venues.</p>
-        </div>
-        <!-- Same icons as the opening screen. Add another <li> for another network. -->
-        <ul class="soc-icons reveal" aria-label="Social">
-          <li><a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><rect class="si-line" x="3" y="3" width="18" height="18" rx="5"/><circle class="si-line" cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.2"/></svg></a></li>
-          <li><a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener" aria-label="LinkedIn">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="2.5"/><path class="si-cut" d="M7.6 10.2V17M11.4 17v-6.8M11.4 13.4c0-2 1.2-3.3 2.8-3.3s2.6 1.1 2.6 3.3V17"/><circle class="si-dot" cx="7.6" cy="7.3" r="1.3"/></svg></a></li>
-          <!-- Behance and Vimeo are hidden for now (vimeo.com/erickwittmann returns "page not found"). -->
-        </ul>
+  <!-- The about bar from the mock-up: the portrait's yellow disc rides up over the grid, the copy
+       sits to its right. Pixel trail on the disc and on the key words (js/pixel-trail.js). -->
+  <section class="hello" id="about" aria-label="About">
+    <div class="hello-in">
+      <figure class="portrait">
+        <canvas class="pixel-trail" aria-hidden="true"></canvas>
+        <div class="cutout"><img src="assets/portrait5.webp" alt="Erick Wittmann" onerror="this.remove()"></div>
+      </figure>
+      <div class="hello-copy">
+        <h2>hi, i’m <em class="px-word">erick</em></h2>
+        <p class="hello-lead">i’m a <b class="px-word">motion graphics</b> and <b class="px-word">audiovisual designer</b></p>
+        <nav class="hello-links" aria-label="More">
+          <a href="#work">more works</a>
+          <a href="#contact">contact me</a>
+          <a href="about.html">about</a>
+        </nav>
       </div>
-      <nav class="about-links reveal" aria-label="More">
-        <a href="about.html">more about me</a>
-        <a href="#work">selected work</a>
-        <a href="#contact">get in touch</a>
-      </nav>
     </div>
   </section>
 
-  <hr class="rule">
-
+  <!-- Selected works: one card per case study. The class p1–p4 places it in the spread
+       (css/style.css, "selected works"); --ar is the cover's shape. Black Mirror is left out for now
+       (work/black-mirror.html still exists, it just isn't listed or in the next-case loop). -->
   <section class="works" id="work">
-    <div class="works-head reveal">
-      <h2>Selected Works</h2>
-      <span>04 Projects</span>
-    </div>
+    <header class="works-head reveal">
+      <h2><span class="px-flower" aria-hidden="true"></span>selected works</h2>
+      <p class="works-count" aria-label="4 projects">(04)</p>
+      <p class="works-note">live visuals, interactive work and motion, 2025–26.</p>
+      <hr class="px-rule">
+    </header>
     <div class="projects">
-      <a class="project reveal" href="work/beyond-fashion.html">
-        <div class="cover">
-          <div class="art art-fashion"></div>
+      <a class="project p1 reveal" href="work/beyond-fashion.html">
+        <div class="cover" style="--ar:16 / 9">
+          <div class="art art-reel"></div>
           <video src="assets/Beyond Fashion Compressed.mp4" muted loop playsinline preload="none" aria-hidden="true" onerror="this.remove()"></video>
-          <div class="cover-title"><h3><b>Beyond Fashion</b><span>VJ Set</span></h3><p>Erick Wittmann<span>Fashion Show · LED Wall</span></p></div>
+          <span class="cover-tag">case study <span aria-hidden="true">→</span></span>
         </div>
-        <div class="project-meta"><span>01 — Live Visuals</span><span>2025</span><span class="go">View case study →</span></div>
+        <div class="project-meta">
+          <span class="p-num">01</span>
+          <span class="p-title"><span>Beyond Fashion</span> <i>vj set</i></span>
+          <span class="p-year">2025</span>
+          <span class="p-tags">live visuals · fashion show · led wall</span>
+        </div>
       </a>
-      <a class="project reveal" href="work/anatomy-of-a-computer.html">
-        <div class="cover">
+      <a class="project p2 reveal" href="work/boiler-room.html">
+        <div class="cover" style="--ar:1 / 1">
+          <div class="art art-reel"></div>
+          <video src="assets/Boiler Room Square.mp4" muted loop playsinline preload="none" aria-hidden="true" onerror="this.remove()"></video>
+          <span class="cover-tag">case study <span aria-hidden="true">→</span></span>
+        </div>
+        <div class="project-meta">
+          <span class="p-num">02</span>
+          <span class="p-title"><span>Boiler Room</span> <i>audiovisuals</i></span>
+          <span class="p-year">2026</span>
+          <span class="p-tags">live visuals · touchdesigner</span>
+        </div>
+      </a>
+      <a class="project p3 reveal" href="work/anatomy-of-a-computer.html">
+        <div class="cover" style="--ar:16 / 9">
           <div class="art art-reel"></div>
           <img src="assets/work/anatomy/aoc-frame-4.jpg" alt="" loading="lazy" onerror="this.remove()">
           <video src="assets/work/anatomy/aoc-cover.mp4" muted loop playsinline preload="none" aria-hidden="true" onerror="this.remove()"></video>
-          <div class="cover-title"><h3><b>Anatomy of a Computer</b><span>Interactive Website</span></h3><p>Erick Wittmann<span>UX · Prototype</span></p></div>
+          <span class="cover-tag">case study <span aria-hidden="true">→</span></span>
         </div>
-        <div class="project-meta"><span>02 — Interactive</span><span>2026</span><span class="go">View case study →</span></div>
-      </a>
-      <a class="project reveal" href="work/boiler-room.html">
-        <div class="cover">
-          <div class="art art-boiler"></div>
-          <video src="assets/Boiler Room Square.mp4" muted loop playsinline preload="none" aria-hidden="true" onerror="this.remove()"></video>
-          <div class="cover-title"><h3><b>Boiler Room</b><span>Audiovisuals</span></h3><p>Erick Wittmann<span>Live Visuals</span></p></div>
+        <div class="project-meta">
+          <span class="p-num">03</span>
+          <span class="p-title"><span>Anatomy of a Computer</span> <i>interactive</i></span>
+          <span class="p-year">2026</span>
+          <span class="p-tags">ux · 3d · prototype</span>
         </div>
-        <div class="project-meta"><span>03 — Live Visuals</span><span>2026</span><span class="go">View case study →</span></div>
       </a>
-      <a class="project reveal" href="work/project01.html">
-        <div class="cover">
+      <a class="project p4 reveal" href="work/project01.html">
+        <div class="cover" style="--ar:16 / 9">
           <div class="art art-reel"></div>
           <img src="assets/work/project01/p01-sf-6.jpg" alt="" loading="lazy" onerror="this.remove()">
-          <!-- Final animation: add assets/work/project01/p01-cover.mp4 (a short silent loop) and it plays over the still. -->
           <video src="assets/work/project01/p01-cover.mp4" muted loop playsinline preload="none" aria-hidden="true" onerror="this.remove()"></video>
-          <div class="cover-title"><h3><b>Project01</b><span>Motion Branding</span></h3><p>Startup brand<span>Identity animation</span></p></div>
+          <span class="cover-tag">case study <span aria-hidden="true">→</span></span>
         </div>
-        <div class="project-meta"><span>04 — Motion</span><span>2025</span><span class="go">View case study →</span></div>
+        <div class="project-meta">
+          <span class="p-num">04</span>
+          <span class="p-title"><span>Project01</span> <i>motion branding</i></span>
+          <span class="p-year">2025</span>
+          <span class="p-tags">identity animation</span>
+        </div>
       </a>
     </div>
   </section>
@@ -148,17 +149,24 @@
   </div>
 </footer>
 
-<script src="js/vendor/three.min.js"></script>
-<script src="js/vendor/GLTFLoader.js"></script>
-<script src="js/vendor/meshopt_decoder.js"></script>
-<!-- 3D stage; the intro grid is its LED screen. (js/stage-cube.js is an older stand-in from before the
-     grid moved onto the screen: it would cover the grid, so it is no longer a drop-in swap.) -->
-<script src="js/visualizer.js"></script>
-<script src="js/hero.js"></script>
-<!-- js/stage-ui.js (road-case controls on the stage) retired: music is run from the nav player. -->
+<script src="js/vendor/lenis.min.js"></script>
+<script src="js/smooth-scroll.js"></script>
+<script src="js/sfx.js"></script>
+<script src="js/page-music.js"></script>
+<script src="js/page-audio.js"></script>
+<script src="js/tracks.js"></script>
+<script src="js/playlist.js"></script>
+<script src="js/spectrum.js"></script>
+<script src="js/nav-audio.js"></script>
+<script src="js/now-playing.js"></script>
+<script src="js/intro-media.js"></script>
+<script src="js/intro.js"></script>
+<script src="js/enter.js"></script>
 <script src="js/site.js"></script>
 <script src="js/tilt.js"></script>
 <script src="js/pixel-trail.js"></script>
 <script src="js/chroma.js"></script>
+<script src="js/backstage.js"></script>
+<script src="js/reels.js"></script>
 </body>
 </html>

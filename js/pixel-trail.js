@@ -3,18 +3,20 @@
 //   flat RGB/CMY colours, each one blinking off after a random beat. The canvas is only GRID x GRID
 //   pixels; CSS scales it to the disc with image-rendering:pixelated, so a frame is a handful of 1px
 //   fillRects. The loop runs only while some cell is lit.
-// - The opening screen's black bar (js/enter.js): the same trail across the whole bar.
+// - The opening screen's bar (js/enter.js): the same trail across the whole bar.
 // - Key words in the copy (class="px-word"): same idea, one pixel per letter. Each letter the cursor
 //   crosses turns into a solid block of colour, then the letter comes back.
 (function () {
   var LIFE = [0.45, 1.1];              // s, how long a pixel stays lit (random in range)
   var COLOURS = ['#ffffff', '#ff1f1f', '#12b4f4', '#000000', '#ff1ff0', '#1ff01f'];
+  var DARK = document.documentElement.classList.contains('theme-dark');   // stage.html
   function pick(list) { return list[(Math.random() * list.length) | 0]; }
   function life() { return LIFE[0] + Math.random() * (LIFE[1] - LIFE[0]); }
 
   // ---------- Words ----------
-  // Black would vanish on the black page, so words swap it for the disc's yellow.
-  var WORD_COLOURS = COLOURS.map(function (c) { return c === '#000000' ? '#fff64f' : c; });
+  // On white paper (the site) white would vanish, so words and the opening bar swap it for the disc's
+  // yellow; on the dark stage page it's black that swaps.
+  var WORD_COLOURS = COLOURS.map(function (c) { return c === (DARK ? '#000000' : '#ffffff') ? '#fff64f' : c; });
   Array.prototype.forEach.call(document.querySelectorAll('.px-word'), function (el) {
     var text = el.textContent;
     // Screen readers get the plain word; the letter spans are visual only.

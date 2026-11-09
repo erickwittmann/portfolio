@@ -34,21 +34,8 @@
   var AA = !POST && !LOW && DEVICE_DPR < 1.5;
   var FIXED_DPR = param('dpr') ? parseFloat(param('dpr')) : 0;
 
-  // The homepage playlist (grid + stage share it). Add a line per song: { artist, title, src }.
-  // It plays in this order; clicking the DJ booth crossfades to the next one, and each song blends
-  // into the next when it ends. artist/title show on the booth's little screen. .mp3 works, and so
-  // does the sound of an .mp4. The music drives the lights.
-  // gain (optional) evens the songs out against each other: 1 = as is, 0.73 = a bit quieter. Leave
-  // it off for a normally mastered song; add e.g. gain: 0.8 if one stands out as too loud. The
-  // overall stage level is LEVEL.stage in js/page-audio.js.
-  var TRACKS = [
-    { artist: 'Internet Girl', title: 'PULL UP', src: 'assets/PULL UP2.mp3', gain: 0.65 },   // cut so the drop lands on the zoom-out
-    { artist: 'yaego, kučka', title: 'ketamina', src: 'assets/yaego, kučka - ketamina.mp3', gain: 0.73 },
-    { artist: 'Blood Cultures', title: 'Unarchiver', src: 'assets/Blood Cultures - Unarchiver_Cut.mp3', gain: 0.97 },
-    { artist: 'Feng', title: 'XY', src: 'assets/XY.mp3' },
-    { artist: 'Ferdous', title: 'Gravity', src: 'assets/Ferdous - Gravity.mp3', gain: 0.95 },
-    { artist: 'Ferdous', title: 'Sad Nebula', src: 'assets/Ferdous - Sad Nebula.mp3', gain: 0.92 },
-  ];
+  // The playlist: js/tracks.js (shared with the homepage player, js/playlist.js).
+  var TRACKS = window.TRACKS || [];
   // Erick's stage, reduced for the web from assets/erick_concert_stage.glb (111 MB, 1.17M triangles,
   // 395 draw calls) with gltfpack 1.3:
   //   gltfpack -i erick_concert_stage.glb -o erick_concert_stage-lite.glb -si 0.1 -mm -cc -tw -tl 512

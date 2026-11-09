@@ -1,7 +1,5 @@
-// Cursor tilt for the 2D sections under the stage. Each element leans slightly toward the cursor and
-// drifts against it, scaled by its depth, so nearer things move more than farther ones. The motion
-// follows the cursor the way the stage camera sways (js/hero.js), so the page and the stage read as
-// one space. It's a CSS transform only (see .tilt in css/style.css): compositor work, no layout.
+// Cursor tilt for the page's sections. Each element leans slightly toward the cursor and drifts
+// against it, scaled by its depth, so nearer things move more than farther ones. It's a CSS transform only (see .tilt in css/style.css): compositor work, no layout.
 // - Only elements on screen are updated, and nothing runs once the cursor has stopped and settled.
 // - Off on touch screens and with reduced motion.
 // Add or tune elements in PARTS: [selector, depth]. Depth 1 = the strongest tilt and drift.
@@ -11,8 +9,8 @@
   var MAX_TILT = 3.2;    // degrees at depth 1, cursor at the edge of the window
   var MAX_DRIFT = 14;    // px at depth 1
   var PARTS = [
-    ['.about .portrait', 1],
-    ['.about > div.reveal', 0.6],       // the text column (not the portrait, which is a .reveal too)
+    ['.hello .portrait', 1],
+    ['.hello-copy', 0.6],
     ['.works-head', 0.35],
     ['.project', 0.55],                 // big cards: less, so the edges don't swing too far
     ['footer .col', 0.3],

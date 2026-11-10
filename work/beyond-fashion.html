@@ -10,10 +10,9 @@
 <meta name="description" content="Live visuals and lighting for RIT's Beyond Fashion show, run in Resolume Arena by Erick Wittmann.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Instrument+Sans:wght@600&family=Silkscreen&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
 <link rel="stylesheet" href="../css/style.css">
 </head>
-<!-- Music for this page: set it in js/page-music.js (under 'beyond-fashion'). -->
 <body class="case" data-music="">
 
 <nav class="nav" id="nav">
@@ -24,21 +23,6 @@
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
-
-<!--
-  Case study template. To make another one, copy this file and change:
-  - the title, intro and the four facts in .cs-facts
-  - each .cs-row: its media (image or looping video) and text
-  - the "Next" link at the bottom
-  Media: put files in assets/work/<project>/. This page sits in work/, so paths start with ../
-  (../assets/...). A video can't go in an <img> tag; use
-  <video src="../assets/..." muted loop playsinline preload="none"></video> instead (it plays
-  while on screen, via js/site.js). Set --ar on the figure to the media's aspect ratio
-  (width / height) so the page doesn't jump while it loads.
-  Carousel: put two or more <img> lines in one figure and they crossfade, with a thin bar at the
-  bottom counting down to the next image (js/carousel.js; change SECONDS there for the pace).
-  object-position on an <img> picks which part shows when its shape differs from the frame.
--->
 
 <main>
   <header class="cs-head">
@@ -52,7 +36,6 @@
     </dl>
   </header>
 
-  <!-- data-gain="0.5": this reel's sound is mastered loud, so it plays at half to match the other videos. -->
   <figure class="cs-hero reveal" style="--ar:2 / 1" data-audio data-gain="0.5">
     <video src="../assets/Beyond Fashion Edit Reel.mp4" muted loop playsinline preload="none" aria-label="Beyond Fashion edit reel: show graphics and LED wall visuals" onerror="this.remove()"></video>
     <span class="ph-label">Edit reel — 2 : 1</span>
@@ -76,8 +59,6 @@
 
   <section class="cs-row">
     <figure class="cs-media reveal" style="--ar:1920 / 952">
-      <!-- Web versions of "bf example1-5.mp4" (1280px, no sound): 5.6 MB for all five instead of 47.5 MB.
-           Each loop plays once, 5 seconds, then the next one comes in. -->
       <video src="../assets/bf-example1-web.mp4" muted loop playsinline preload="none" aria-label="A looping graphic made for one of the fashion designers" onerror="this.remove()"></video>
       <video src="../assets/bf-example2-web.mp4" muted loop playsinline preload="none" aria-label="A looping graphic made for one of the fashion designers" onerror="this.remove()"></video>
       <video src="../assets/bf-example3-web.mp4" muted loop playsinline preload="none" aria-label="A looping graphic made for one of the fashion designers" onerror="this.remove()"></video>
@@ -95,9 +76,6 @@
 
   <section class="cs-row">
     <figure class="cs-media reveal" style="--ar:4 / 3">
-      <!-- Floor plan: save it in assets/ as "bf floorplan.png" (or change the name here) and it
-           joins the carousel. class="is-whole" shows a diagram complete on a light background
-           instead of cropping it to fill the frame; photos fill the frame. -->
       <img class="is-whole" src="../assets/bf floorplan.png" alt="Floor plan of the show: runway, seating, model pose spots and camera positions" loading="lazy" onerror="this.remove()">
       <img src="../assets/bf layout2.jpg" alt="The team reviewing the floor plan on the LED wall during setup" style="object-position:50% 30%" loading="lazy" onerror="this.remove()">
       <img src="../assets/BF Layout1.jpg" alt="The finished room: rows of chairs around the runway under red stage light" loading="lazy" onerror="this.remove()">
@@ -113,8 +91,6 @@
 
   <section class="cs-row">
     <figure class="cs-media reveal" style="--ar:16 / 9">
-      <!-- Web version of "BF Gopro Video Edit.mp4" (181.6 MB) re-encoded at 720p without sound: 16.8 MB.
-           A video stays up for its own length in the carousel, then the photo after it. -->
       <video src="../assets/bf-execution-web.mp4" muted loop playsinline preload="none" aria-label="Beyond Fashion show day: GoPro footage of the show with the live visuals" onerror="this.remove()"></video>
       <img src="../assets/bf exe2.jpg" alt="Beyond Fashion on show day" loading="lazy" onerror="this.remove()">
       <img src="../assets/work/beyond-fashion/bf-runway-model.jpg" alt="A model on the runway in front of the LED wall" style="object-position:50% 30%" loading="lazy" onerror="this.remove()">
@@ -124,8 +100,6 @@
     <div class="cs-text reveal">
       <span class="cs-num">04</span>
       <h2>Execution</h2>
-      <!-- DRAFT: only says what's already known (date from the pass, role, tools). Replace with
-           how the day actually went: setup, rehearsal, cueing, anything that went wrong. -->
       <p>On show day, December 12, 2025, I worked as the Screen Operator, running the LED wall and the lights live from the VJ station.</p>
       <p>Everything ran in Resolume Arena, with the looks we'd built in After Effects ready to trigger as the show moved from one designer to the next.</p>
     </div>
@@ -149,7 +123,6 @@
     <h4>Elsewhere</h4>
     <a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener">LinkedIn</a>
-    <!-- Behance hidden for now: <a href="https://www.behance.net/erickwittmann" target="_blank" rel="noopener">Behance</a> -->
   </div>
   <div class="col">
     <h4>&nbsp;</h4>

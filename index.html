@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Opening screen: mark the page as gated before it paints, so the about strip never flashes in.
-     js/enter.js takes it off again if the visit skips the opening (a #link, or reloaded lower down). -->
 <script>if (!location.hash) document.documentElement.classList.add('is-gated');</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -13,7 +11,7 @@
 <meta name="description" content="Erick Wittmann is a motion graphics and audiovisual designer: live visuals, interactive work and motion.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Instrument+Sans:wght@600&family=Silkscreen&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -27,11 +25,6 @@
   </ul>
 </nav>
 
-<!--
-  Homepage: the splash grid (js/intro.js, splash mode) with the opening screen over it (js/enter.js),
-  then it scrolls normally: the hello strip, the selected works, the footer.
-  The 3D stage that used to be here is archived in stage.html.
--->
 <main>
   <section class="splash intro" id="top" aria-label="Selected visuals">
     <h1 class="sr-only">Erick Wittmann — Motion &amp; Audiovisual Designer</h1>
@@ -40,8 +33,6 @@
     </div>
   </section>
 
-  <!-- The about bar from the mock-up: the portrait's yellow disc rides up over the grid, the copy
-       sits to its right. Pixel trail on the disc and on the key words (js/pixel-trail.js). -->
   <section class="hello" id="about" aria-label="About">
     <div class="hello-in">
       <figure class="portrait">
@@ -49,8 +40,9 @@
         <div class="cutout"><img src="assets/portrait5.webp" alt="Erick Wittmann" onerror="this.remove()"></div>
       </figure>
       <div class="hello-copy">
-        <h2>hi, i’m <em class="px-word">erick</em></h2>
-        <p class="hello-lead">i’m a <b class="px-word">motion graphics</b> and <b class="px-word">audiovisual designer</b></p>
+        <h2>Hi, I’m <b class="px-word">Erick</b></h2>
+        <p class="hello-lead">I’m a <b class="px-word">motion graphics</b> and <b class="px-word">audiovisual designer</b>
+          <a class="hello-school" href="about.html">from the Rochester Institute of <span class="nowrap">Technology<span class="hello-arrow" aria-hidden="true">→</span></span></a></p>
         <nav class="hello-links" aria-label="More">
           <a href="#work">more works</a>
           <a href="#contact">contact me</a>
@@ -60,9 +52,20 @@
     </div>
   </section>
 
-  <!-- Selected works: one card per case study. The class p1–p4 places it in the spread
-       (css/style.css, "selected works"); --ar is the cover's shape. Black Mirror is left out for now
-       (work/black-mirror.html still exists, it just isn't listed or in the next-case loop). -->
+  <section class="reel" id="reel" aria-label="Motion reel">
+    <div class="reel-bar">
+      <a class="reel-song" href="https://open.spotify.com/track/5arjVgWfJHC7V5FFXPRf5g" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 14 1v9.6a2.2 2.2 0 1 1-1.4-2V4.1L7.4 5.1v7.5A2.2 2.2 0 1 1 6 10.6z"/></svg>
+        <span><span class="sr-only">Soundtrack: </span>: feng - j*b</span>
+      </a>
+      <span class="reel-label">motion reel! <span aria-hidden="true">↓</span></span>
+    </div>
+    <button type="button" class="reel-frame" aria-label="Play the 2025–26 motion reel with sound" data-src="assets/reel/motion-reel.mp4">
+      <video class="reel-loop" src="assets/reel/motion-reel-loop.mp4" poster="assets/reel/motion-reel-band.webp" muted loop playsinline preload="none" aria-hidden="true"></video>
+      <span class="reel-hint" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2 1l9 5-9 5z"/></svg>click to play</span>
+    </button>
+  </section>
+
   <section class="works" id="work">
     <header class="works-head reveal">
       <h2><span class="px-flower" aria-hidden="true"></span>selected works</h2>
@@ -141,7 +144,6 @@
     <h4>Elsewhere</h4>
     <a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.linkedin.com/in/erick-wittmann-b228b2305/" target="_blank" rel="noopener">LinkedIn</a>
-    <!-- Behance hidden for now: <a href="https://www.behance.net/erickwittmann" target="_blank" rel="noopener">Behance</a> -->
   </div>
   <div class="col">
     <h4>&nbsp;</h4>
@@ -167,6 +169,7 @@
 <script src="js/pixel-trail.js"></script>
 <script src="js/chroma.js"></script>
 <script src="js/backstage.js"></script>
+<script src="js/reel.js"></script>
 <script src="js/reels.js"></script>
 </body>
 </html>

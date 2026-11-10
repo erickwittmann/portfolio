@@ -1,6 +1,3 @@
-/* Anatomy of a Computer — prototype build.
-   Laid out on the 1920 × 1080 frames of the final motion mockup: sizes are in artboard units (--u),
-   horizontal positions in artboard fractions of the width, so the composition holds at any 16:9-ish size. */
 :root {
   --u: min(100vw / 1920, 100vh / 1080);
   --font: "Inter", system-ui, sans-serif;
@@ -24,7 +21,7 @@ img { display: block; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 @keyframes fadeIn { from { opacity: 0; } }
 
-/* ---------- intro (0:00–0:03) ---------- */
+/* ---------- intro ---------- */
 .intro { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; background: #d8d8d8; color: #0a0a0a; transition: opacity .9s var(--ease), visibility .9s; }
 .intro__fx { position: absolute; inset: 0; width: 100%; height: 100%; }
 .intro__content { position: relative; text-align: center; padding: 0 16px; }
@@ -43,7 +40,6 @@ img { display: block; }
   font: 400 clamp(11px, calc(19 * var(--u)), 20px)/1 var(--mono); letter-spacing: .42em; color: #111;
   animation: fadeIn .6s 2.2s both;
 }
-/* the short rule under "Start", as drawn in the mockup */
 .intro__start::after { content: ""; position: absolute; left: 30.5%; width: 23%; bottom: 0; height: 1px; background: currentColor; }
 .intro__start:disabled { cursor: progress; color: #777; }
 .intro__start:disabled::after { animation: load 1.2s ease-in-out infinite; }
@@ -100,7 +96,7 @@ body:not([data-mode="overview"]) .side { color: #9a9a9a; }
 .side:hover { color: #fff; }
 .side--prev:hover { transform: translateX(-4px); } .side--next:hover { transform: translateX(4px); }
 
-/* ---------- footer: title, copy, part switcher, view rail ---------- */
+/* ---------- footer ---------- */
 .foot { position: absolute; inset: auto 0 0; height: calc(250 * var(--u)); z-index: 5; pointer-events: none; }
 .foot > * { pointer-events: auto; }
 .title { position: absolute; left: 13.54vw; bottom: calc(176 * var(--u)); margin: 0; font: 300 calc(53 * var(--u))/1.15 var(--font); color: #fff; white-space: nowrap; letter-spacing: -.012em; }
@@ -118,7 +114,6 @@ body:not([data-mode="overview"]) .side { color: #9a9a9a; }
 .partnav__icon.flip img { animation: iconFlip .6s var(--ease); }
 @keyframes iconFlip { 0% { transform: rotateY(0); } 50% { transform: rotateY(90deg) scale(.8); opacity: .3; } 100% { transform: rotateY(0); } }
 
-/* the four views of the Figma prototype; 1 goes down, 2 goes up */
 .modes { position: absolute; left: 5.57vw; bottom: calc(150 * var(--u)); display: flex; flex-direction: column; gap: calc(10 * var(--u)); }
 .mode { display: flex; align-items: center; gap: calc(16 * var(--u)); height: calc(22 * var(--u)); min-height: 14px; color: #fff; text-align: left; }
 .mode__tick { width: 1px; height: 100%; background: currentColor; opacity: .7; transition: width .3s var(--ease), background .3s, opacity .3s; }
@@ -128,7 +123,6 @@ body:not([data-mode="overview"]) .side { color: #9a9a9a; }
 .mode.is-on .mode__label { font-weight: 700; opacity: 1; }
 
 /* ---------- hotspots + callout ---------- */
-/* power / data component labels */
 .flowlabels { position: absolute; inset: 0; pointer-events: none; z-index: 2; opacity: 0; transition: opacity .45s .35s; --flow: #fff200; }
 .flowlabels.is-on { opacity: 1; }
 body[data-mode="data"] .flowlabels { --flow: #ff53e2; }
@@ -158,7 +152,6 @@ body[data-mode="data"] .flowlabels { --flow: #ff53e2; }
 .callout { position: absolute; left: 0; top: 0; z-index: 3; width: calc(300 * var(--u)); min-width: 180px; pointer-events: none; color: #fff; }
 .callout[hidden] { display: none; }
 .callout__title { position: relative; margin: 0 0 calc(18 * var(--u)); padding-bottom: calc(7 * var(--u)); font: 400 max(13px, calc(22 * var(--u)))/1 var(--font); white-space: nowrap; }
-/* the rule runs from the start of the title to the ring */
 .callout__title::after { content: ""; position: absolute; left: 0; bottom: 0; width: var(--rule, 100%); height: max(2px, calc(3 * var(--u))); background: currentColor; transform-origin: var(--rule-from, right); }
 .callout__text { margin: 0; font: 400 max(11px, calc(17 * var(--u)))/1.22 var(--font); }
 .callout.is-right .callout__title::after { left: auto; right: 0; }
@@ -185,16 +178,16 @@ body[data-mode="data"] .flowlabels { --flow: #ff53e2; }
 .index__sound:hover { border-color: #888; color: #fff; }
 kbd { display: inline-block; min-width: 18px; padding: 2px 4px; margin-right: 2px; border: 1px solid #444; border-radius: 3px; font: 11px var(--mono); text-align: center; color: #ccc; }
 
-/* ---------- the flash between photo and x-ray (0:09) ---------- */
+/* ---------- the flash between photo and x-ray ---------- */
 .flash { position: fixed; inset: 0; z-index: 7; pointer-events: none; background: #fff; animation: flash .42s ease-out both; }
 @keyframes flash { 0% { opacity: 0; } 30% { opacity: .35; } 100% { opacity: 0; } }
 
-/* ---------- exit (0:18–0:23) ---------- */
+/* ---------- exit ---------- */
 .exit { position: fixed; inset: 0; z-index: 40; pointer-events: none; visibility: hidden; }
 .exit.is-on { visibility: visible; pointer-events: auto; cursor: pointer; }
 .exit__warm, .exit__bit { position: absolute; inset: 0; width: 100%; height: 100%; clip-path: inset(0 0 100% 0); }
 .exit__warm { background: linear-gradient(180deg, #fff 5.5%, #1b1b1b 100%); }
-.exit__warm canvas { position: absolute; inset: 0; width: 100%; height: 100%; filter: grayscale(1) sepia(1) saturate(4.5) hue-rotate(-22deg) brightness(.95); }   /* the orange pass of 0:18 */
+.exit__warm canvas { position: absolute; inset: 0; width: 100%; height: 100%; filter: grayscale(1) sepia(1) saturate(4.5) hue-rotate(-22deg) brightness(.95); }
 .exit__bit { background: #2e2e2e; }
 .exit__glitch { position: absolute; inset: 0; }
 .exit__glitch i { position: absolute; background: #fff; }

@@ -1,5 +1,3 @@
-/* Simplified stand-in models for parts that don't have a GLB yet.
-   Each faces +Z, stands on +Y, and stores spinning fan groups in userData.fans. */
 import * as THREE from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
@@ -16,7 +14,6 @@ const M = {
   glow:   () => new THREE.MeshStandardMaterial({ color: "#ffffff", emissive: "#bfe9ff", emissiveIntensity: 1.2, roughness: 0.4 }),
 };
 
-// mark a piece for the exploded view: where it flies to, and what to call it
 function ex(obj, dir, label) { obj.userData.explode = dir; obj.userData.label = label; return obj; }
 
 function box(w, h, d, mat, x = 0, y = 0, z = 0) {
@@ -25,7 +22,6 @@ function box(w, h, d, mat, x = 0, y = 0, z = 0) {
   return m;
 }
 
-// merge many same-material boxes into one mesh (keeps draw calls low)
 function boxes(list, mat) {
   const geos = list.map(([w, h, d, x, y, z]) => new THREE.BoxGeometry(w, h, d).translate(x, y, z));
   return new THREE.Mesh(mergeGeometries(geos), mat);
@@ -54,7 +50,6 @@ export function buildRam() {
   const chips = [];
   for (let i = 0; i < 8; i++) chips.push([1.1, 1.05, 0.14, -5.4 + i * 1.54, 0.15, 0.13]);
   g.add(ex(boxes(chips, chip), [0, 0, 0.16], "Memory chips"));
-  // gold fingers with an off-centre key notch
   const fingers = [];
   for (let i = 0; i < 72; i++) {
     const x = -6.4 + i * 0.178;
@@ -62,7 +57,6 @@ export function buildRam() {
     fingers.push([0.12, 0.5, 0.14, x, -1.33, 0]);
   }
   g.add(ex(boxes(fingers, gold), [0, -0.12, 0], "Gold contacts"));
-  // heat spreader top bar + light strip
   g.add(ex(box(13.4, 0.9, 0.5, alu, 0, 1.25, 0), [0, 0.2, 0.04], "Heat spreader"));
   g.add(ex(box(13.0, 0.12, 0.42, M.glow(), 0, 1.75, 0), [0, 0.3, 0.04], "Light bar"));
   return g;
@@ -102,7 +96,6 @@ export function buildCooler() {
   finStack.userData.dense = true;
   g.add(ex(finStack, [0, 0.03, -0.1], "Fin stack"));
   g.add(ex(box(11.8, 0.4, 5.4, M.steel(), 0, 6.8, -0.4), [0, 0.16, -0.1], "Top cover"));
-  // heat pipes
   const pipeMat = M.copper();
   for (let i = 0; i < 4; i++) {
     const x = -2.4 + i * 1.6;
@@ -113,7 +106,6 @@ export function buildCooler() {
     g.add(ex(new THREE.Mesh(new THREE.TubeGeometry(curve, 48, 0.28, 10, false), pipeMat), [0, -0.06, 0.04], i === 0 ? "Heat pipes" : undefined));
   }
   g.add(ex(box(4.6, 0.9, 4.0, pipeMat, 0, -7.9, -0.4), [0, -0.16, 0.04], "Copper base"));
-  // front fan in a frame
   const frame = new THREE.Mesh(
     new THREE.ExtrudeGeometry((() => {
       const s = new THREE.Shape(); s.moveTo(-6, -6); s.lineTo(6, -6); s.lineTo(6, 6); s.lineTo(-6, 6); s.lineTo(-6, -6);
@@ -133,7 +125,6 @@ export function buildPsu() {
   const g = new THREE.Group();
   const steel = M.steel();
   g.add(ex(box(15, 8.6, 14, steel), [0, -0.04, 0], "Steel case"));
-  // top fan grille (rings) + fan beneath
   const grille = new THREE.Group();
   for (let r = 1; r <= 6; r++) grille.add(new THREE.Mesh(new THREE.TorusGeometry(r * 0.95, 0.07, 6, 64), M.alu()));
   grille.rotation.x = Math.PI / 2;
@@ -148,7 +139,6 @@ export function buildPsu() {
   f.position.set(0, 4.0, 0);
   g.add(ex(f, [0, 0.28, 0], "Fan"));
   g.userData.fans = [f];
-  // back panel: honeycomb vent, socket, switch
   const vents = [];
   for (let row = 0; row < 7; row++) for (let col = 0; col < 13; col++) {
     const x = 0.8 + col * 0.5 + (row % 2) * 0.25, y = -2.8 + row * 0.75;
@@ -159,7 +149,6 @@ export function buildPsu() {
   g.add(ex(vent, [0, 0, 0.22], "Exhaust vent"));
   g.add(ex(box(2.4, 1.6, 0.3, M.chip(), -4.4, 0.9, 7.05), [-0.06, 0.04, 0.3], "Wall socket"));
   g.add(ex(box(0.9, 1.4, 0.35, M.chip(), -4.4, -1.5, 7.05), [-0.06, -0.04, 0.3], "Switch"));
-  // cable bundle out of the side
   const cableMat = M.chip();
   for (let i = 0; i < 6; i++) {
     const y = -2.5 + i * 0.75;

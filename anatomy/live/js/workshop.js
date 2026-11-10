@@ -1,5 +1,3 @@
-/* Build-a-PC workshop: drag parts from the bench into a real-scale PC case, swap options,
-   and watch the price and specs change as the computer comes together. */
 import * as THREE from "three";
 import { clone as cloneSkinned } from "three/addons/utils/SkeletonUtils.js";
 import { CASE, CATEGORIES, CAT, ORDER, PRESETS, option, stats, warnings } from "./catalog.js";
@@ -13,15 +11,13 @@ const money = (v) => "$" + Math.round(v).toLocaleString("en-US");
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 const K = 0.0105;   // scene units per millimetre
-// while you drag a part, the camera leans toward where it goes — most for the small ones
 const LEAN = { mthr: 0, psu: 0.3, gpu: 0.35, cooler: 0.6, ram: 0.7, storage: 0.85, cpu: 0.9 };
-// Inside the case, in millimetres from its centre: x runs rear → front, y up, z from the motherboard tray out to the glass.
 const IN_CASE = {
-  board: [-72, 41, -63],                       // motherboard origin: its rear edge lines up with the I/O cut-out
+  board: [-72, 41, -63],
   psu: { pos: [-124, -165, 6], basis: ["-z", "-y", "-x"] },   // under the shroud, fan down, plug to the rear
-  cut: { z: 60, y: -100, floor: -190 },        // cut-away window into the shroud so the PSU stays visible
+  cut: { z: 60, y: -100, floor: -190 },
 };
-const HIDE_ON_BOARD = /^(CPULid|CPU_Base|Ram\d|RGBM|M2_)/;   // parts the motherboard model ships with; the builder adds them
+const HIDE_ON_BOARD = /^(CPULid|CPU_Base|Ram\d|RGBM|M2_)/;
 const ALL = new Set(ORDER);
 
 const ROWS = [
@@ -50,8 +46,8 @@ export function createWorkshop(ctx) {
 
   // ---------- state ----------
   const sel = { ...PRESETS.balanced.pick };
-  try { Object.assign(sel, JSON.parse(localStorage.getItem("aoc-ws") || "{}")); } catch { /* storage blocked */ }
-  const save = () => { try { localStorage.setItem("aoc-ws", JSON.stringify(sel)); } catch { /* storage blocked */ } };
+  try { Object.assign(sel, JSON.parse(localStorage.getItem("aoc-ws") || "{}")); } catch { }
+  const save = () => { try { localStorage.setItem("aoc-ws", JSON.stringify(sel)); } catch { } };
   const has = new Set();
   const pieces = {};           // category → { obj, fans, mixer }
   const anims = [];
@@ -67,14 +63,11 @@ export function createWorkshop(ctx) {
   const glow = new THREE.PointLight("#7fd4ff", 0, 6, 1.6);      // the "RGB" that comes on with the power
   glow.position.set(-40, 40, 40);
   root.add(glow);
-  // a fragment is cut only if it's on the glass side, below the shroud top and above the floor
   const cutLocal = [new THREE.Plane(new THREE.Vector3(0, 0, -1), IN_CASE.cut.z), new THREE.Plane(new THREE.Vector3(0, 1, 0), -IN_CASE.cut.y), new THREE.Plane(new THREE.Vector3(0, -1, 0), IN_CASE.cut.floor)];
   const cutWorld = cutLocal.map((p) => p.clone());
-  // the green "this is where it goes" hologram; normal blending so layered parts don't burn out to white
   const ghostMat = new THREE.MeshBasicMaterial({ color: "#3dff9a", transparent: true, opacity: 0.25, depthWrite: false });
   let caseObj = null, caseFans = [];
 
-  // a fresh copy of a part in the explorer's "part space" (centred, longest side = part.size)
   function partCopy(id) {
     const r = rig(id);
     const obj = r.part.proc ? procedural[r.part.proc]() : cloneSkinned(r.proto);
@@ -117,7 +110,6 @@ export function createWorkshop(ctx) {
     for (const [k, box] of Object.entries(mb.matBoxes)) if (re.test(k)) out.union(box);
     return out;
   };
-  // a part's own point that should land on the target point (in part space), e.g. the bottom of the cooler's copper base
   function landing(q, s, contact, target) {
     return target.clone().sub(contact.clone().multiplyScalar(s).applyQuaternion(q));
   }
@@ -127,8 +119,6 @@ export function createWorkshop(ctx) {
     return { xs: n >= 4 ? xs : [xs[1], xs[3]], y: box.getCenter(new THREE.Vector3()).y };
   }
 
-  /* Where a category sits for the current pick: position (case mm), rotation, scale (mm per part unit).
-     RAM is a set of sticks, so its pose also lists each stick. */
   function poseFor(cat, opt = option(cat, sel)) {
     const q = new THREE.Quaternion();
     if (cat === "mthr") { const b = boardRef(); return { pos: b.origin.clone(), quat: q, scale: b.mm }; }
@@ -145,7 +135,7 @@ export function createWorkshop(ctx) {
       return { pos: onBoard(b, p), quat: q, scale: 40 / r.part.size };
     }
     if (cat === "cooler") {
-      q.setFromRotationMatrix(basisMatrix(["y", "z", "x"]));   // tower up out of the board, fan facing the front of the case
+      q.setFromRotationMatrix(basisMatrix(["y", "z", "x"]));
       const s = (opt.mm * k) / r.part.size;
       const base = r.matBoxes["Material.004"];
       const contact = base ? new THREE.Vector3(base.getCenter(new THREE.Vector3()).x, base.min.y, base.getCenter(new THREE.Vector3()).z) : new THREE.Vector3(0, -r.box.y / 2, 0);
@@ -270,7 +260,6 @@ export function createWorkshop(ctx) {
     anims.push({ obj: p.obj, t0: performance.now(), dur: 380, step: (k) => p.obj.scale.setScalar(s * (0.86 + 0.14 * easeOutBack(k))), done: () => p.obj.scale.setScalar(s) });
   }
 
-  // keyboard / tap fallback: the part flies in from the bench by itself
   function autoInstall(cat) {
     if (has.has(cat)) {
       if (dependents(cat).length) return refuseRemove(cat);
@@ -313,7 +302,7 @@ export function createWorkshop(ctx) {
     bootT = performance.now();
     sfx.boot();
     setTimeout(() => sfx.badge(), 1400);
-    try { localStorage.setItem("aoc-built", "1"); } catch { /* storage blocked */ }
+    try { localStorage.setItem("aoc-built", "1"); } catch { }
     toast(prefs.simple ? "★ It's alive! You built a computer." : "★ POST passed — your build boots.", "badge");
     renderAll();
     flashHint(prefs.simple ? "It's alive! Now swap parts with the arrows and watch the numbers change." : "Running. Swap options to compare builds live.", "good", 5000);
@@ -328,7 +317,6 @@ export function createWorkshop(ctx) {
     const r = canvas.getBoundingClientRect();
     return { x: r.left + (v.x * 0.5 + 0.5) * r.width, y: r.top + (-v.y * 0.5 + 0.5) * r.height };
   }
-  // pointer → a point in case millimetres on the camera-facing plane through `through` (case mm)
   function pointerAt(x, y, through) {
     ray.setFromCamera(toNdc(x, y), camera);
     camera.getWorldDirection(w);
@@ -405,7 +393,6 @@ export function createWorkshop(ctx) {
     const a = screenOf(pose.pos), b = screenOf(pose.pos.clone().add(new THREE.Vector3(60, 0, 0)));
     return THREE.MathUtils.clamp(Math.hypot(a.x - b.x, a.y - b.y) * 1.4, 46, 120);
   }
-  // a tap on a card: show where it goes, without moving anything
   function nudge(cat) {
     const card = cardEl(cat);
     card?.classList.remove("is-nudge"); void card?.offsetWidth; card?.classList.add("is-nudge");
@@ -434,9 +421,8 @@ export function createWorkshop(ctx) {
   addEventListener("pointermove", onMove);
   addEventListener("pointerup", onUp);
   addEventListener("pointercancel", onUp);
-  const vibrate = (ms) => { try { navigator.vibrate?.(ms); } catch { /* not allowed */ } };
+  const vibrate = (ms) => { try { navigator.vibrate?.(ms); } catch { } };
 
-  // a small label that follows the pointer while it's over the bench, where the 3D part would be hidden
   function chip(x, y) {
     const c = $("wsChip");
     const bench = $("wsBench").getBoundingClientRect();
@@ -447,7 +433,6 @@ export function createWorkshop(ctx) {
     c.style.transform = `translate(${x}px, ${y}px)`;
   }
 
-  // a price tag that floats up from where the part went in
   function priceTag(text, at, kind = "up") {
     const st = canvas.getBoundingClientRect(), p = screenOf(at);
     const el = document.createElement("span");
@@ -459,7 +444,7 @@ export function createWorkshop(ctx) {
     el.addEventListener("animationend", () => el.remove());
   }
 
-  // ---------- bench (DOM) ----------
+  // ---------- bench ----------
   const cards = $("wsCards");
   const cardEl = (cat) => cards.querySelector(`[data-cat="${cat}"]`);
   function shakeCard(cat, cls = "shake") {
@@ -487,7 +472,7 @@ export function createWorkshop(ctx) {
     card.addEventListener("pointerdown", (e) => {
       if (e.button > 0 || e.target.closest(".ws-card__opt") || !active) return;
       drag = { cat, from: "bench", sx: e.clientX, sy: e.clientY, x: e.clientX, y: e.clientY, id: e.pointerId, live: false, touch: e.pointerType === "touch", lift: e.pointerType === "touch" ? 56 : 0 };
-      try { card.setPointerCapture(e.pointerId); } catch { /* old browsers */ }
+      try { card.setPointerCapture(e.pointerId); } catch { }
     });
     card.addEventListener("pointerenter", () => { if (!drag && !has.has(cat) && !needsMissing(cat).length && active) showGhost(cat); });
     card.addEventListener("pointerleave", () => { if (!drag && ghost?.cat === cat && !nudge.t) hideGhost(); });
@@ -501,7 +486,6 @@ export function createWorkshop(ctx) {
     });
     card.querySelector("[data-list]").addEventListener("click", (e) => { e.stopPropagation(); openList(cat); });
   });
-  // options run cheapest → priciest, so the arrows stop at the ends rather than wrapping round
   const neighbour = (cat, d) => { const o = CAT[cat].options, i = o.findIndex((x) => x.id === sel[cat]); return o[THREE.MathUtils.clamp(i + d, 0, o.length - 1)].id; };
   function stepOption(cat, d) {
     setOption(cat, neighbour(cat, d));
@@ -526,7 +510,6 @@ export function createWorkshop(ctx) {
     renderAll();
   }
 
-  // option list: every choice with its price and what it changes
   const pop = $("wsPop");
   function openList(cat) {
     const cur = option(cat, sel);
@@ -562,7 +545,6 @@ export function createWorkshop(ctx) {
       <small class="ws-stat__note"></small>
     </li>`).join("");
 
-  // hovering an option shows how the finished PC would change if you picked it
   function previewOption(cat, id) {
     preview = cat ? { cat, id } : null;
     const A = stats(sel, ALL), B = cat ? stats({ ...sel, [cat]: id }, ALL) : null;
@@ -675,7 +657,6 @@ export function createWorkshop(ctx) {
     view.yaw = damp(view.yaw, view.toYaw, 6, dt);
     view.pitch = damp(view.pitch, view.toPitch, 6, dt);
     root.rotation.set(view.pitch, view.yaw, 0, "YXZ");
-    // lean in: slide the case so the target comes to the middle, and move the camera closer
     if (drag?.live) { view.focus.copy(drag.piece.pose.pos); view.cat = drag.cat; }
     view.lean = damp(view.lean, drag?.live || performance.now() < view.hold ? LEAN[view.cat] || 0 : 0, 3.2, dt);
     root.position.copy(view.focus).multiplyScalar(-K * view.lean).applyEuler(root.rotation);
@@ -689,7 +670,6 @@ export function createWorkshop(ctx) {
       o.position.x = damp(o.position.x, drag.want.x, 18, dt);
       o.position.y = damp(o.position.y, drag.want.y, 18, dt);
       o.position.z = damp(o.position.z, drag.want.z, 18, dt);
-      // a little swing as it moves, like it's hanging from your fingers
       const vx = (o.position.x - prev) / Math.max(dt, 1e-3);   // mm per second
       drag.swing = damp(drag.swing || 0, THREE.MathUtils.clamp(-vx * 0.0004, -0.3, 0.3), 10, dt);
       o.quaternion.copy(drag.piece.pose.quat).premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), drag.near ? 0 : drag.swing));
@@ -710,7 +690,6 @@ export function createWorkshop(ctx) {
       label.style.transform = `translate(${(p.x - st.left).toFixed(1)}px, ${(p.y - st.top).toFixed(1)}px)`;
     }
 
-    // fans: still until the power comes on, then a spin-up
     const boot = powered ? Math.min(1, (now - bootT) / 1800) : 0;
     const spin = dt * 9 * boot;
     for (const f of caseFans) f.rotation.z += spin;
@@ -721,7 +700,6 @@ export function createWorkshop(ctx) {
     glow.intensity = powered ? 2.2 * boot : glow.intensity;
     if (powered) glow.color.setHSL((t * 0.08) % 1, 0.8, 0.6);
 
-    // numbers count toward their new values
     const tp = target;
     shown.price = damp(shown.price ?? tp.price, tp.price, 9, dt);
     $("wsTotal").textContent = money(shown.price);
@@ -761,7 +739,6 @@ export function createWorkshop(ctx) {
     $("wsBench").hidden = true;
   }
 
-  // for screenshots and tests: put the first n parts straight in
   function quickFill(n, presetKey) {
     if (presetKey && PRESETS[presetKey]) Object.assign(sel, PRESETS[presetKey].pick);
     for (const cat of ORDER.slice(0, n)) if (!has.has(cat)) { const p = makePiece(cat); root.add(p.obj); has.add(cat); pieces[cat] = p; }

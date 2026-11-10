@@ -1,14 +1,4 @@
-// Case study carousels: any .cs-media figure with two or more images/videos slowly crossfades
-// between them. A thin bar along the bottom fills up until the next one arrives.
-// - The bar's own CSS animation is the clock: when it finishes filling, the next item comes in.
-//   So the bar and the swap can never drift apart.
-// - Images stay SECONDS each. A video plays from the start when it comes up and stays for its own
-//   length, so the bar shows how far through it is. Only the showing video plays; the next one
-//   starts loading ahead of time.
-// - Pauses while it's off screen (bar and video too).
-// - Click or tap to skip ahead.
-// - Reduced motion: no automatic swapping and no slow zoom; clicking still steps through.
-// To add items, just add more <img> or <video> lines inside the figure (see work/beyond-fashion.html).
+// Case study carousels: crossfading media with progress ticks.
 (function () {
   var SECONDS = 6;   // how long each image stays
   var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -22,7 +12,6 @@
     fig.appendChild(bar);
     var fill = bar.firstChild, index = 0, paused = false;
 
-    // Items that fail to load remove themselves (onerror), so always ask for the current list.
     function items() { return fig.querySelectorAll('img, video'); }
     function isVideo(el) { return el.tagName === 'VIDEO'; }
     function current() { return items()[index]; }
@@ -53,22 +42,17 @@
       }
       if (isVideo(next) && next.preload === 'none') next.preload = 'auto';   // ready by the time it's up
       fig.style.setProperty('--slide', lengthOf(el).toFixed(2) + 's');
-      // Restart the bar (and the item's slow zoom) from empty.
       fill.style.animation = 'none'; void fill.offsetWidth; fill.style.animation = '';
     }
     if (!reduced) fill.addEventListener('animationend', function () { show(index + 1); });
-    // A missing file removes itself (onerror="this.remove()"). If it was the one showing, move on
-    // right away instead of leaving the frame empty for a whole turn.
     fig.addEventListener('error', function (e) {
       if (e.target.classList && e.target.classList.contains('is-on')) setTimeout(function () { show(index); }, 0);
     }, true);
     fig.addEventListener('click', function () { show(index + 1); });
-    // A video's length is only known once its metadata loads; if it's showing, time the bar by it.
     Array.prototype.forEach.call(fig.querySelectorAll('video'), function (v) {
       v.addEventListener('loadedmetadata', function () { if (v === current()) show(index); });
     });
 
-    // Pause while off screen; the bar, the zoom and a playing video pause with it.
     var visible = true;
     function sync() {
       paused = reduced || !visible;

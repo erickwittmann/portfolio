@@ -11,16 +11,11 @@
 <meta name="description" content="Erick Wittmann is a motion graphics and audiovisual designer. Step onto the stage and run the lights.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;700&family=Silkscreen&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/stage.css">
 </head>
 <body>
-<!--
-  The 3D stage, archived. It used to be the homepage: the intro grid is the stage's LED screen and
-  scrolling pulls the camera back to the whole stage (js/stage/hero.js, js/intro.js in stage mode).
-  Nothing else on the site loads it; open stage.html directly. Its styles are css/stage.css.
--->
 
 <nav class="nav" id="nav">
   <ul>
@@ -32,9 +27,6 @@
 </nav>
 
 <main>
-  <!-- One scroll sequence: the media grid fills the window and is also the stage's LED screen.
-       Scrolling pulls the camera back out of the screen to the whole stage (js/hero.js), then the
-       page carries on. .stage-pin stays in the window while the section scrolls past behind it. -->
   <section class="stage-seq intro" id="top" aria-label="Selected visuals and interactive stage">
     <h1 class="sr-only">Erick Wittmann — Motion &amp; Audiovisual Designer</h1>
     <div class="stage-pin">
@@ -57,16 +49,12 @@
 
 </main>
 
-
 <script src="js/vendor/three.min.js"></script>
 <script src="js/vendor/GLTFLoader.js"></script>
 <script src="js/vendor/meshopt_decoder.js"></script>
-<!-- 3D stage; the intro grid is its LED screen. (js/stage-cube.js is an older stand-in from before the
-     grid moved onto the screen: it would cover the grid, so it is no longer a drop-in swap.) -->
 <script src="js/stage/visualizer.js"></script>
 <script src="js/tracks.js"></script>
 <script src="js/stage/hero.js"></script>
-<!-- js/stage-ui.js (road-case controls on the stage) retired: music is run from the nav player. -->
 <script src="js/site.js"></script>
 <script src="js/tilt.js"></script>
 <script src="js/pixel-trail.js"></script>

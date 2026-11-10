@@ -1,18 +1,7 @@
-// Easter egg: recent reels. The pixel flower next to the footer's name turns on hover; clicking it
-// opens a drawer under the footer with Erick's latest Instagram reels.
-//
-// ---------- The reels: the one place to edit ----------
-// Paste a reel's link (Instagram: ••• on the reel > Copy link), newest first. 3–6 is plenty.
-// Leave the list empty and the drawer just points to the profile.
+// Footer easter egg: recent Instagram reels drawer.
 window.REELS = [
-  // 'https://www.instagram.com/reel/XXXXXXXXXXX/',
 ];
 var REELS_PROFILE = 'https://www.instagram.com/erickwittmann/';
-//
-// The reels are Instagram's own embeds. Their script (instagram.com/embed.js) only loads the first
-// time the drawer opens, so the rest of the time this costs nothing.
-// (Instagram doesn't let a static site list "the latest reels" by itself; that needs Instagram's
-// API with a token on a server, e.g. a Cloudflare Worker. Until then the list above is it.)
 (function () {
   var footer = document.querySelector('footer');
   var brand = footer && footer.querySelector('.brand');

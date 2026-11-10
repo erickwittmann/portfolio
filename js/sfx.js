@@ -1,7 +1,4 @@
-// Synthesized sound effects (no audio files): relay clicks for the splash letters, a heavy
-// "lights on" clunk and knob detent ticks.
-// Browsers keep audio locked until the visitor clicks, taps or presses a key. Sounds requested
-// before that are silently skipped; SFX.onUnlock lets the stage unmute the reel at that moment.
+// Synthesized UI sound effects (Web Audio, no files).
 (function () {
   var AC = window.AudioContext || window.webkitAudioContext;
   var ctx = null, master = null, noise = null, unlocked = false, waiting = [];
@@ -37,17 +34,12 @@
   var SFX = {
     get ctx() { return ctx; },
     get unlocked() { return unlocked; },
-    // A stage-light relay engaging: a bright click over a small body thump. `i` varies the pitch.
     relay: function (i) {
       if (!live()) return;
       var t = ctx.currentTime, k = 1 + ((i || 0) % 5) * 0.06;
       burst(t, 0.03, 'bandpass', 2600 * k, 1.4, 0.32, 0.03);
       thump(t, 150 * k, 70, 0.16, 0.09);
     },
-    // A soft chime, played as each stage light strikes during the zoom-out (in place of the relay
-    // click). Successive lights climb a warm A major 9 chord, so the reveal plays as a gentle
-    // arpeggio: a sine with a quiet octave above, eased in, ringing out through a low-pass, panned
-    // a little left and right.
     chime: function (i) {
       if (!live()) return;
       var NOTES = [220, 277.18, 329.63, 415.3, 493.88, 554.37, 659.25, 830.61];
@@ -66,7 +58,6 @@
         o.connect(og); og.connect(lp); o.start(t); o.stop(t + 2.5);
       });
     },
-    // Big breaker "lights on": low thud, a hum swell, a bright click on top.
     clunk: function () {
       if (!live()) return;
       var t = ctx.currentTime;
@@ -78,7 +69,6 @@
       g.gain.exponentialRampToValueAtTime(0.06, t + 0.08); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.4);
       o.connect(lp); lp.connect(g); g.connect(master); o.start(t); o.stop(t + 1.5);
     },
-    // Knob detent.
     tick: function () {
       if (!live()) return;
       burst(ctx.currentTime, 0.012, 'highpass', 5000, 0.8, 0.09, 0.012);
@@ -86,7 +76,6 @@
     onUnlock: function (cb) { if (unlocked) cb(); else waiting.push(cb); }
   };
 
-  // The first click, tap or key press anywhere unlocks audio for the whole page.
   function unlock() {
     if (unlocked) return;
     unlocked = true;

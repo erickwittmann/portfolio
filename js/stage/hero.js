@@ -1,26 +1,14 @@
-// The interactive stage: Erick's 3D concert stage whose LED screen IS the intro media grid, with
-// moving-head beams, truss washes, spark-fountain pyro, strobe and haze. Everything the deck can
-// touch is exposed on window.Stage (see the bottom of this file).
-//
-// How the grid gets onto the screen: the grid stays ordinary HTML (so its videos, hover and links
-// keep working) and sits behind the canvas. The 3D screen is drawn as a see-through hole, so the
-// grid shows through it, while the booth, trusses and beams draw over it like real objects in front
-// of a screen. Every frame the grid is warped (CSS matrix3d) onto where the screen lands on screen.
-// At the top of the page the camera sits square in front of the screen so the grid simply fills the
-// window; scrolling (js/intro.js gives the progress) pulls the camera back to the whole stage.
+// 3D concert stage (three.js): the splash grid is mapped onto the LED wall, with lights, pyro and haze.
 (function () {
   var statusEl = document.getElementById('status');
   var SFX = window.SFX;
   function fail(msg) { statusEl.textContent = msg; }
   window.addEventListener('error', function (e) { fail('Error: ' + (e.message || 'unknown')); });
   if (typeof THREE === 'undefined' || !THREE.GLTFLoader || !window.MeshoptDecoder) { fail('3D libraries failed to load.'); return; }
-  var SEQ = window.StageSeq;   // from js/intro.js: scroll progress + the grid element
+  var SEQ = window.StageSeq;
   if (!SEQ) { fail('Stage sequence missing.'); return; }
   var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Quality tier: phones / low-core devices get smaller textures, a lower resolution range,
-  // cheaper shadows, slower reflection updates, no beam floor-spots, fewer sparks, fewer blur taps.
-  // Test overrides: ?quality=high|low  ?dpr=<fixed pixel ratio, disables adaptive>  ?post=0 (no depth of field / edge haze)
   function param(name) { return (location.search.match(new RegExp('[?&]' + name + '=([^&]+)')) || [])[1]; }
   var LOW = param('quality') ? param('quality') === 'low'
     : (window.matchMedia && matchMedia('(pointer: coarse)').matches) || (navigator.hardwareConcurrency || 8) <= 4;
@@ -28,34 +16,21 @@
   var Q = LOW
     ? { dprMin: 0.75, dprMax: 1.5, dprStart: 1.25, shadow: 1024, shadowType: THREE.PCFShadowMap, envRes: 64, envFaceEvery: 3, spots: 0, sparks: 900, taps: 8 }
     : { dprMin: 1, dprMax: 2, dprStart: 1.5, shadow: 2048, shadowType: THREE.PCFSoftShadowMap, envRes: 96, envFaceEvery: 2, spots: 3, sparks: 2400, taps: 12 };
-  // Depth of field + edge haze run as one extra full-screen pass (see "Post"). It renders the scene
-  // into an off-screen target, which can't use MSAA here, but the blur softens edges anyway.
   var POST = param('post') !== '0';
   var AA = !POST && !LOW && DEVICE_DPR < 1.5;
   var FIXED_DPR = param('dpr') ? parseFloat(param('dpr')) : 0;
 
-  // The playlist: js/tracks.js (shared with the homepage player, js/playlist.js).
   var TRACKS = window.TRACKS || [];
-  // Erick's stage, reduced for the web from assets/erick_concert_stage.glb (111 MB, 1.17M triangles,
-  // 395 draw calls) with gltfpack 1.3:
-  //   gltfpack -i erick_concert_stage.glb -o erick_concert_stage-lite.glb -si 0.1 -mm -cc -tw -tl 512
-  // = 10% of the triangles (168k), meshes merged by material (58 draw calls), meshopt-compressed
-  // geometry and 512px WebP textures: 3.1 MB. Needs js/vendor/meshopt_decoder.js on the page.
   var ASSETS = { model: 'assets/erick_concert_stage-lite.glb' };
 
-  // Everything the controls change. Values are 0..1. dim: the light bar's dim/bright slider.
-  // strobe / pyro / haze have no control any more (the deck is gone) and keep these settings.
   var show = { hue: 0.36, dim: 1, strobe: 0, pyro: 0.35, haze: 0.45, level: 0, kick: 0 };
 
   // ---------- Renderer / scene / camera ----------
   var wrap = document.getElementById('wrap'), frame = SEQ.frame, pin = SEQ.pin;
   var nav = document.getElementById('nav'), deckEl = document.getElementById('deck');
   var renderer;
-  // alpha: the canvas is see-through where the LED screen is, so the grid behind it shows.
   try { renderer = new THREE.WebGLRenderer({ antialias: AA, alpha: true, powerPreference: 'high-performance' }); }
   catch (e) { fail('WebGL is not available in this browser.'); return; }
-  // Start a little low when the post pass is on: the pull-back happens in the first seconds, before
-  // the adaptive resolution has had time to step down (it then steps up if there is headroom).
   renderer.setPixelRatio(FIXED_DPR || Math.min(DEVICE_DPR, POST ? Math.min(1.2, Q.dprStart) : Q.dprStart));
   renderer.setClearColor(0x000000, 1);
   renderer.outputEncoding = THREE.sRGBEncoding;
@@ -63,18 +38,18 @@
   renderer.shadowMap.type = Q.shadowType;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   wrap.appendChild(renderer.domElement);
-  wrap.style.opacity = 0;   // the stage fades in around the screen as the camera pulls back
+  wrap.style.opacity = 0;
 
   var scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x000000, 0);
   var camera = new THREE.PerspectiveCamera(42, 1, 0.1, 500);
-  var SCREEN_LAYER = 2;     // the see-through screen: main camera only (not in reflections)
-  var ENV_LAYER = 1;        // studio panels + a picture of the grid: reflections only
+  var SCREEN_LAYER = 2;
+  var ENV_LAYER = 1;
   camera.layers.enable(SCREEN_LAYER);
   var W = 1, H = 1, navPx = 64, deckPx = 0;
   function resize() {
     W = pin.clientWidth || window.innerWidth || 800; H = pin.clientHeight || window.innerHeight || 600;
-    navPx = nav ? nav.offsetHeight : 64; deckPx = deckEl ? deckEl.offsetHeight : 0;   // overlay the canvas (the deck is gone; kept in case a bottom bar returns)
+    navPx = nav ? nav.offsetHeight : 64; deckPx = deckEl ? deckEl.offsetHeight : 0;
     renderer.setSize(W, H, false); camera.aspect = W / H; camera.updateProjectionMatrix();
     sizeScreen();
     if (post) post.resize();
@@ -82,10 +57,6 @@
   }
 
   // ---------- Base lighting ----------
-  // Light budget: every light is evaluated per pixel by every PBR material, so the count matters
-  // far more than anything else here (measured: each point light ~1.5 ms/frame at 2x DPR).
-  // Fixed rig: hemisphere + 1 shadowed directional + 3 point lights (screen glow, 2 truss washes)
-  // + up to 3 floor spots on desktop. Strobe and pyro flashes reuse these instead of adding lights.
   var HEMI_BASE = 0.55, KEY_BASE = 0.7;
   var hemi = new THREE.HemisphereLight(0x8899ff, 0x201a10, HEMI_BASE);
   scene.add(hemi);
@@ -94,9 +65,6 @@
   key.shadow.camera.left = -18; key.shadow.camera.right = 18; key.shadow.camera.top = 18; key.shadow.camera.bottom = -18;
   key.shadow.camera.near = 1; key.shadow.camera.far = 60; scene.add(key);
 
-  // A dark venue for the reflections: invisible to the main camera but seen by the cube camera.
-  // Kept dim on purpose, a brightly lit room made every glossy surface read tan and washed out;
-  // the bright things the stage should reflect are the screen (the grid picture) and the lights.
   (function buildEnvironment() {
     var room = new THREE.Mesh(new THREE.BoxGeometry(80, 40, 80), new THREE.MeshBasicMaterial({ color: 0x04050a, side: THREE.BackSide }));
     room.position.y = 12; room.layers.set(ENV_LAYER); scene.add(room); freeze(room);
@@ -108,16 +76,11 @@
     panel(26, 14, 0xffffff, 0.7,  22, 16,  26);   // house lights, far and dim
     panel(8, 22, 0x5a86ff, 1.2,  -30, 12,   8);
     panel(20, 8, 0xff3fc0, 0.6,  -14, 24, -30);
-    panel(60, 2.5, 0xffffff, 1.4,  0, 34,   0);   // rig strips overhead: long highlights on the glossy floor
+    panel(60, 2.5, 0xffffff, 1.4,  0, 34,   0);
     panel(60, 2.5, 0xffffff, 1.4,  0, 34,  12);
     panel(60, 2.5, 0xffffff, 1.4,  0, 34, -12);
     panel(30, 6, 0xffffff, 0.3,   0, 6, 38);
   })();
-  // Live reflections, rendered one cube face per frame into two targets that swap once all six
-  // faces are fresh. Spreading the work avoids a 6-render spike every few frames, and materials
-  // always sample the finished target (no feedback loop, no toggling scene.environment, which
-  // would force a shader-program switch). Mipmapped, so rough surfaces get blurrier reflections
-  // and glossy ones sharper.
   function envTarget() {
     return new THREE.WebGLCubeRenderTarget(Q.envRes, { format: THREE.RGBAFormat, generateMipmaps: true, minFilter: THREE.LinearMipmapLinearFilter });
   }
@@ -138,37 +101,24 @@
   }
 
   // ---------- The LED screen ----------
-  // On the backdrop ("Cube1" in the model: 14.5 x 9.6, front face at z = -3.9). Its shape follows
-  // the window's, so at the top of the page the grid can fill the window exactly; it's as big as
-  // fits on the backdrop.
   var SCREEN_C = new THREE.Vector3(-0.2, 6.0, -3.85), SCREEN_MAX_W = 14.2, SCREEN_MAX_H = 9.4;
   var screenW = SCREEN_MAX_W, screenH = 8.8;
   var unitPlane = new THREE.PlaneGeometry(1, 1);
-  // The hole: writes transparent black (colour and alpha both zeroed) but still writes depth, so
-  // anything behind it is hidden and anything in front draws over the grid.
   var hole = new THREE.Mesh(unitPlane, new THREE.MeshBasicMaterial({
     color: 0x000000, fog: false, toneMapped: false,
     blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.ZeroFactor, blendDst: THREE.ZeroFactor,
     blendEquationAlpha: THREE.AddEquation, blendSrcAlpha: THREE.ZeroFactor, blendDstAlpha: THREE.ZeroFactor
   }));
   hole.layers.set(SCREEN_LAYER); hole.position.copy(SCREEN_C); scene.add(hole);
-  // Matte black surround over the backdrop, just behind the screen: real LED walls sit in a flat
-  // black frame, and the glossy backdrop beside a narrow (phone-shaped) screen read tan.
   var surround = new THREE.Mesh(new THREE.PlaneGeometry(14.6, 9.7), new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.95, metalness: 0 }));
   surround.position.set(SCREEN_C.x, SCREEN_C.y, SCREEN_C.z - 0.03); surround.receiveShadow = true; scene.add(surround); freeze(surround);
-  // A small live picture of the grid, for reflections only (see "Grid picture").
   var mirrorCanvas = document.createElement('canvas'); mirrorCanvas.width = 160; mirrorCanvas.height = 100;
   var mirrorTex = new THREE.CanvasTexture(mirrorCanvas);
   mirrorTex.encoding = THREE.sRGBEncoding; mirrorTex.minFilter = THREE.LinearFilter; mirrorTex.generateMipmaps = false;
   var proxy = new THREE.Mesh(unitPlane, new THREE.MeshBasicMaterial({ map: mirrorTex, color: new THREE.Color(1.6, 1.6, 1.6), toneMapped: false, fog: false }));
   proxy.layers.set(ENV_LAYER); proxy.position.copy(SCREEN_C); scene.add(proxy);
-  // Light spill from the screen onto the booth and floor. Kept well forward of the backdrop: close
-  // to it, it painted a broad tan highlight across the glossy black wall.
   var glow = new THREE.PointLight(0x9bb4ff, 0.9, 22); glow.position.set(SCREEN_C.x, SCREEN_C.y - 1.5, SCREEN_C.z + 6); scene.add(glow);
   var glowTarget = new THREE.Color(0x9bb4ff);
-  // The audio-reactive visualizer (js/visualizer.js): drawn on a plane just in front of the hole.
-  // It fades in over the grid once the page content starts scrolling over the stage (vizMix), and the
-  // grid behind it is hidden (and its videos paused) once it's fully covered.
   var viz = window.Visualizer ? window.Visualizer(THREE, renderer) : null, vizMix = 0, vizScreen = null;
   if (viz) {
     vizScreen = new THREE.Mesh(unitPlane, new THREE.MeshBasicMaterial({ map: viz.texture, transparent: true, opacity: 0, toneMapped: false, fog: false, depthWrite: false }));
@@ -185,13 +135,7 @@
     if (vizScreen) { vizScreen.scale.copy(hole.scale); vizScreen.updateMatrixWorld(); viz.setAspect(screenW / screenH); }
   }
 
-  // ---------- Grid picture (for reflections) ----------
-  // ~4 fps: draw each tile's image/video into a tiny canvas laid out like the grid, which the stage
-  // reflects. Never read pixels back from it: a readback makes the browser wait for the GPU to
-  // finish everything queued, and doing that 8x a second caused a long, visible hitch each time
-  // (measured on a 2x screen: 24 long frames in 3 s with it, none without).
-  // Only same-origin files are drawn: a cross-origin one would "taint" the canvas and WebGL would
-  // refuse it.
+  // ---------- Grid picture ----------
   var mctx = mirrorCanvas.getContext('2d'), mirrorOK = param('mirror') !== '0', mirrorAt = 0;   // ?mirror=0: test switch
   function sameOrigin(src) { try { return new URL(src, location.href).origin === location.origin; } catch (e) { return false; } }
   function updateMirror(now) {
@@ -207,16 +151,13 @@
       var t = tiles[i], x = t.offsetLeft * s, y = t.offsetTop * s, w = t.offsetWidth * s, h = t.offsetHeight * s;
       var m = t.querySelector('.ic-photo') || t.querySelector('video, img');
       var ready = m && sameOrigin(m.currentSrc || m.src) && (m.tagName === 'VIDEO' ? m.readyState >= 2 : m.complete && m.naturalWidth);
-      if (ready) { try { mctx.drawImage(m, x, y, w, h); continue; } catch (e) { /* not drawable yet */ } }
+      if (ready) { try { mctx.drawImage(m, x, y, w, h); continue; } catch (e) { } }
       mctx.fillStyle = '#0b0b0b'; mctx.fillRect(x, y, w, h);
     }
     mirrorTex.needsUpdate = true;
   }
 
   // ---------- Camera: from square in front of the screen to the whole stage ----------
-  // p (scroll progress) 0: the screen fills the window exactly, so the grid looks like a plain page.
-  // p 1: the whole stage, framed in the band between the nav and the deck. The view sways a little
-  // toward the cursor, more the further back the camera is.
   var STAGE_T = new THREE.Vector3(-0.2, 5.7, 0);   // where the wide shot looks
   var mouse = { x: 0, y: 0 }, cur = { x: 0, y: 0 };
   var MAX_YAW = reduced ? 0 : 0.12, MAX_PITCH = reduced ? 0 : 0.04;
@@ -231,10 +172,9 @@
   function updateCamera(p) {
     var t = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)), a = W / H, e = ease(p);
     fillPos.set(SCREEN_C.x, SCREEN_C.y, SCREEN_C.z + (screenH / 2) / t);
-    // Wide shot: fit the stage into the band between the nav and the deck (both overlay the canvas).
     var navH = navPx, deckH = deckPx;
     var band = Math.max(0.35, (H - navH - deckH) / H), stageW = a < 1 ? 11.5 : 20.6;
-    var D = Math.max((12.6 * 1.12) / (2 * t * band), (stageW * 0.98) / (2 * t * a));   // a little tight: the edge haze takes the outskirts
+    var D = Math.max((12.6 * 1.12) / (2 * t * band), (stageW * 0.98) / (2 * t * a));
     widePos.copy(STAGE_T).add(tmpVec.setFromSpherical(tmpSph.set(D, Math.PI / 2 - 0.05, 0)));
     camera.position.lerpVectors(fillPos, widePos, e);
     target.lerpVectors(SCREEN_C, STAGE_T, e);
@@ -247,7 +187,6 @@
     }
     camera.lookAt(target);
     camera.updateMatrixWorld();
-    // Shift the picture so the stage centres in the visible band (the nav and deck aren't there at p 0).
     var shift = Math.round(((navH + (H - deckH)) / 2 - H / 2) * e);
     var view = W + 'x' + H + ':' + shift;
     if (view !== shownView || dirtyView) {
@@ -257,8 +196,6 @@
   }
 
   // ---------- Warp the grid onto the screen ----------
-  // Project the screen's corners and map the grid's rectangle onto them with a homography, written
-  // as a CSS matrix3d. At p 0 the screen fills the window, so no transform at all (crisp text).
   var corners = [new THREE.Vector3(-0.5, 0.5, 0), new THREE.Vector3(0.5, 0.5, 0), new THREE.Vector3(0.5, -0.5, 0), new THREE.Vector3(-0.5, -0.5, 0)];
   var pv = new THREE.Vector3(), q = [0, 0, 0, 0, 0, 0, 0, 0], shownWarp = '';
   function warpGrid(p) {
@@ -268,7 +205,6 @@
       q[i * 2] = (pv.x + 1) / 2 * W; q[i * 2 + 1] = (1 - pv.y) / 2 * H;
     }
     var fw = frame.offsetWidth || W, fh = frame.offsetHeight || H;
-    // Unit square -> quad (Heckbert), then scale the grid's size down to the unit square.
     var x0 = q[0], y0 = q[1], x1 = q[2], y1 = q[3], x2 = q[4], y2 = q[5], x3 = q[6], y3 = q[7];
     var dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3, dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3;
     var den = dx1 * dy2 - dx2 * dy1 || 1e-9;
@@ -283,20 +219,12 @@
   window.addEventListener('resize', resize);
   if (window.ResizeObserver) new ResizeObserver(resize).observe(pin);
 
-  // ---------- Events for the stage controls (js/stage-ui.js) ----------
+  // ---------- Events for the stage controls ----------
   var handlers = {};
   function on(ev, cb) { (handlers[ev] = handlers[ev] || []).push(cb); }
   function emit(ev) { (handlers[ev] || []).forEach(function (cb) { cb(); }); }
 
   // ---------- Music: two players that crossfade ----------
-  // Clicking the DJ booth (or reaching the end of a song) blends into the next track over XFADE
-  // seconds instead of cutting. Two <audio> elements take turns: the next song loads into the idle
-  // one, fades up while the current one fades down, then the old one stops.
-  // Audio graph, built on the first click/tap/key press (browsers block sound until then):
-  //   player A -> gain A \
-  //                       analyser -> master (volume / mute) -> speakers
-  //   player B -> gain B /
-  // Before that gesture the music plays silently, which still drives the light show (idle pulse).
   var XFADE = 1.6;
   function makePlayer() {
     var el = document.createElement('audio');   // plays .mp3 and the sound of .mp4 alike
@@ -309,14 +237,11 @@
   function active() { return players[curP].el; }
   function playEl(el) { var p = el.play(); if (p && p.catch) p.catch(function () {}); }
   function playSafe() { if (!userPaused) playEl(active()); }
-  var userPaused = false;   // paused from the nav player: nothing restarts the music by itself
+  var userPaused = false;
   function loadInto(pl, i) { pl.el.src = TRACKS[i].src; pl.el.load(); }
   function trackGain(i) { var g = TRACKS[i].gain; return typeof g === 'number' ? g : 1; }
   loadInto(players[0], 0);
 
-  // The fader starts at 50%; after that, the visitor's own volume and mute carry over between pages
-  // (js/page-audio.js keeps them). What comes out of the speakers is fader x STAGE_LEVEL, set with
-  // the rest of the site's sound balance in js/page-audio.js.
   var PA = window.PageAudio, prefs = PA ? PA.prefs : { volume: 0.5, muted: false };
   var STAGE_LEVEL = PA && PA.LEVEL ? PA.LEVEL.stage : 0.5;
   var audio = { analyser: null, master: null, freq: null, volume: prefs.volume, muted: prefs.muted, unlockedAt: -1e9 };
@@ -341,7 +266,6 @@
     applyVolume(1.6);
     if (reveal.t0 >= 0 && active().paused && !userPaused) playSafe();
   });
-  // Volume and mute go through the master gain (or the elements themselves without Web Audio).
   function applyVolume(fade) {
     var v = audio.muted ? 0 : audio.volume * STAGE_LEVEL;
     if (audio.master) {
@@ -351,7 +275,6 @@
     if (PA) PA.save(audio.volume, audio.muted);
     emit('mute');
   }
-  // The nav player (js/nav-audio.js): play/pause, back, skip, and its volume bar.
   function togglePlay() {
     var el = active();
     if (el.paused) { userPaused = false; playSafe(); applyVolume(0.4); }
@@ -376,8 +299,6 @@
     });
     PA.onVolume(function (v) { audio.volume = v; audio.muted = false; applyVolume(); });
   }
-  // Leaving for another page: fade the music out first (js/page-audio.js waits for it); Back
-  // restores it.
   if (PA) {
     PA.fadeOut = function () {
       if (!audio.master || audio.muted || active().paused) return 0;
@@ -415,16 +336,12 @@
   }
   var glowTex = radialTexture([[0, 'rgba(255,255,255,1)'], [0.2, 'rgba(255,255,255,.55)'], [1, 'rgba(255,255,255,0)']]);
   var sparkTex = radialTexture([[0, 'rgba(255,255,255,1)'], [0.35, 'rgba(255,255,255,.6)'], [1, 'rgba(255,255,255,0)']]);
-  // Additive light that leaves alpha alone: over the screen hole it adds glow on top of the grid
-  // instead of covering it (plain additive blending would also raise alpha and hide the grid).
   var ADD = {
     blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.SrcAlphaFactor, blendDst: THREE.OneFactor,
     blendEquationAlpha: THREE.AddEquation, blendSrcAlpha: THREE.ZeroFactor, blendDstAlpha: THREE.OneFactor
   };
 
   // ---------- Moving-head beams ----------
-  // Six fixtures hang under the light bar. Each is a soft additive light cone whose visibility
-  // scales with haze, plus a lens flare sprite. Every other one also lights the floor (desktop).
   var BEAM_VS = [
     'varying float vAlong; varying vec3 vN; varying vec3 vV;',
     'void main() {',
@@ -469,8 +386,6 @@
   });
   var beamDir = new THREE.Vector3(), beamColor = new THREE.Color(), white = new THREE.Color(1, 1, 1);
 
-  // Truss washes: coloured lights at the uprights that tint the truss and floor. They also carry
-  // the warm flare when the pyro on their side fires (no extra lights for pyro).
   var washes = [new THREE.PointLight(0xffffff, 0, 26, 1.4), new THREE.PointLight(0xffffff, 0, 26, 1.4)];
   washes[0].position.set(-7.6, 5.2, 4.6); washes[1].position.set(7.3, 5.2, 4.6);   // front truss towers
   washes.forEach(function (w) { scene.add(w); });
@@ -517,7 +432,6 @@
       }
     });
     pyroFlare[0] = Math.min(1, leftBurn * 2); pyroFlare[1] = Math.min(1, rightBurn * 2);
-    // Idle: no CPU loop, no buffer upload, no draw call.
     sparks.visible = sAlive > 0;
     if (!sAlive) return;
     var drag = 1 - 0.7 * dt;
@@ -537,8 +451,7 @@
     sparkGeo.attributes.color.needsUpdate = true;
   }
 
-  // ---------- Strobe (capped at 3 flashes/second, the WCAG limit for flashing content) ----------
-  // Flashes by boosting the hemisphere + key lights that already exist, not with an extra light.
+  // ---------- Strobe ----------
   var strobePhase = 0, strobeFlash = 0;
   function updateStrobe(dt) {
     if (show.strobe > 0.03) {
@@ -554,11 +467,10 @@
     return onNow;
   }
 
-  // ---------- Audio analysis (or an idle 120 BPM pulse while muted/locked) ----------
+  // ---------- Audio analysis ----------
   var avgBass = 0.2, lastKick = -1, lastBeatIdx = -1;
   function updateAudio(dt, t) {
     var lvl = 0, kick = false, el = active();
-    // Near the end of a song, blend into the next one.
     if (!el.paused && el.duration > XFADE * 2 && el.duration - el.currentTime < XFADE && performance.now() - xfadeAt > 4000) nextTrack(1);
     if (audio.analyser && !audio.muted && !el.paused) {
       audio.analyser.getByteFrequencyData(audio.freq);
@@ -586,8 +498,6 @@
     scene.fog.density = 0.002 + hz * 0.02;
     scene.fog.color.setHSL(show.hue, 0.5, 0.012 + hz * 0.035);
     var speed = reduced ? 0.25 : 1;
-    // Master level for the lights: the dim/bright slider, plus a brief dip while one track blends
-    // into the next (the "transition" when the DJ booth is clicked).
     var xf = (performance.now() - xfadeAt) / (XFADE * 1000);
     var dip = xf >= 0 && xf < 1 ? 1 - 0.6 * Math.sin(Math.PI * xf) : 1;
     var lightK = (0.06 + 0.94 * show.dim) * dip;
@@ -616,21 +526,17 @@
       w.color.setHSL((show.hue + (i ? 0.08 : 0)) % 1, 0.85, 0.5).lerp(PYRO_COLOR, pyroFlare[i]);
       w.intensity = washPower * (1.1 + show.level * 1.6 + show.kick * 0.8) * lightK + pyroFlare[i] * 6;
     });
-    // Light spill from the screen: a soft, desaturated version of the Colour dial. (It used to sample
-    // the grid's average colour, but reading pixels back stalled the GPU; see "Grid picture".)
     glowTarget.setHSL(show.hue, 0.3, 0.62);
     glow.color.lerp(glowTarget, 0.08);
     glow.intensity = 0.9 * (0.35 + 0.65 * lightK);
-    // Auto pyro on the beat; the dial sets how often.
     if (kick && show.pyro > 0.04 && t - lastPyro > 3.4 - show.pyro * 2.6 && Math.random() < 0.25 + show.pyro * 0.6) {
       var pair = Math.random() < 0.5 ? [0, 3] : [1, 2];
       firePyro(0.45 + show.pyro * 0.5, show.pyro > 0.8 ? null : pair);
     }
   }
 
-  // ---------- Stage model (keeps its own materials and textures) ----------
+  // ---------- Stage model ----------
   var model = null, mats = [];
-  // Upload the model's textures now, behind the reveal, not on the first visible frame.
   function uploadTextures() {
     var maxA = renderer.capabilities.getMaxAnisotropy ? renderer.capabilities.getMaxAnisotropy() : 1;
     mats.forEach(function (m) {
@@ -642,10 +548,6 @@
     });
   }
 
-  // Parts that lost their textures on export come in plain white/cream. Give them simple dark
-  // surfaces: matte-ish black speakers and ceiling, dark grey trusses with a metallic sheen so the
-  // beams and the screen catch them. Only light-coloured, untextured materials are touched, because
-  // one of the light bar's (black) materials shares the "0012_Bisque_1" name with the trusses.
   var RESURFACE = {
     '0012_Bisque_1':   { color: 0x2b2b2b, roughness: 0.4, metalness: 0.6 },    // truss towers + overhead grid
     'SpeakerTripod01': { color: 0x0e0e0e, roughness: 0.6, metalness: 0 },      // front speakers + tripods
@@ -661,9 +563,6 @@
     m.roughness = r.roughness; m.metalness = r.metalness;
     return true;
   }
-  // A real stage is mostly gloss-black: painted deck, plastic and metal cases. Out of the exporter
-  // nearly everything is fully rough (1.0), which reads as clay. Bring the roughness down so the
-  // floor and cases pick up the beams, the washes and the screen in their reflections.
   function glossify(m) {
     if (!m.isMeshStandardMaterial) return;
     var hsl = {}; m.color.getHSL(hsl);
@@ -701,12 +600,6 @@
   }, null, function (err) { console.error(err); fail('Could not load the 3D model: ' + ((err && err.message) || err)); });
 
   // ---------- Interactive parts: hover highlight ----------
-  // The light bar, the DJ booth and both speaker columns can be clicked (js/stage-ui.js). On
-  // hover each one lights up with a fresnel rim glow plus its edges drawn as a fine silver
-  // wireframe, so it reads as "this does something".
-  // The model's meshes are merged by material (for speed), so the parts aren't separate objects:
-  // after loading, the triangles inside each part's box are copied out into an overlay of their own.
-  // The overlays only draw while they're showing.
   var ZONES = {
     lights:  new THREE.Box3(new THREE.Vector3(-6.7, 8.15, 2.5), new THREE.Vector3(6.3, 10.45, 4.0)),
     booth:   new THREE.Box3(new THREE.Vector3(-3.6, 1.25, -0.3), new THREE.Vector3(2.8, 4.1, 2.05)),
@@ -730,8 +623,6 @@
     '}'].join('\n');
   var highlights = {}, hlColor = new THREE.Color(), hlBuilt = false;
   function readPos(attr, i, out) {
-    // gltfpack stores positions as integers (dequantized by the node transform); if an attribute is
-    // flagged normalized, scale it back to -1..1 the way the GPU would.
     out.fromBufferAttribute(attr, i);
     if (attr.normalized) {
       var a = attr.array, d = a instanceof Int8Array ? 127 : a instanceof Uint8Array ? 255 : a instanceof Int16Array ? 32767 : a instanceof Uint16Array ? 65535 : 1;
@@ -762,7 +653,6 @@
       var g = new THREE.BufferGeometry();
       g.setAttribute('position', new THREE.Float32BufferAttribute(acc[n], 3));
       g.computeVertexNormals();
-      // Push the shell out a hair along each face normal so it sits on top of the part, not in it.
       var p = g.attributes.position, nn = g.attributes.normal;
       for (var i = 0; i < p.count; i++) p.setXYZ(i, p.getX(i) + nn.getX(i) * 0.015, p.getY(i) + nn.getY(i) * 0.015, p.getZ(i) + nn.getZ(i) * 0.015);
       var shell = new THREE.Mesh(g, new THREE.ShaderMaterial(Object.assign({
@@ -773,8 +663,6 @@
         color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, depthFunc: THREE.LessEqualDepth, fog: false, toneMapped: false
       }, ADD)));
       shell.renderOrder = lines.renderOrder = 5;
-      // Main camera only (the screen's layer): kept out of the reflection renders, which would
-      // otherwise need their own shader variants (that compile was a 400 ms freeze on first show).
       shell.layers.set(SCREEN_LAYER); lines.layers.set(SCREEN_LAYER);
       shell.visible = lines.visible = false;
       shell.frustumCulled = lines.frustumCulled = false;
@@ -782,8 +670,6 @@
       highlights[n] = { shell: shell, lines: lines, alpha: 0, target: 0, tris: acc[n].length / 9 };
     });
   }
-  // Fade each overlay toward its target. A gentle one-off pulse the first time the whole stage is in
-  // view shows that these three can be touched.
   var hlPulse = -1;
   function updateHighlights(dt, t, p) {
     if (!hlBuilt) return;
@@ -805,7 +691,6 @@
       h.lines.material.opacity = h.alpha * 0.9;
     });
   }
-  // Where a part is on screen (CSS px within the stage view), for the controls to sit on.
   var corner = new THREE.Vector3();
   function zoneRect(name) {
     var bx = ZONES[name]; if (!bx) return null;
@@ -818,25 +703,20 @@
     return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
   }
 
-  // Static objects: compute their matrices once instead of every frame.
   function freeze(root) {
     root.updateMatrixWorld(true);
     root.traverse(function (o) { o.matrixAutoUpdate = false; });
   }
 
-  var allLoaded = false, stageReady = false;   // stageReady: hover overlays built, controls can show
+  var allLoaded = false, stageReady = false;
   function loading() { return !allLoaded; }
   function onAllLoaded() {
     var w0 = performance.now();
     if (allLoaded) return;
     allLoaded = true;
     uploadTextures();
-    // Nothing that casts shadows ever moves, so draw the shadow map once (it also stopped being
-    // re-rendered for every reflection face).
     renderer.shadowMap.autoUpdate = false;
     renderer.shadowMap.needsUpdate = true;
-    // Warm-up while the visitor is still looking at the grid: compile every shader, fill both
-    // reflection targets and draw one frame (into the post target too), so pulling back is smooth.
     updateCamera(0.5);
     renderer.compile(scene, camera);
     for (var i = 0; i < 12 * Q.envFaceEvery; i++) updateEnvFace();
@@ -844,8 +724,6 @@
     if (statusEl.textContent === 'Setting the stage…') statusEl.textContent = '';
     perf.loadedAt = Math.round(w0); perf.warmupMs = Math.round(performance.now() - w0);   // for tuning (window.__dbg.perf)
     if (reveal.pending) startReveal();
-    // (The stage's hover wireframes and road-case controls were removed: music is run from the nav
-    // player now, js/nav-audio.js. buildHighlights() is kept below in case they come back.)
     setTimeout(function () {
       updateCamera(1);
       draw(1);
@@ -868,8 +746,6 @@
     active().currentTime = 0;
     playSafe();
   }
-  // Fixtures strike one by one, then the washes fade up. Silent: the music carries the reveal. Driven by the
-  // frame clock rather than timers, so it can't drift from what's drawn.
   function updateReveal(now) {
     if (reveal.t0 < 0 || washPower >= 1) return;
     var e = now - reveal.t0;
@@ -882,16 +758,6 @@
   }
 
   // ---------- Post: depth of field + edge haze ----------
-  // The scene renders into an off-screen target with its depth. Then:
-  // 1. Blur pass, at half resolution (a quarter of the pixels; a soft blur loses nothing by it):
-  //    each pixel is blurred by its distance from the screen's depth (the screen and the booth stay
-  //    sharp, the front speakers, trusses and the dark beyond go soft), plus extra toward the edges
-  //    of the picture, where the model's hard edges and the end of the set would give it away.
-  // 2. Composite, full resolution: sharp where in focus, the blurred copy where not, and a slow
-  //    coloured haze that thickens toward the edges.
-  // Colours stay premultiplied the whole way, so the see-through screen hole survives the blur.
-  // Both effects ramp in with the scroll: at the top of the page the grid is untouched.
-  // Measured before splitting into two passes: one full-resolution pass cost ~7 ms/frame at 1.75x.
   var POST_VS = 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }';
   var POST_COMMON = [
     '#include <packing>',
@@ -935,7 +801,7 @@
   function makePost() {
     var opts = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, stencilBuffer: false };
     var rt = new THREE.WebGLRenderTarget(2, 2, opts);
-    rt.texture.encoding = THREE.sRGBEncoding;   // 8-bit, so store display-encoded colour (no banding in the darks)
+    rt.texture.encoding = THREE.sRGBEncoding;
     rt.texture.generateMipmaps = false;
     rt.depthTexture = new THREE.DepthTexture(2, 2);
     rt.depthTexture.type = THREE.UnsignedIntType;
@@ -978,7 +844,6 @@
     renderer.setRenderTarget(post.rt);
     renderer.render(scene, camera);
     var e = ease(p == null ? 1 : p), u = post.u, c = post.comp;
-    // Focus on the screen: its distance along the view direction.
     u.uFocus.value = -focusVec.copy(SCREEN_C).applyMatrix4(camera.matrixWorldInverse).z;
     u.uDof.value = 0.55 * e;
     u.uEdgeBlur.value = 0.9 * e;
@@ -989,15 +854,8 @@
   }
 
   // ---------- Adaptive resolution ----------
-  // Watches real frame times and trades render resolution for frame rate, aiming for at least
-  // 60 fps (also on 120 Hz screens). Steps down quickly when frames are late, steps up only after
-  // ~4 s of comfortable frames, and stops stepping up if it keeps flip-flopping (same idea as
-  // drei's PerformanceMonitor). If even the minimum resolution is too slow, it drops the floor
-  // spots, slows reflection updates and turns the depth of field off, once.
   var BUDGET = 1000 / 60;
   var perf = {
-    // With depth of field + haze on, resolution above 1.5x is spent on pixels the blur softens anyway
-    // (measured: 1.75x on a 2x screen took the whole 16.7 ms frame budget on the GPU).
     dpr: renderer.getPixelRatio(), min: Math.min(DEVICE_DPR, Q.dprMin), max: Math.min(DEVICE_DPR, POST ? Math.min(1.5, Q.dprMax) : Q.dprMax),
     frames: [], last: 0, good: 0, slowAtMin: 0, flips: 0, lastDir: 0, noMoreUp: false, fellBack: false, settleUntil: 0
   };
@@ -1018,8 +876,6 @@
     if (now < perf.settleUntil) { perf.frames.length = 0; return; }
     if (perf.frames.length < 45) return;
     var f = perf.frames.sort(function (a, b) { return a - b; }), med = f[f.length >> 1];
-    // Slow frames come in clumps (a GPU-bound frame doubles to ~33 ms) that never move the median,
-    // so also count them: more than 1 in 10 over budget counts as slow.
     var late = f.filter(function (x) { return x > BUDGET * 1.5; }).length / f.length;
     perf.frames = [];
     if (med > BUDGET * 1.2 || late > 0.1) {
@@ -1034,14 +890,9 @@
   }
 
   // ---------- Visualizer on the screen + the stage as a backdrop ----------
-  // ps = how far past the full-stage view (window heights). From there the content scrolls over the
-  // stage: the visualizer takes over the screen, and the stage renders a little lighter (resolution
-  // capped at BG_DPR) since it's now a backdrop behind text and cards.
   var BG_DPR = 1.25, FULL_MAX = perf.max, shownGridHidden = false;
   var worksEl = document.getElementById('work');
   function updateViz(dt, kick, ps, now) {
-    // Only once the Selected Works section scrolls up into view: it starts when the section's top
-    // reaches 95% of the window and has fully taken over by 35%. Above that, the grid stays on.
     var wt = worksEl ? worksEl.getBoundingClientRect().top / (window.innerHeight || H) : 99;
     var want = viz ? smooth(0.95, 0.35, wt) : 0;
     vizMix += (want - vizMix) * Math.min(1, dt * 6);
@@ -1053,7 +904,6 @@
       viz.render(dt, { freq: audible ? audio.freq : null, level: show.level, kick: kick, hue: 0, volume: audio.volume, playing: audible });
       vizScreen.material.map = viz.texture;
       vizScreen.material.opacity = vizMix;
-      // Reflections show the visualizer instead of the grid picture once it dominates.
       proxy.material.map = vizMix > 0.5 ? viz.texture : mirrorTex;
     } else if (proxy.material.map !== mirrorTex) proxy.material.map = mirrorTex;
     var hidden = vizMix >= 0.999;
@@ -1071,8 +921,6 @@
   }
 
   // ---------- Render loop ----------
-  // While the grid fills the window (p 0) nothing 3D is drawn at all. Nothing runs while the
-  // section is scrolled away (js/site.js) or the tab is hidden.
   var heroVisible = true, shownK = -1;
   window.__setHeroVisible = function (v) { heroVisible = v; };
   function smooth(a, b, x) { var t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
@@ -1087,7 +935,6 @@
     updateCamera(p);
     var gridHidden = allLoaded && updateViz(dt, kick, ps, now);
     if (!gridHidden) warpGrid(p);
-    // The stage fades in around the screen over the first part of the pull-back.
     var k = allLoaded ? smooth(0.0, 0.3, p) : 0;
     if (Math.abs(k - shownK) > 0.001) { wrap.style.opacity = k.toFixed(3); shownK = k; }
     if (k <= 0) { perf.last = 0; return; }
@@ -1102,20 +949,17 @@
     adaptResolution(now);
   })();
 
-  // ---------- Public API for the stage controls (js/stage-ui.js) ----------
+  // ---------- Public API for the stage controls ----------
   window.Stage = {
     state: show,
     on: on,
     get ready() { return stageReady; },
     progress: SEQ.progress,
-    // Lights
     setHue: function (h) { show.hue = ((h % 1) + 1) % 1; emit('lights'); },
     setDim: function (d) { show.dim = Math.min(1, Math.max(0, d)); emit('lights'); },
     fire: function () { firePyro(1); },
-    // Hover overlays + where each part is on screen
     highlight: function (name, on) { if (highlights[name]) highlights[name].target = on ? 1 : 0; },
     zoneRect: zoneRect,
-    // Music
     track: function () { return TRACKS[trackIndex]; },
     nextTrack: function () { nextTrack(1); },
     prevTrack: function () { nextTrack(-1); },
@@ -1128,7 +972,6 @@
       applyVolume();
     },
     toggleMute: function () { audio.muted = !audio.muted; applyVolume(0.25); },
-    // Fills `buf` with the live waveform; returns false while there's no audible signal.
     getWaveform: function (buf) {
       if (!audio.analyser || audio.muted || active().paused) return false;
       audio.analyser.getByteTimeDomainData(buf);

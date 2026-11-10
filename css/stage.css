@@ -1,71 +1,50 @@
-/* The archived 3D stage (stage.html only): the scroll sequence, the road-case controls and the
-   page sitting over the stage. Loaded after css/style.css. The rest of the look comes from
-   style.css, in its dark theme (html.theme-dark). */
-/* ---------- Stage sequence: media grid -> pull back out of the LED screen -> whole stage ----------
-   The section is scroll length; .stage-pin holds the window while it passes (js/intro.js gives the
-   progress, js/hero.js moves the camera). Stacking inside the pin: the grid at the back, the 3D
-   canvas over it with a see-through hole where the LED screen is (so the booth, trusses and beams
-   draw in front of the grid), then the deck. */
+/* ---------- Stage sequence ---------- */
 .stage-seq { position:relative; --zoom-len:170vh; height:calc(100vh + var(--zoom-len)); height:calc(100svh + var(--zoom-len)); }
 .stage-pin { position:sticky; top:0; height:100vh; height:100svh; overflow:hidden; background:#000; }
-/* Homepage: the stage stays fixed behind the whole page, and everything after the zoom scrolls over
-   it. The section itself is now only scroll length for the camera move. */
 .stage-seq .stage-pin { position:fixed; left:0; right:0; z-index:0; }
-/* Darkens the stage behind the content, most toward the bottom where the text and cards are
-   (--scrim 0..1, set from the scroll position by js/intro.js). */
 .stage-pin::after { content:""; position:absolute; inset:0; z-index:4; pointer-events:none; opacity:var(--scrim,0);
   background:linear-gradient(180deg, rgba(0,0,0,.25) 0%, rgba(0,0,0,.45) 45%, rgba(0,0,0,.82) 100%); }
-#wrap { position:absolute; inset:0; z-index:2; pointer-events:none; }   /* clicks go through to the grid */
+#wrap { position:absolute; inset:0; z-index:2; pointer-events:none; }
 #wrap canvas { width:100%; height:100%; }
 #status { position:absolute; z-index:3; left:var(--gutter); top:calc(var(--nav-h) + env(safe-area-inset-top,0px) + 12px);
   font-size:11px; letter-spacing:.08em; color:var(--dim); pointer-events:none; }
 @media (max-width:760px) { .stage-seq { --zoom-len:130vh; } }
 
-/* ---------- Stage controls: road-case panels over the stage (js/stage-ui.js) ----------
-   Road cases: black laminate, aluminium edge extrusion, chrome ball corners. Faux-3D after the
-   Mausoleum "Provoker" cover: chrome lettering, glossy arcade button, chrome-ball knobs, a little
-   recessed screen. Everything picks up the stage light: --scene (the light colour) tints the
-   sheen and glows, --beat (the music level) breathes it, --mx (cursor x) moves a glint along it. */
+/* ---------- Stage controls ---------- */
 .stage-ui { position:absolute; inset:0; z-index:3; pointer-events:none; opacity:0; transition:opacity .6s var(--ease);
   --scene:hsl(130 85% 58%); --beat:0; --silver:linear-gradient(135deg,#f6f7f9,#8a8e95 22%,#e3e6ea 46%,#5d6066 72%,#cdd0d5); }
 .stage-ui.is-live { opacity:1; }
 .stage-ui.is-live .hotspot, .stage-ui.is-live .rc.is-open { pointer-events:auto; }
 
-/* Invisible buttons laid over the light bar, the booth and the speaker column. */
 .hotspot { position:absolute; left:0; top:0; width:0; height:0; padding:0; border:0; background:none; cursor:pointer;
   touch-action:none; -webkit-tap-highlight-color:transparent; }
 .hotspot--lights { cursor:ew-resize; }
 .hotspot:focus-visible { outline:1px dashed rgba(255,255,255,.7); outline-offset:6px; }
 
-/* The case */
 .rc { position:absolute; left:0; top:0; opacity:0; pointer-events:none; padding:12px 16px; color:#e9ebee;
   font-size:9px; font-weight:600; letter-spacing:.26em; text-transform:uppercase; white-space:nowrap;
   border:3px solid; border-image:var(--silver) 1;
   background:
-    repeating-linear-gradient(45deg, rgba(255,255,255,.022) 0 1px, transparent 1px 3px),   /* laminate grain */
+    repeating-linear-gradient(45deg, rgba(255,255,255,.022) 0 1px, transparent 1px 3px),
     linear-gradient(180deg, #1a1b1e, #09090a);
   box-shadow:0 18px 40px rgba(0,0,0,.7), 0 0 26px -6px color-mix(in srgb, var(--scene) 55%, transparent),
     inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 0 1px rgba(0,0,0,.7);
   transition:opacity .3s var(--ease), filter .3s var(--ease); filter:blur(3px); }
 .rc.is-open { opacity:1; filter:none; }
-/* chrome ball corners */
 .rc::before { content:""; position:absolute; inset:-9px; pointer-events:none;
   --ball:radial-gradient(circle 7px at 6.5px 6.5px, #fff 0 1px, #e3e6ea 2.2px, #8d9198 4.2px, #2b2d31 6.3px, transparent 7px);
   background:var(--ball) 0 0 / 15px 15px no-repeat, var(--ball) 100% 0 / 15px 15px no-repeat,
     var(--ball) 0 100% / 15px 15px no-repeat, var(--ball) 100% 100% / 15px 15px no-repeat; }
-/* the stage light reflected in the case: a coloured sheen that follows the cursor and the beat */
 .rc::after { content:""; position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
   background:linear-gradient(105deg, transparent 32%, color-mix(in srgb, var(--scene) 20%, transparent) 45%,
     rgba(255,255,255,.12) 50%, color-mix(in srgb, var(--scene) 16%, transparent) 55%, transparent 68%) no-repeat;
   background-size:260% 100%; background-position:calc((1 - var(--mx, .5)) * 100%) 0;
   opacity:calc(.55 + var(--beat) * .45); transition:background-position .25s; }
 
-/* Chrome lettering */
 .rc-chrome { display:inline-block; font-weight:700; letter-spacing:.28em;
   background:linear-gradient(180deg,#fff 0%,#e6e8ec 38%,#7a7e86 52%,#f2f4f6 70%,#9da1a8 100%);
   -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 1px 0 rgba(0,0,0,.9)); }
 
-/* Sliders: a recessed slot, a scene-coloured fill and a chrome-ball knob */
 .rc-slider { position:relative; width:120px; height:20px; cursor:pointer; touch-action:none; }
 .rc-track { position:absolute; left:0; right:0; top:50%; height:6px; margin-top:-3px; border-radius:3px; overflow:hidden;
   background:linear-gradient(180deg,#000,#1b1c1f); box-shadow:inset 0 1px 3px #000, 0 1px 0 rgba(255,255,255,.14); }
@@ -80,7 +59,6 @@
 .rc-slider--v .rc-knob { top:auto; left:50%; bottom:50%; margin:0 0 -9px -9px; }
 .rc-slider:focus-visible, .rc-rail:focus-visible { outline:1px dashed rgba(255,255,255,.7); outline-offset:5px; }
 
-/* Light bar: a slim colour rail under the bar, then a dim/bright module */
 .rc-lights { display:flex; flex-direction:column; align-items:center; gap:10px; padding:10px 14px; }
 .rc-rail { position:relative; width:var(--rail-w, 520px); height:12px; cursor:ew-resize; touch-action:none; border-radius:6px;
   box-shadow:0 0 0 2px #1a1b1e, 0 0 0 3px #a6aab0, 0 4px 10px rgba(0,0,0,.6); }
@@ -90,21 +68,19 @@
 .rc-rail .rc-knob { width:20px; height:20px; margin:-10px 0 0 -10px; }
 .rc-mod { display:flex; align-items:center; gap:12px; }
 
-/* DJ booth: a small recessed screen, like the arcade PLAY! display */
 .rc-booth { display:flex; flex-direction:column; align-items:center; gap:8px; }
 .rc-title { font-size:8px; }
 .rc-lcd { position:relative; min-width:220px; max-width:320px; padding:7px 12px; overflow:hidden; text-align:center; border-radius:3px;
   font:600 12px/1.2 "Courier New", ui-monospace, monospace; letter-spacing:.16em; color:var(--scene); text-shadow:0 0 6px var(--scene);
   background:radial-gradient(120% 160% at 50% 0%, color-mix(in srgb, var(--scene) 14%, #04070a), #020304);
   box-shadow:inset 0 2px 7px #000, inset 0 0 0 1px rgba(255,255,255,.06), 0 0 0 2px #232528, 0 0 0 3px #8f9399; }
-.rc-lcd::after { content:""; position:absolute; inset:0; pointer-events:none;   /* scanlines */
+.rc-lcd::after { content:""; position:absolute; inset:0; pointer-events:none;
   background:repeating-linear-gradient(0deg, rgba(0,0,0,.35) 0 1px, transparent 1px 3px); }
 .rc-lcd-text { display:inline-block; }
 .rc-lcd.is-swap .rc-lcd-text { animation:rc-swap .45s steps(6) both; }
 @keyframes rc-swap { 0% { opacity:1; } 40% { opacity:0; transform:translateY(-3px); } 60% { opacity:0; transform:translateY(3px); } 100% { opacity:1; transform:none; } }
 .rc-hint { font-size:8px; letter-spacing:.24em; color:#8f949b; }
 
-/* Speakers: vertical fader + glossy arcade mute button */
 .rc-speaker { display:flex; flex-direction:column; align-items:center; gap:10px; padding:12px 12px 10px; }
 .rc-btn { position:relative; width:34px; height:34px; padding:0; border:0; border-radius:50%; cursor:pointer; --btn:#d9dce1;
   background:radial-gradient(circle at 38% 30%, #fff 0 7%, var(--btn) 24%, color-mix(in srgb, var(--btn) 50%, #000) 70%, #0d0d0f 100%);
@@ -121,10 +97,7 @@
 }
 @media (prefers-reduced-motion:reduce) { .rc, .rc::after { transition:none; } .rc-lcd.is-swap .rc-lcd-text { animation:none; } }
 
-
-/* ---------- Stage controls: size scale ----------
-   Every panel dimension comes from --u, which steps down on smaller screens so the road cases
-   don't crowd the stage. (Overrides the fixed sizes in "Stage controls" above.) */
+/* ---------- Stage controls ---------- */
 .stage-ui { --u:1; }
 @media (max-width:1280px) { .stage-ui { --u:.88; } }
 @media (max-width:1000px) { .stage-ui { --u:.78; } }
@@ -149,18 +122,12 @@
 .rc-speaker { gap:calc(10px * var(--u)); padding:calc(12px * var(--u)) calc(12px * var(--u)) calc(10px * var(--u)); }
 .rc-btn { width:calc(34px * var(--u)); height:calc(34px * var(--u)); }
 
-
-/* ---------- Homepage over the stage ----------
-   About, the works and the footer scroll over the fixed stage (see .stage-seq .stage-pin). */
+/* ---------- Homepage over the stage ---------- */
 .works { position:relative; z-index:4; }
-.stage-seq ~ .rule { display:none; }   /* the divider would cut across the stage behind */
+.stage-seq ~ .rule { display:none; }
 footer { position:relative; z-index:5; background:#000; }
-/* The stage controls are put away once the content covers the stage. */
 html.is-past-stage .stage-ui { opacity:0 !important; pointer-events:none !important; }
 html.is-past-stage .stage-ui * { pointer-events:none !important; }
 
-
-/* stage.html: the nav is hidden while the grid fills the window (the name tile says who this is) and
-   fades in as the camera pulls back to the stage (--nav-a, js/intro.js). It stays from then on. */
 html.has-seq .nav { opacity:var(--nav-a,0); }
 html.has-seq .nav.is-off { pointer-events:none; visibility:hidden; }

@@ -1,16 +1,3 @@
-/* Anatomy of a Computer — prototype build.
-   The final motion mockup (EIII P2 Prototype.mp4, 23 s) as a working site, on the framework of the Figma record.
-
-   Shot list, from the mockup:
-   0:00  a 1-bit circuit board resolves from big pixels, the title arrives, the board dissolves to specks
-   0:03  "Click to Start Experience": the title dissolves away while the first part drifts in from the upper right
-   0:05  next part: the copy is eaten from its first letter, the parts slide right → left as the new one turns
-         into pose, the title ticks upward, the part icon flips, the new copy types out
-   0:08  hotspot rings fade in once the part has settled
-   0:09  a ring opens the x-ray: dissolve to the dark circuit board, the callout is ruled out from the ring
-   0:11  dissolve back to the photograph
-   0:18  exit: a warm scan wipe, then a 1-bit pan through the machine, a glitch to black, and the title again
-   From the Figma prototype page: views Overview / Framework / Power / Data, "(1) to go down, (2) to go up!" */
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
@@ -44,10 +31,8 @@ const COPY = {
   cpu: { overview: "The Central Processing Unit, or CPU, is the computer's \"brain\": it fetches every program's instructions and carries them out, billions each second.",
          hot: { tab: ["Corner Tab", "This corner tab lines the CPU up with the socket, so it only goes in the right way round."] } },
 };
-// the mockup shows the graphics card from its flow-through side, gold fingers on top
 const VIEW = {
   psu: { size: 2.4, tilt: [0.16, 0.5], lighten: 2.6 },   // the mockup's PSU is a light grey box
-  // the mockup's own chip; its printing is modelled geometry, so the x-ray shows the lid's lettering by its edges
   cpu: {
     glb: "cpu7950.glb", model: "AMD Ryzen 9 7950X3D", basis: ["x", "y", "z"], size: 2.7, tilt: [-0.62, 0.1, -0.1], xrayFront: true, edgeLimit: 60000,
     hotspots: [
@@ -55,7 +40,6 @@ const VIEW = {
       { id: "ihs",  at: [0.12, 0.1, 0.5], title: "Heat Spreader", text: "The metal lid protects the silicon and spreads its heat evenly into the cooler above it." },
       { id: "pins", at: [0.3, -0.3, -0.5], n: [0, 0, -1], title: "Contact Pads", text: "1,718 flat gold pads on the underside press onto springy pins in the AM5 socket." },
     ],
-    // dies hidden under the lid: placement schematic, connections per AMD's Raphael platform
     modes: {
       framework: "Three chiplets under the heat spreader: two 5 nm compute dies with eight Zen 4 cores each — one with a 3D V-Cache die stacked on top — and a 6 nm I/O die with the DDR5 and PCIe 5.0 controllers and small RDNA 2 graphics. 128 MB of L3 cache in all.",
       power: "The AM5 socket feeds separate rails through its 1,718 contacts: one for the cores and one for the I/O die. The CPU asks the motherboard's regulators for exactly the voltage it needs, within a 120 W budget.",
@@ -119,13 +103,9 @@ const key = new THREE.DirectionalLight("#ffffff", 1.6);
 key.position.set(-4, 8, 6);
 scene.add(key, new THREE.AmbientLight("#ffffff", 0.3));
 
-// x-ray: an additive fresnel twin of every mesh, plus its hard edges
 const XR = { rim: { value: 1 } };
-// premultiplied glow: the shader writes colour × opacity with an alpha that covers it, both summed.
-// (Alpha must be written: GPU compositing drops colour where a transparent canvas has zero alpha.)
 const GLOW = { transparent: true, depthWrite: false, blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor, blendSrcAlpha: THREE.OneFactor, blendDstAlpha: THREE.OneFactor };
 const ADD = { transparent: true, depthWrite: false, blending: THREE.AdditiveBlending };
-// `this` is the material: textured twins light up their printing (text, labels, pads) by its edges
 function xrayCompile(sh) {
   sh.uniforms.uRim = XR.rim;
   const inv = !!this.userData.invert;
@@ -139,7 +119,6 @@ function xrayCompile(sh) {
       float tex = 0.0;${tex}
       float fres = pow(1.0 - clamp(abs(dot(normal, normalize(vViewPosition))), 0.0, 1.0), 2.0);
       totalEmissiveRadiance = vec3(0.12, 0.62, 1.0) * (fres * uRim * 1.3 + 0.008 + tex);`)
-    // pure glow: no lighting at all (its specular sheen was the grey haze), and no tone mapping to wash out the cyan
     .replace("vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;", "vec3 outgoingLight = totalEmissiveRadiance;")
     .replace("#include <dithering_fragment>", `#include <dithering_fragment>
       gl_FragColor.rgb *= opacity;
@@ -152,7 +131,6 @@ const xrayDim = xrayMat.clone();
 xrayDim.opacity = 0.07;
 xrayDim.onBeforeCompile = xrayCompile;
 xrayDim.customProgramCacheKey = xrayMat.customProgramCacheKey;
-// one x-ray material per texture
 const xrayByMap = new Map();
 function xrayFor(src, dense, invert = false) {
   if (dense || !src?.map) return dense ? xrayDim : xrayMat;
@@ -169,14 +147,12 @@ function xrayFor(src, dense, invert = false) {
 }
 const edgeMat = new THREE.LineBasicMaterial({ color: "#3fd2ff", opacity: 0.45, ...ADD });
 
-// power / data wiring (flowmap.js): shared clock for the light travelling along the wires
 const flowUniforms = { uTime: { value: 0 }, uGrow: { value: 0 } };
 
 function basisMatrix(basis = ["x", "y", "z"]) {
   const v = (s) => { const k = s.startsWith("-") ? -1 : 1, a = s.replace("-", ""); return new THREE.Vector3(a === "x" ? k : 0, a === "y" ? k : 0, a === "z" ? k : 0); };
   return new THREE.Matrix4().makeBasis(v(basis[0]), v(basis[1]), v(basis[2]));
 }
-// fans aren't always modelled around their hub: pivot each at its centre, z along its thinnest side
 function wrapSpin(root, names) {
   const out = [];
   root.updateMatrixWorld(true);
@@ -243,7 +219,6 @@ class Rig {
     if (part.dense) obj.traverse((o) => { if (part.dense.test(o.name)) o.traverse((m) => { m.userData.dense = true; }); });
     for (const m of meshes) {
       const tris = m.geometry.index ? m.geometry.index.count / 3 : m.geometry.attributes.position.count / 3;
-      // very dense meshes (pin grids, fin stacks, fan blades) would pile up into a white wall
       const dense = m.userData.dense || tris > 30000 || /heatsink|fin/i.test(m.name) || /heatsink|fin/i.test(m.parent?.name || "");
       const xm = xrayFor([].concat(m.material)[0], dense, part.xrayInvert);
       let twin;
@@ -267,7 +242,6 @@ class Rig {
       }
     }
 
-    // anchor points from node names, material names or fractions of the part's box
     this.inner.updateMatrixWorld(true);
     const tmp = new THREE.Box3();
     for (const m of meshes) {
@@ -296,7 +270,7 @@ class Rig {
     if (clips.length) { this.mixer = new THREE.AnimationMixer(obj); for (const c of clips) this.mixer.clipAction(c).play(); }
     if (obj.userData.fans) this.fans.push(...obj.userData.fans);
     if (part.spin) this.fans.push(...wrapSpin(obj, part.spin));
-    const mirrorY = !!part.mirror;   // shown upside down from the live build: its box-fraction anchors flip
+    const mirrorY = !!part.mirror;
     this.flows.power = buildFlowGraph(THREE, this, part.flows, "power", { color: "#fff200", uniforms: flowUniforms, mirrorY });
     this.flows.data = buildFlowGraph(THREE, this, part.flows, "data", { color: "#ff53e2", uniforms: flowUniforms, mirrorY });
     for (const g of Object.values(this.flows)) { g.visible = false; this.inner.add(g); }
@@ -304,7 +278,6 @@ class Rig {
   }
   look(mode) {
     const x = mode !== "overview";
-    // front-only x-ray: the solid part stays as an invisible depth layer so only its nearest surface glows
     for (const m of this.pbr) {
       m.visible = !x || !!this.part.xrayFront;
       if (this.part.xrayFront) for (const mat of [].concat(m.material)) mat.colorWrite = !x;
@@ -322,7 +295,7 @@ const state = { part: 0, mode: "overview", hot: -1, peek: false, shownAt: Infini
 let started = false, slide = null, exiting = false;
 const view = { yaw: 0, pitch: 0, vYaw: 0, drag: null, lastMove: 0 };
 
-// ---------- loading (the first part first) ----------
+// ---------- loading ----------
 const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 (async function load() {
   for (const r of rigs) {
@@ -367,7 +340,7 @@ function setIcon(p, flip) {
   setTimeout(() => { img.src = ICON + p.icon; }, 300);
 }
 
-// ---------- part carousel (0:05) ----------
+// ---------- part carousel ----------
 function go(i, dir) {
   if (exiting || !started) return;
   i = (i + PARTS.length) % PARTS.length;
@@ -381,10 +354,8 @@ function go(i, dir) {
   sfx.slide(dir);
   state.part = i;
   const p = PARTS[i];
-  // leaving an x-ray view dissolves back to the photograph instead of cutting
   const toPhoto = () => { from.look("overview"); to.look("overview"); };
   if (wasX) dissolve(toPhoto); else toPhoto();
-  // the copy goes first, then the slide, then the title and icon mid-slide
   typeText(els.desc, p.modes.overview, { eraseFrom: "start", eraseCps: 340, cps: 170 });
   const d0 = reduceMotion() ? 0 : 150;
   slide = { from, to, dir, t0: performance.now() + d0, dur: reduceMotion() ? 1 : 1000 };
@@ -395,11 +366,10 @@ function go(i, dir) {
   renderChrome();
 }
 
-// ---------- views: dissolve between photograph and x-ray (0:09, 0:11) ----------
+// ---------- views: dissolve between photograph and x-ray ----------
 const snap = $("snap"), snapCtx = snap.getContext("2d");
 function dissolve(swap) {
   if (reduceMotion()) { swap(); return; }
-  // freeze the current frame on a 2D canvas, change the scene underneath, then fade the freeze away
   renderer.render(scene, camera);
   snap.width = canvas.width; snap.height = canvas.height;
   snapCtx.clearRect(0, 0, snap.width, snap.height);
@@ -457,7 +427,6 @@ function openHot(i) {
   sfx.duck(true);
   $("calloutTitle").textContent = a.h.title;
   $("calloutText").textContent = a.h.text;
-  // a ring opens the x-ray; inside an x-ray view it just changes the callout
   if (state.mode === "overview") { state.peek = true; setMode("framework", { keepCopy: true }); }
   const c = els.callout;
   c.hidden = false;
@@ -475,7 +444,7 @@ function closeHot(back) {
 
 const v3 = new THREE.Vector3(), nrm = new THREE.Vector3(), toCam = new THREE.Vector3();
 const unit = () => Math.min(innerWidth / 1920, innerHeight / 1080);   // the CSS --u, for artboard sizes
-const rings = [];   // on-screen hotspot rings, which the flow labels steer around
+const rings = [];
 function placeHotspots() {
   const rig = rigs[state.part];
   if (!rig.ready || slide) return;
@@ -497,10 +466,8 @@ function placeHotspots() {
     if (b.classList.contains("is-shown")) rings.push({ x, y, r: b.offsetWidth / 2 + 4 });
   });
   if (!ring || els.callout.hidden) return;
-  // the callout sits beside its ring, its rule running from the title to the ring (left side preferred)
   const c = els.callout, th = $("calloutTitle").offsetHeight;
-  if (w / h < 1) { c.style.width = ""; c.style.transform = ""; return; }   // phones: the callout is a card under the header (CSS)
-  // beside its ring, never over a side arrow: narrower rather than overlapping
+  if (w / h < 1) { c.style.width = ""; c.style.transform = ""; return; }
   const cr = canvas.getBoundingClientRect(), pr = $("prev").getBoundingClientRect(), nx = $("next").getBoundingClientRect();
   const minX = pr.right - cr.left + 14, maxX = nx.left - cr.left - 14, want = Math.min(300 * unit(), 340);
   const roomL = ring.x - ring.r - minX, roomR = maxX - ring.x - ring.r;
@@ -511,7 +478,6 @@ function placeHotspots() {
   c.style.transform = `translate(${(left ? ring.x - ring.r - cw : ring.x + ring.r).toFixed(1)}px, ${(ring.y - th).toFixed(1)}px)`;
 }
 
-// component labels on the power / data traces
 function placeFlows() {
   const rig = rigs[state.part], layer = $("flowLabels");
   const graph = rig.ready && LOOK[state.mode]?.flow && !slide && !exiting ? rig.flows[state.mode] : null;
@@ -519,7 +485,7 @@ function placeFlows() {
   placeFlowLabels(THREE, layer, graph, rig.inner, camera, canvas.clientWidth, canvas.clientHeight, false, rings);
 }
 
-// ---------- start (0:03) ----------
+// ---------- start ----------
 const intro = createIntro($("introFx"), "../assets/img/circuit-a.jpg");
 function start(first = 0) {
   if (started || !rigs[first].ready) return;
@@ -531,7 +497,6 @@ function start(first = 0) {
   setTimeout(() => intro.stop(), 1000);
   const rig = rigs[first], p = PARTS[first];
   for (const r of rigs) { r.pivot.visible = r === rig; r.pivot.position.set(0, 0, 0); if (r.ready) r.look("overview"); }
-  // it drifts in from the upper right while the title dissolves
   slide = { from: null, to: rig, dir: 1, t0: performance.now() + 150, dur: reduceMotion() ? 1 : 1150, drift: true };
   els.title.querySelector(".roll").innerHTML = "";
   rollTitle(els.title, titleHtml(p), 1);
@@ -546,7 +511,7 @@ function start(first = 0) {
 }
 $("start").addEventListener("click", () => start());
 
-// ---------- exit (0:18–0:23) ----------
+// ---------- exit ----------
 let bit = null;
 async function exitSequence() {
   if (exiting || !started) return;
@@ -555,7 +520,6 @@ async function exitSequence() {
   toggleIndex(false);
   const ex = $("exit"), warm = $("exitWarm"), bitCanvas = $("bit"), glitch = $("glitch");
   sfx.scan(false);
-  // a warm copy of the screen scans in from the top…
   renderer.render(scene, camera);
   const ws = $("exitSnap");
   ws.width = canvas.width; ws.height = canvas.height;
@@ -563,7 +527,6 @@ async function exitSequence() {
   ex.classList.add("is-on");
   const wipe = (el, ms) => el.animate([{ clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)" }], { duration: reduceMotion() ? 1 : ms, easing: "cubic-bezier(.5,0,.3,1)", fill: "forwards" }).finished;
   await wipe(warm, 420);
-  // …then the machine itself, in 1 bit, panning slowly
   bit ||= createBitScene(bitCanvas);
   const showBit = bit.ready();
   if (showBit) { bit.play(); await wipe(bitCanvas, 420); }
@@ -571,13 +534,11 @@ async function exitSequence() {
   const onSkip = () => { skip = true; };
   ex.addEventListener("click", onSkip, { once: true });
   for (let t = 0; showBit && t < 3600 && !skip; t += 100) await wait(100);
-  // glitch to black, the score tape-stopping into it
   sfx.stop();
   glitch.innerHTML = Array.from({ length: 16 }, () => `<i style="left:${Math.random() * 96}%;top:${Math.random() * 98}%;width:${4 + Math.random() * 60}px;height:${2 + Math.random() * 4}px"></i>`).join("");
   glitch.classList.add("is-black");
   await wait(reduceMotion() ? 0 : 650);
   bit?.stop();
-  // back to the title
   started = false;
   document.body.classList.remove("started");
   $("app").setAttribute("aria-hidden", "true");
@@ -593,8 +554,6 @@ async function exitSequence() {
 }
 $("home").addEventListener("click", exitSequence);
 
-/* The finale: motherboard, graphics card and cooler assembled in board space, rendered through a 1-bit
-   threshold with Sobel outlines (white on #2e2e2e, like the mockup's machine footage). */
 function createBitScene(target) {
   const r2 = new THREE.WebGLRenderer({ canvas: target, antialias: false });
   r2.setPixelRatio(Math.min(devicePixelRatio, 1.5));
@@ -639,13 +598,11 @@ function createBitScene(target) {
     const mb = rig("mthr"), k = mb.box.y / 305;   // board units per millimetre (ATX is 305 mm tall)
     const top = mb.matBoxes.BaseBoardM?.max.z ?? -mb.box.z / 2;
     sc.add(copy("mthr"));
-    // graphics card standing out of the top PCIe slot, bracket at the rear, fans down
     const gpu = rig("gpu"), gq = new THREE.Quaternion().setFromRotationMatrix(basisMatrix(["x", "z", "-y"])), gs = (285 * k) / gpu.part.size;
     const ext = gpu.box.clone().applyQuaternion(gq); ext.set(Math.abs(ext.x), Math.abs(ext.y), Math.abs(ext.z)).multiplyScalar(gs);
     const g = copy("gpu"); g.quaternion.copy(gq); g.scale.setScalar(gs);
     g.position.set(-mb.box.x / 2 + ext.x / 2 - 0.05, -0.17 * mb.box.y, top + ext.z / 2 - 0.02);
     sc.add(g);
-    // tower cooler on the socket, fan to the front of the case
     const sock = new THREE.Box3();
     for (const [n, b] of Object.entries(mb.matBoxes)) if (/^CPU_Base/.test(n)) sock.union(b);
     const cool = rig("cooler"), cq = new THREE.Quaternion().setFromRotationMatrix(basisMatrix(["y", "z", "x"])), cs = (155 * k) / cool.part.size;
@@ -667,7 +624,6 @@ function createBitScene(target) {
   }
   function frame(now) {
     const k = Math.min(1, (now - t0) / 4400);
-    // low and close along the graphics card, drifting toward the cooler (0:18.7 → 0:22.2)
     cam.position.set(THREE.MathUtils.lerp(-1.75, -0.2, k), THREE.MathUtils.lerp(-1.45, -1.1, k), THREE.MathUtils.lerp(1.85, 1.6, k));
     cam.lookAt(THREE.MathUtils.lerp(-0.6, 0.35, k), THREE.MathUtils.lerp(-0.35, 0.2, k), 0.15);
     r2.setRenderTarget(rt); r2.render(sc, cam);
@@ -714,7 +670,6 @@ document.addEventListener("keydown", (e) => {
   else if (e.key === "2" || e.key === "ArrowUp") { e.preventDefault(); stepMode(-1); }   //  (2) to go up!"
   else if (e.key === "m" || e.key === "M") toggleSound();
 });
-// sound: on by default, M or the index's switch turns it off (remembered)
 function toggleSound() {
   sfx.muted = !sfx.muted;
   renderSound();
@@ -732,11 +687,9 @@ function fit() {
   const w = canvas.clientWidth, h = canvas.clientHeight;
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
-  // the mockup centres its part a little left of middle and well above the footer
   const portrait = w / h < 1;
   camera.setViewOffset(w, h, w * (portrait ? 0 : 0.008), h * (portrait ? 0.12 : 0.065), w, h);
   camera.updateProjectionMatrix();
-  // portrait: back off until the widest part (4.6 units) fits the screen's width with a margin
   camera.position.set(0, 0, portrait ? Math.max(12, 5.6 / (2 * Math.tan(THREE.MathUtils.degToRad(14)) * (w / h))) : 9.4 * Math.max(1, 1.62 / (w / h)));
   intro.resize();
 }
@@ -753,7 +706,7 @@ function frame() {
   const W = Math.max(6, camera.aspect * 4.6);
   if (slide) {
     const k = ease(THREE.MathUtils.clamp((performance.now() - slide.t0) / slide.dur, 0, 1));
-    if (slide.drift) {   // the first part: from the upper right, already turned toward its pose
+    if (slide.drift) {
       slide.to.pivot.position.set(W * 0.22 * (1 - k), 1.1 * (1 - k), 0);
       slide.to.slideYaw = 0.6 * (1 - k);
     } else {
@@ -793,7 +746,6 @@ intro.play();
 requestAnimationFrame(frame);
 renderChrome();
 if (Q.has("debug")) window.__p = { rigs, state, camera, go, setMode, openHot, exitSequence, start };
-// ?part=gpu&view=framework&hot=0 jumps straight in (screenshots)
 if (Q.has("part")) {
   const pi = Math.max(0, ORDER.indexOf(Q.get("part")));
   const timer = setInterval(() => {

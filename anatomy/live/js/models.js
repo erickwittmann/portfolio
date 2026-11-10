@@ -1,7 +1,3 @@
-/* Model loading for both builds. A published Claude artifact can't serve .glb files, so its pages set
-   window.__aocPacked and each model ships as name.glb.json: { "glb": "<the GLB's bytes, base64>" }.
-   Everywhere else the GLB loads directly. */
-
 export function loadModel(loader, url, onLoad, onProgress, onError) {
   if (!window.__aocPacked) return loader.load(url, onLoad, onProgress, onError);
   const file = url.split("?")[0];

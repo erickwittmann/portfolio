@@ -1,18 +1,8 @@
-// Opening screen: the media grid shows straight away, slightly dimmed (it still flexes around the
-// cursor), with a bar across the middle: "erickwittmann.com", "headphones recommended", Instagram
-// and LinkedIn, and "click to enter". Clicking anywhere (or pressing Enter/Space, or trying to
-// scroll) enters: the bar collapses to a line and closes, the dim lifts and the sound starts
-// (browsers only allow sound after a click/key, so this click is the one that unlocks it).
-// - Homepage (splash): after that the page scrolls as normal.
-// - stage.html: the camera then pulls back from the LED screen to the whole stage, over DURATION ms. The two social links open in a new tab without entering.
-// - Arriving part-way down the page (a #about link, reloading lower down) skips the opening.
-// - Reduced motion: no camera move; entering jumps straight to the stage.
-// Load after js/intro.js (needs window.StageSeq).
+// Opening screen over the splash grid.
 (function () {
   var SEQ = window.StageSeq, section = document.getElementById('top');
   if (!SEQ || !section) return;
-  var DURATION = 2800, CLOSE = 1100;   // CLOSE: how long the bar and dim take to go (css/style.css)
-  // Same icons as the About bar (index.html): Instagram as an outline, LinkedIn as a solid tile.
+  var DURATION = 2800, CLOSE = 1100;
   var SOCIAL =
     '<li><a href="https://www.instagram.com/erickwittmann" target="_blank" rel="noopener" aria-label="Instagram">' +
       '<svg viewBox="0 0 24 24" aria-hidden="true"><rect class="si-line" x="3" y="3" width="18" height="18" rx="5"/>' +
@@ -41,7 +31,6 @@
   var lenis = window.SmoothScroll;   // js/smooth-scroll.js (null with reduced motion)
   if (lenis) lenis.stop();
 
-  // Hold the page at the top until entered, and while the camera move plays.
   var KEYS = { ' ': 1, 'Enter': 1, 'ArrowDown': 1, 'PageDown': 1, 'End': 1, 'Spacebar': 1 };
   function hold(e) {
     if (state === 'in') return;
@@ -55,8 +44,6 @@
     if (e.target.closest && e.target.closest('input, textarea, select, .soc-icons a')) return;
     hold(e);
   });
-  // The first click anywhere on the grid enters (rather than following a link in a tile).
-  // The social links are the exception: they open in a new tab and leave the opening screen up.
   SEQ.pin.addEventListener('click', function (e) {
     if (state !== 'gated') return;
     if (e.target.closest && e.target.closest('.soc-icons a')) return;
@@ -73,19 +60,19 @@
     root.classList.remove('is-gated');
     gate.classList.add('is-out');
     setTimeout(function () { gate.remove(); }, CLOSE + 100);
-    if (!SEQ.stage) {   // splash: no camera move, the page is simply free to scroll once the bar has gone
+    if (!SEQ.stage) {
       if (lenis) lenis.start();
       setTimeout(done, CLOSE);
       return;
     }
     var end = SEQ.end();
-    if (lenis) {   // let the smooth scroller play the move, so it hands over seamlessly to normal scrolling
+    if (lenis) {
       lenis.start();
       lenis.scrollTo(end, { duration: DURATION / 1000, easing: ease, lock: true, force: true, onComplete: done });
       setTimeout(done, DURATION + 400);   // in case onComplete doesn't come
       return;
     }
-    root.style.scrollBehavior = 'auto';   // the page normally scrolls smoothly; steer it frame by frame instead
+    root.style.scrollBehavior = 'auto';
     if (reduced) { scrollToY(end); done(); return; }
     var from = window.scrollY || window.pageYOffset, t0 = performance.now();
     (function step(now) {

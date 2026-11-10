@@ -12,8 +12,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Cormorant+Garamond:wght@500&family=Courier+Prime&display=swap" rel="stylesheet">
 <style>
-  /* Layout: one column on the site's black x-ray field: the name, two large build entries, the route the power takes, then how to explore.
-     A single dark look by choice (the experience itself is dark), so every colour is set explicitly. */
   :root {
     color-scheme: dark;
     --bg: #060708; --panel: #0d0f11; --ink: #ececec; --dim: #8e9296; --line: rgba(236, 242, 246, .11);
@@ -45,7 +43,6 @@
   .build p { margin: 0; color: var(--dim); font-size: 14px; }
   .go { margin-top: 6px; font: 400 12px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--xray); }
 
-  /* the story order is a real sequence: the route the power takes */
   .route { display: grid; gap: 14px; }
   .acts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
   .act { display: grid; gap: 8px; padding: 14px 16px; border-top: 2px solid var(--c); background: var(--panel); border-radius: 0 0 6px 6px; }

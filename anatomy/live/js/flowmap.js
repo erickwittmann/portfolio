@@ -1,31 +1,3 @@
-/* Power and data paths as real wiring, shared by the live build and the prototype.
-   A part's `flows` names its real components (nodes) and joins them with links:
-
-     flows: {
-       nodes: {
-         eps: { at: [-0.24, 0.46], label: "8-pin EPS", note: "12 V" },
-         cpu: { mat: "CPU_BaseM", label: "CPU", simple: "Brain", note: { power: "≈1.2 V", data: "LGA1151" } },
-       },
-       power: [["eps", "vrm", 3], …],                                        // [from, to, count, options]
-       data:  [["cpu", "dimm", 4, { kind: "ddr", both: true, label: "DDR4" }], …],
-       plane: -0.46,     // the circuit board's surface, as a depth in box fractions (default: the part's front face)
-       normal: [0, 1, 0],// the way the copper faces (default +z, toward the viewer)
-       inside: true,     // keep nodes at their own 3D positions instead of laying them on the board plane
-       boards: [{ at: [0, -0.2, 0], size: [0.8, 0.7] }],   // a bare circuit board to lay copper on, where the model has none
-     }
-
-   Link kinds, as a real board or harness would carry them:
-     pour   power through a wide copper pour (the default for power)
-     trace  thin copper traces with 45° bends (the default for data); count = traces
-     pairs  differential pairs (PCIe, DMI, USB, SATA…); count = pairs
-     ddr    a length-matched bus: traces with serpentine meanders
-     cable  an insulated harness from harness.js: { harness: "atx24", plug: "to" | "from" | "both", axis: "x" | "y", via: [[x, y, z?]…] }
-     field  an isolation gap (a transformer, an opto-coupler): broken copper that the pulse jumps across
-   Options: both (pulses run both ways), label (a bus or rail name on the route), fade ("from" | "to": the cable's free end fades out).
-   A node is placed by `node` (a named object in the model), `mat` (a material's centre), `mix: [nodeA, nodeB, t]`
-   or `at: [x, y, z?]` in box fractions; `off: [x, y, z]` nudges it. A node without a label is a plain endpoint.
-   The flow shows as light travelling inside the copper or the insulation. Entering a view, each link draws itself on from
-   its upstream end, in the order listed (uniforms.uGrow: seconds since the view's wiring appeared). */
 import { HARNESS, INSULATION } from "./harness.js";
 import { REAL_MM } from "./parts.js";
 
@@ -37,8 +9,8 @@ export function buildFlowGraph(THREE, rig, flows, mode, { color, uniforms, mirro
   if (!links?.length) return g;
   const B = rig.box, S = Math.max(B.x, B.y, B.z);
   const SP = S * (mode === "data" ? 0.08 : 0.22);   // distance between packets
-  const mm = S / (REAL_MM[rig.part.id] || 300);   // scene units per real millimetre, for cables and connectors
-  const k = mirrorY ? -1 : 1;   // a part shown upside down mirrors its box fractions top-to-bottom and front-to-back
+  const mm = S / (REAL_MM[rig.part.id] || 300);
+  const k = mirrorY ? -1 : 1;
   const N = new V(...(flows.normal || [0, 0, 1]));
   const front = flows.plane != null ? k * flows.plane * B.z : B.z * 0.5 + 0.02;
   const frac = (f) => new V(f[0] * B.x, k * f[1] * B.y, k * (f[2] ?? 0) * B.z);
@@ -80,7 +52,6 @@ export function buildFlowGraph(THREE, rig, flows, mode, { color, uniforms, mirro
     const kind = opt.kind || (mode === "power" ? "pour" : "trace");
     if (kind === "cable") { buildCable(a, b, A, Bp, opt, li); return; }
 
-    // copper on the board: a right-angle route with 45° corners, then one offset copy per trace
     const centre = chamfer(manhattan(A, Bp), S * 0.022);
     if (centre.length < 2) return;
     busLabel(a, b, opt.label, longestMid(centre));
@@ -107,7 +78,6 @@ export function buildFlowGraph(THREE, rig, flows, mode, { color, uniforms, mirro
     const hw = S * 0.0012;
     offs.forEach((o, i) => {
       let route = offset(centre, N, o);
-      // a length-matched bus: the inside traces of a bend are shorter, so they wiggle to catch up
       if (kind === "ddr" && i % 2 === 0) route = meander(route, N, S * 0.0026);
       const rev = opt.both && (kind === "pairs" ? Math.floor(i / 2) % 2 : i % 2);
       g.add(new THREE.Mesh(strip(THREE, route, N, hw, S * 0.0007 * lift, (s) => [s / SP, (seed + i * 0.11) % 1, 1, 1], rev, grow(li)), M.copper));
@@ -115,7 +85,6 @@ export function buildFlowGraph(THREE, rig, flows, mode, { color, uniforms, mirro
     });
   });
 
-  // cables are physical: one that only carries the other view's flow is still there, unlit and unlabelled
   const here = new Set(links.filter((l) => l[3]?.kind === "cable").map((l) => `${l[0]}>${l[1]}>${l[3].harness}`));
   (flows[mode === "power" ? "data" : "power"] || []).forEach(([a, b, , opt = {}]) => {
     if (opt.kind !== "cable" || here.has(`${a}>${b}>${opt.harness}`)) return;
@@ -123,7 +92,6 @@ export function buildFlowGraph(THREE, rig, flows, mode, { color, uniforms, mirro
     buildCable(a, b, point(a, true).p, point(b, true).p, { ...opt, label: "" }, 0, true);
   });
 
-  // gold-finished pads where traces land, and rounded ends on the pours
   if (pads.length) addDiscs(pads.map((p) => [p, S * 0.0029]), M.pad, S * 0.0009);
   if (caps.length) addDiscs(caps, M.pour, S * 0.0005);
   return g;
@@ -137,7 +105,6 @@ export function buildFlowGraph(THREE, rig, flows, mode, { color, uniforms, mirro
     g.add(inst);
   }
 
-  // an insulated harness: conductors laid side by side in the connector's rows, drawn through smooth control points
   function buildCable(a, b, A, Bp, opt, li, rest = false) {
     const H = HARNESS[opt.harness];
     const od = H.od * mm, hh = (H.housing || 0) * mm, lift = S * 0.04;
@@ -150,7 +117,6 @@ export function buildFlowGraph(THREE, rig, flows, mode, { color, uniforms, mirro
     const curve = new THREE.CatmullRomCurve3(ctrl, false, "centripetal");
     const SEG = 96, pts = curve.getSpacedPoints(SEG), len = curve.getLength();
     busLabel(a, b, opt.label, curve.getPointAt(0.5));
-    // parallel-transported frame, starting with the connector's long side
     const axis = { x: new V(1, 0, 0), y: new V(0, 1, 0), z: new V(0, 0, 1) }[opt.axis || "x"];
     const T = pts.map((p, i) => pts[Math.min(i + 1, SEG)].clone().sub(pts[Math.max(i - 1, 0)]).normalize());
     let n = axis.clone().addScaledVector(T[0], -axis.dot(T[0]));
@@ -159,7 +125,6 @@ export function buildFlowGraph(THREE, rig, flows, mode, { color, uniforms, mirro
     const frames = T.map((t) => { n = n.addScaledVector(t, -n.dot(t)).normalize(); return [n.clone(), new V().crossVectors(t, n)]; });
     const cols = Math.ceil(H.pins.length / H.rows), pitch = od * 1.06;
     H.pins.forEach((pin, idx) => pin && conductor(pin, idx, 0, 1));
-    // a second wire crimped into the same pin (e.g. the 24-pin's 3.3 V sense lead), tucked beside the first
     for (const [idx, pin, scale] of H.extras || []) conductor(pin, idx, od * (0.5 + scale / 2), scale);
     function conductor(pin, idx, nudge, scale) {
       const [, col, role, dir] = pin;
@@ -178,7 +143,6 @@ export function buildFlowGraph(THREE, rig, flows, mode, { color, uniforms, mirro
       }, (i) => g0 + uv.getX(i) * gd * 1.3);
       g.add(new THREE.Mesh(geo, M.insulation(col === "jacket" ? INSULATION.jacket : INSULATION[col])));
     }
-    // connector housings at the plugged ends
     const w = H.jacket ? od * 2.4 : cols * H.pitch * mm + 1.8 * mm, d = H.jacket ? od * 1.5 : H.rows * H.pitch * mm + 1.8 * mm;
     const [g0, gd] = grow(li);
     for (const [on, at, when] of [[plugA, A, g0], [plugB, Bp, g0 + gd * 1.3]]) {
@@ -197,7 +161,6 @@ export function buildFlowGraph(THREE, rig, flows, mode, { color, uniforms, mirro
 // ---------- materials: physically based, with the flow as light travelling inside ----------
 function materials(THREE, color, uniforms, mode) {
   const flow = new THREE.Color(color), one = { value: 1 }, never = { value: 1e4 };
-  // packets: power swells slowly like DC, data runs in short crisp packets (spacing set where aFlow is written)
   const speed = { value: mode === "data" ? 2.75 : 0.73 }, width = { value: mode === "data" ? 0.07 : 0.16 };
   const make = (params) => {
     const m = new THREE.MeshPhysicalMaterial({ side: THREE.DoubleSide, transparent: true, ...params });
@@ -222,7 +185,6 @@ function materials(THREE, color, uniforms, mode) {
   const cache = new Map();
   const once = (key, params) => cache.get(key) || cache.set(key, make(params)).get(key);
   return {
-    // copper dimmed against the studio environment so it reads as copper, not as a white highlight
     copper: make({ color: "#b0653a", metalness: 1, roughness: 0.42, envMapIntensity: 0.42 }),
     pour: make({ color: "#9b5830", metalness: 1, roughness: 0.5, envMapIntensity: 0.38 }),
     pad: make({ color: "#d4a752", metalness: 1, roughness: 0.3, envMapIntensity: 0.6 }),   // ENIG gold finish
@@ -232,7 +194,6 @@ function materials(THREE, color, uniforms, mode) {
   };
 }
 
-// every wire mesh carries aFlow = (distance in pulse lengths, phase seed, glow strength, fade) and aGrow = when it appears
 function flowAttr(geo, fn, growFn = () => 0) {
   const n = geo.attributes.position.count, a = new Float32Array(n * 4), gr = new Float32Array(n);
   for (let i = 0; i < n; i++) { a.set(fn(i), i * 4); gr[i] = growFn(i); }
@@ -241,7 +202,6 @@ function flowAttr(geo, fn, growFn = () => 0) {
 }
 const smooth = (e0, e1, x) => { const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); };
 
-// a flat copper strip along a polyline: top face plus two edges, mitred at the corners
 function strip(THREE, pts, N, hw, h, flowAt, reverse, [g0, gd] = [0, 0]) {
   const n = pts.length;
   const along = [0];
@@ -273,7 +233,6 @@ function strip(THREE, pts, N, hw, h, flowAt, reverse, [g0, gd] = [0, 0]) {
   return geo;
 }
 
-// in-plane perpendicular at each vertex, lengthened at corners so offset copies stay parallel
 function miters(V, pts, N) {
   const n = pts.length;
   return pts.map((p, i) => {
@@ -292,7 +251,6 @@ function offset(pts, N, d) {
   return pts.map((p, i) => p.clone().addScaledVector(mit[i], d));
 }
 
-// right-angle route, longest leg first, like traces on a circuit board
 function manhattan(a, b) {
   const d = b.clone().sub(a);
   const axes = ["x", "y", "z"].sort((p, q) => Math.abs(d[q]) - Math.abs(d[p]));
@@ -305,7 +263,6 @@ function manhattan(a, b) {
   }
   return pts;
 }
-// cut every corner at 45°, the way boards are routed
 function chamfer(pts, c) {
   if (pts.length < 3) return pts;
   const out = [pts[0]];
@@ -317,7 +274,6 @@ function chamfer(pts, c) {
   out.push(pts[pts.length - 1]);
   return out;
 }
-// trapezoid meanders on the middle of the longest leg (length matching)
 function meander(pts, N, amp) {
   let best = 0, L = 0;
   for (let i = 0; i < pts.length - 1; i++) { const l = pts[i].distanceTo(pts[i + 1]); if (l > L) { L = l; best = i; } }
@@ -333,7 +289,6 @@ function meander(pts, N, amp) {
   mid.push(at(start + count * period, 0));
   return [...pts.slice(0, best + 1), ...mid, ...pts.slice(best + 1)];
 }
-// cut a polyline into dashes: [{ pts, at (distance from the start) }]
 function dashes(pts, on, off) {
   const out = [];
   let acc = 0, cur = null, phase = 0, drawing = true;
@@ -360,9 +315,6 @@ function longestMid(pts) {
   return mid;
 }
 
-/* Component labels for a part's current graph: project each node, then push overlapping labels apart.
-   simple: plain names only (no notes or bus names), matching the site's plain-language setting.
-   avoid: on-screen circles [{ x, y, r }] the labels must not cover, such as hotspot rings. */
 export function placeFlowLabels(THREE, layer, graph, inner, camera, w, h, simple = false, avoid = []) {
   const shown = (graph?.userData.nodes || []).filter((n) => (simple ? !n.bus && n.simple : n.label));
   const key = graph && `${graph.uuid}${simple}`;
@@ -375,18 +327,15 @@ export function placeFlowLabels(THREE, layer, graph, inner, camera, w, h, simple
     layer._size = null;
   }
   if (!shown.length) return;
-  // measure once per label set (offsetWidth forces layout)
   layer._size ||= [...layer.children].map((el) => [el.offsetWidth, el.offsetHeight]);
   const v = new THREE.Vector3();
   const pos = shown.map((n, i) => {
     v.copy(n.p); inner.localToWorld(v).project(camera);
     const [lw, lh] = layer._size[i];
-    // components: label sits above its point; bus names sit centred on their route
     return { el: layer.children[i], x: (v.x * 0.5 + 0.5) * w, y: (-v.y * 0.5 + 0.5) * h - (n.bus ? 0 : lh / 2 + 9), w: lw + 6, h: lh + 2 };
   });
   for (let pass = 0; pass < 10; pass++) {
     let moved = false;
-    // rings stay put: a label overlapping one moves all the way off it, along the shorter way out
     for (const A of pos) for (const o of avoid) {
       const ox = A.w / 2 + o.r - Math.abs(A.x - o.x), oy = A.h / 2 + o.r - Math.abs(A.y - o.y);
       if (ox <= 0 || oy <= 0) continue;
@@ -398,7 +347,6 @@ export function placeFlowLabels(THREE, layer, graph, inner, camera, w, h, simple
       const ox = (A.w + C.w) / 2 - Math.abs(A.x - C.x), oy = (A.h + C.h) / 2 - Math.abs(A.y - C.y);
       if (ox <= 0 || oy <= 0) continue;
       moved = true;
-      // separate along the cheaper axis
       if (oy < ox) { const s = (C.y >= A.y ? 1 : -1) * oy / 2; A.y -= s; C.y += s; }
       else { const s = (C.x >= A.x ? 1 : -1) * ox / 2; A.x -= s; C.x += s; }
     }

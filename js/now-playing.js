@@ -1,13 +1,4 @@
-// Now playing: the song the site is playing, with a link out to it on Spotify. It lives in the nav
-// player's dropdown (js/nav-audio.js), above the volume bar, and opens with it on hover/focus.
-// It follows the nav player: the stage playlist on the homepage, the page's own music elsewhere.
-// It appears once a song has started. Load after js/nav-audio.js.
-//
-// ---------- The song list: the one place to edit ----------
-// One line per audio file, keyed by its path from the site's main folder (the same path as in
-// js/tracks.js or js/page-music.js). spotify: the song's open.spotify.com/track link.
-// Leave spotify '' and the card links to a Spotify search for the artist and title instead.
-// A file not listed here still shows, named from its file name ("Artist - Title.mp3").
+// Now playing card in the nav player, linking the current song on Spotify.
 window.SONGS = {
   'assets/PULL UP2.mp3':                         { artist: 'Internet Girl',   title: 'PULL UP',    spotify: 'https://open.spotify.com/track/2EZbh6qrqdrsF41mbryyfQ' },
   'assets/yaego, kučka - ketamina.mp3':          { artist: 'yaego, KUČKA',    title: 'ketamina',   spotify: 'https://open.spotify.com/track/0mzHbZ09hL9uUeV7rJ1ylR' },
@@ -15,7 +6,6 @@ window.SONGS = {
   'assets/XY.mp3':                               { artist: 'Feng',            title: 'XY',         spotify: 'https://open.spotify.com/track/5kI88ybsxuqXdmnOATVXN7' },
   'assets/Ferdous - Gravity.mp3':                { artist: 'Ferdous',         title: 'Gravity',    spotify: 'https://open.spotify.com/track/4IR1ACM7QnpToR5zCzxrVs' },
   'assets/Ferdous - Sad Nebula.mp3':             { artist: 'Ferdous',         title: 'Sad Nebula', spotify: 'https://open.spotify.com/track/1XImSknjBxOJWfDXBdRSQ9' },
-  // Artist unknown: fill in artist + spotify for these two.
   'assets/unplug reality.mp3':                   { artist: '',                title: 'unplug reality', spotify: '' },
   'assets/Expansion.mp3':                        { artist: '',                title: 'Expansion',  spotify: '' }
 };
@@ -25,7 +15,6 @@ window.SONGS = {
   if (!PA || !vol) return;
   var root = (document.currentScript && document.currentScript.src || location.href).replace(/js\/now-playing\.js.*$/, '');
 
-  // Song details for whatever file is playing.
   var byUrl = {};
   Object.keys(window.SONGS).forEach(function (k) { byUrl[new URL(k, root).href] = window.SONGS[k]; });
   function lookup(src) {
@@ -38,7 +27,6 @@ window.SONGS = {
     return { artist: s.artist, title: s.title, href: s.spotify || 'https://open.spotify.com/search/' + encodeURIComponent(q) };
   }
 
-  // The song block, at the top of the dropdown panel (above the volume bar).
   var song = document.createElement('a');
   song.className = 'na-song';
   song.target = '_blank'; song.rel = 'noopener'; song.hidden = true;
@@ -51,7 +39,6 @@ window.SONGS = {
   vol.classList.add('has-song');
   var titleEl = song.querySelector('.na-song-title'), artistEl = song.querySelector('.na-song-artist'), labelEl = song.querySelector('.na-song-label');
 
-  // Checked twice a second: only touches the page when something changed.
   var shownSrc = '', everPlayed = false, state = '';
   function tick() {
     if (document.hidden) return;

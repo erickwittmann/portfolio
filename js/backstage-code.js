@@ -1,6 +1,4 @@
-// The code viewer on backstage.html: pick a file on the left, its source loads from the site
-// (same folder as the page) and shows with line numbers and light highlighting. Nothing is copied
-// into the page, so it always shows the current file.
+// Backstage: source viewer for the stage files.
 (function () {
   var box = document.getElementById('bs-code');
   if (!box) return;
@@ -12,7 +10,6 @@
 
   function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-  // One pass over the text: comments, strings, keywords, numbers. Anything else is left plain.
   var JS = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|('(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*"|`(?:\\.|[^`\\])*`)|\b(var|let|const|function|return|if|else|for|while|do|new|this|typeof|in|of|break|continue|switch|case|default|try|catch|throw|true|false|null|undefined)\b|\b(\d+(?:\.\d+)?(?:e-?\d+)?)\b/g;
   var CSS = /(\/\*[\s\S]*?\*\/)|('(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*")|(@[\w-]+|![\w]+)|(-?\d*\.?\d+(?:px|vh|vw|svh|em|rem|%|s|ms|deg|fr)?)\b/g;
   function highlight(text, css) {
@@ -63,7 +60,6 @@
       var n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); show(n);
     });
   });
-  // Load the first file once the viewer is near the screen, not on page load.
   var first = tabs[0];
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es) {

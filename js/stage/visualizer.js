@@ -1,43 +1,29 @@
-// Audio-reactive visualizer for the stage's LED screen, built like a TouchDesigner network:
-//   audio -> histogram lines (the music's spectrum, same lines as the nav player: js/spectrum.js) -> mirrors ->
-//   feedback -> threshold -> tone (posterize) -> grit (grain, scanlines, RGB split on kicks)
-// Two passes: the first draws the lines through the mirrors on top of the previous frame (the
-// feedback picture); the second turns that into the hard-edged, flat-colour image on the screen.
-// It's drawn off-screen; js/hero.js puts it on the LED screen once the content scrolls over the
-// stage. Preview it on its own in tools/visualizer.html.
-//
-// Usage: var viz = Visualizer(THREE, renderer);
-//        viz.render(dt, { freq, level, kick, hue, volume, playing });   // once per frame
-//        viz.texture                                                    // the picture
-//        viz.setAspect(width / height)
-// With nothing playing it falls back to slow, looping pulses.
+// Stage: audio-reactive LED visualizer (mirrors, feedback, threshold, grain).
 (function () {
   var LOOK = {
-    folds: 6,          // kaleidoscope mirrors around the centre (more = busier)
-    tiles: 2,          // the mirrored picture repeats this many times across (1 = once)
-    decay: 0.72,       // feedback: how much of the last frame stays (trails); 0.6 short, 0.9 long
-    threshold: 0.55,   // brightness that becomes a lit tile; below it is black
-    tone: 3,           // grey steps for lit tiles (2 = harshest, 5 = smoother)
-    grain: 0.35,       // film grain amount (on lit tiles only: black stays black)
+    folds: 6,
+    tiles: 2,
+    decay: 0.72,
+    threshold: 0.55,
+    tone: 3,
+    grain: 0.35,
     scanlines: 0.18,   // darkness of every other row
-    tile: 7,           // mosaic tile size, in pixels of the 512-wide picture
+    tile: 7,
     edge: 0.95,        // brightness of the glowing edges
-    bright: 0.52,      // overall brightness: kept low so the work in front stays the focus
+    bright: 0.52,
     sizeMin: 0.78,     // picture size at volume 0 ...
     sizeMax: 1.12      // ... and at full volume
   };
 
   var VERT = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }';
 
-  // Pass 1: histogram lines through the mirrors, over last frame's picture.
   var FEED = [
     'precision highp float;',
     'varying vec2 vUv;',
     'uniform sampler2D uPrev;',
-    'uniform sampler2D uSpec;',   // the spectrum lines: x = bin (bass..highs), y = line 0..5
+    'uniform sampler2D uSpec;',
     'uniform float uRot, uLevel, uKick, uHue, uAspect, uScale, uDecay, uFolds, uTiles;',
     'const float PI = 3.14159265;',
-    // The nav player's colours, top to bottom: red, cyan, blue, yellow, white, magenta.
     'vec3 col6(float i) {',
     '  i = mod(i, 6.0);',
     '  if (i < 1.0) return vec3(1.0, 0.08, 0.08);',
@@ -50,21 +36,15 @@
     'float spec(float x, float line) { return texture2D(uSpec, vec2(clamp(x, 0.0, 1.0), (line + 0.5) / 6.0)).r; }',
     'void main() {',
     '  vec2 p = vUv - 0.5; p.x *= uAspect;',
-    // Feedback: last frame, pulled in a touch (more on a kick), fading.
     '  vec2 q = p * (0.975 - uKick * 0.05);',
     '  vec3 prev = texture2D(uPrev, vec2(q.x / uAspect, q.y) + 0.5).rgb * uDecay;',
-    // Size follows the volume.
     '  p /= uScale;',
-    // Mirrors: repeat the plane in mirrored tiles, then fold each tile into a kaleidoscope.
     '  p = abs(fract(p * uTiles * 0.5 + 0.5) - 0.5) * 2.0 / uTiles;',
     '  float r = length(p), a = atan(p.y, p.x), seg = PI / uFolds;',
     '  a = abs(mod(a + uRot, 2.0 * seg) - seg);',   // turns only as the music pushes it
     '  vec2 k = r * vec2(cos(a), sin(a));',
-    // Six histogram lines, stacked like the nav player: the music's spectrum along each one.
     '  float amp = 0.32 + uKick * 0.08, gap = 0.02 + uLevel * 0.02;',
     '  float th = 0.006 + uLevel * 0.012 + uKick * 0.006;',
-    // The lines start at the origin (they fan out from the centre). Inside each line, echoes of it
-    // shrink toward the origin like contour lines, so the whole screen fills with the music's shape.
     '  float fan = smoothstep(0.0, 0.14, k.x);',
     '  vec3 col = vec3(0.0);',
     '  for (int i = 0; i < 6; i++) {',
@@ -73,14 +53,13 @@
     '    float y = (fi * gap + spec(k.x * 1.4, fi) * amp) * fan;',
     '    for (int j = 0; j < 5; j++) {',
     '      float fj = float(j), e = 1.0 - fj * 0.19;',   // each echo a little smaller ...
-    '      col = max(col, c * (1.0 - fj * 0.13) * smoothstep(th, th * 0.35, abs(k.y - y * e)));',   // ... and a little dimmer (max, not add: colours stay pure instead of washing to white)
+    '      col = max(col, c * (1.0 - fj * 0.13) * smoothstep(th, th * 0.35, abs(k.y - y * e)));',
     '    }',
     '  }',
     '  gl_FragColor = vec4(max(prev, col), 1.0);',   // "lighten" composite over the trails
     '}'
   ].join('\n');
 
-  // Pass 2, black and white: mosaic tiles -> threshold + grey steps -> glowing edges -> grit.
   var GRIT = [
     'precision highp float;',
     'varying vec2 vUv;',
@@ -90,20 +69,16 @@
     'float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }',
     'float lumAt(vec2 uv) { return dot(texture2D(uSrc, uv).rgb, vec3(0.299, 0.587, 0.114)); }',   // perceived brightness: blues read dark
     'void main() {',
-    // Mosaic: every tile takes the value at its centre; thin dark gaps between tiles.
     '  vec2 cells = uRes / uTile, id = floor(vUv * cells), f = fract(vUv * cells);',
     '  vec2 c = (id + 0.5) / cells, d = 1.0 / cells;',
     '  float l = lumAt(c);',
-    // Edges between neighbouring tiles (a sharp line), plus a wider, softer halo for the glow.
     '  float e1 = length(vec2(lumAt(c + vec2(d.x, 0.0)) - lumAt(c - vec2(d.x, 0.0)), lumAt(c + vec2(0.0, d.y)) - lumAt(c - vec2(0.0, d.y))));',
     '  float e2 = length(vec2(lumAt(c + vec2(2.0 * d.x, 0.0)) - lumAt(c - vec2(2.0 * d.x, 0.0)), lumAt(c + vec2(0.0, 2.0 * d.y)) - lumAt(c - vec2(0.0, 2.0 * d.y))));',
     '  float edge = max(clamp(e1 * 2.2, 0.0, 1.0), clamp(e2 * 1.1, 0.0, 1.0) * 0.4);',
-    // Threshold + a few grey steps for the tiles' body, dimmer than the edges.
     '  float body = floor(l * uTone + 0.5) / uTone * step(uThresh, l);',
     '  float v = body * 0.3 + edge * uEdge;',
     '  v *= mix(0.2, 1.0, step(0.12, f.x) * step(0.12, f.y));',
     '  v *= uBright * (1.0 + uKick * 0.3);',
-    // Grit: grain that changes every frame, and scanlines.
     '  vec2 px = floor(vUv * uRes);',
     '  v *= 1.0 + (hash(px + floor(uTime * 60.0) * 1.37) - 0.5) * uGrain;',
     '  v *= 1.0 - uScan * mod(px.y, 2.0);',
@@ -117,9 +92,7 @@
     var rtOpts = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, depthBuffer: false, stencilBuffer: false };
     var rtA = new THREE.WebGLRenderTarget(W, H, rtOpts), rtB = new THREE.WebGLRenderTarget(W, H, rtOpts);
     var out = new THREE.WebGLRenderTarget(W, H, Object.assign({}, rtOpts, { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter }));
-    // The finished picture's colours are written as they should look (sRGB), so materials decode them.
     if (THREE.sRGBEncoding) out.texture.encoding = THREE.sRGBEncoding;
-    // Spectrum lines (js/spectrum.js) -> a small texture the shader reads: one row per line.
     var lines = window.SpectrumLines ? SpectrumLines(48, 6) : null, NB = 48;
     var specData = new Uint8Array(NB * 6 * 4), specTex = new THREE.DataTexture(specData, NB, 6, THREE.RGBAFormat);
     specTex.minFilter = specTex.magFilter = THREE.LinearFilter;
@@ -145,8 +118,6 @@
     scene.add(quad);
     var t = 0, kick = 0, scale = 1;
 
-    // While music plays the lines are its spectrum and nothing else. With none, they ease into slow
-    // looping pulses (the idle state), made up here.
     var idle = 1, rot = 0;
     function fillSpectrum(freq, playing, dt) {
       idle += ((playing ? 0 : 1) - idle) * Math.min(1, dt * 2.5);
@@ -169,7 +140,6 @@
         rtA.setSize(W, H); rtB.setSize(W, H); out.setSize(W, H);
         feed.uniforms.uAspect.value = a; grit.uniforms.uRes.value.set(W, H);
       },
-      // a: { freq: Uint8Array | null, level: 0..1, kick: bool, hue: 0..1, volume: 0..1, playing: bool }
       render: function (dt, a) {
         t += dt;
         kick = a.kick ? 1 : Math.max(0, kick - dt * 5);

@@ -1,6 +1,4 @@
-// The lighting deck under the stage: now-playing waveform, transport, volume and four dials.
-// Dials: drag up/down (or left/right), scroll, or use arrow keys. Double-click resets.
-// Pyro also fires when pressed (click/tap without dragging, or Enter/Space).
+// Stage: lighting deck (transport, volume, colour / strobe / pyro / haze dials).
 (function () {
   var Stage = window.Stage, SFX = window.SFX;
   var deck = document.getElementById('deck');
@@ -126,7 +124,6 @@
   });
 
   // ---------- Waveform ----------
-  // Live waveform once audio is on; until then a synthetic trace that breathes with the lights.
   var cv = document.getElementById('wave'), g = cv.getContext('2d');
   var buf = new Uint8Array(1024), visible = true, t0 = performance.now();
   function size() {

@@ -1,5 +1,3 @@
-/* Text motion from the prototype video: the title rolls like a ticker, the description erases then types out. */
-
 const reduce = () => window.__aocStill || matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export function rollTitle(el, html, dir = 1) {
@@ -17,11 +15,9 @@ export function rollTitle(el, html, dir = 1) {
   old.animate([{ transform: "translateY(0)", opacity: 1 }, { transform: `translateY(${-100 * dir}%)`, opacity: 0 }], opts)
     .finished.then(() => old.remove(), () => old.remove());
   nu.animate([{ transform: `translateY(${100 * dir}%)`, opacity: 0 }, { transform: "translateY(0)", opacity: 1 }], opts);
-  // drop stale items if someone mashes the arrows
   [...roll.querySelectorAll(".roll__item")].slice(0, -2).forEach((n) => n.remove());
 }
 
-// eraseFrom: "end" backspaces; "start" eats the old copy from its first letter, as in the final cut of the video
 export function typeText(el, text, { cps = 75, eraseCps = 260, eraseFrom = "end" } = {}) {
   const token = (el._typeToken = (el._typeToken || 0) + 1);
   el.setAttribute("aria-label", text);

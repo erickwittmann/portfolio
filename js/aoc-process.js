@@ -1,9 +1,4 @@
-// The build record on the Anatomy of a Computer case study (work/anatomy-of-a-computer.html, "Building It").
-// - Reads assets/work/anatomy/process/progress.json (the log of the critique-and-improve loop) and draws it
-//   in the page's own look: a facts row, the average-score line over a score matrix, the versions, the issues.
-// - Every number shown is worked out here from the JSON; nothing is typed into the page by hand.
-// - Screenshots go in .cs-media, so the page's lightbox opens them (Lightbox.bind, js/lightbox.js).
-// - No animation of its own, so prefers-reduced-motion needs nothing extra; the containers fade in with .reveal.
+// Anatomy of a Computer: build record (versions, scores, timeline) from progress.json.
 (function () {
   var root = document.querySelector('.aoc-process');
   if (!root || !window.fetch) return;
@@ -20,7 +15,6 @@
   }
   function one(x) { return (Math.round(x * 10) / 10).toFixed(1); }
   function avg(it) { var k = Object.keys(it.scores), s = 0; k.forEach(function (d) { s += it.scores[d]; }); return s / k.length; }
-  // Dates are read as written (the build's own time zone), not shifted to the visitor's.
   function parts(iso) { var m = /^(\d+)-(\d+)-(\d+)T(\d+):(\d+)/.exec(iso); return { y: +m[1], mo: +m[2] - 1, d: +m[3], h: +m[4], mi: m[5] }; }
   function day(iso) { var p = parts(iso); return MONTHS[p.mo] + ' ' + p.d + ', ' + p.y; }
   function clock(iso) { var p = parts(iso), h = p.h % 12 || 12; return h + ':' + p.mi + (p.h < 12 ? ' AM' : ' PM'); }
@@ -29,9 +23,7 @@
     if (p.y === q.y && p.mo === q.mo) return MONTHS[p.mo] + ' ' + p.d + (p.d === q.d ? '' : '–' + q.d) + ', ' + p.y;
     return day(a) + ' – ' + day(b);
   }
-  // Score → strength of white. Most scores sit between 6 and 10, so the curve is steep enough to tell them apart.
   function tone(s) { return Math.max(0.05, Math.pow(s / 10, 2.5)).toFixed(3); }
-  // Change in the average from the version before, compared as shown (one decimal).
   function change(a, b) {
     if (b == null) return '';
     var d = Math.round(a * 10) - Math.round(b * 10);
@@ -95,7 +87,6 @@
     pl.setAttribute('points', avgs.map(function (a, i) { return (i + 0.5) + ',' + (10 - a); }).join(' '));
     svg.appendChild(pl);
     plot.appendChild(svg);
-    // Labels: the start, the peak, the biggest drop between two versions, and the end.
     var drop = 1; for (var k = 1; k < N; k++) if (avgs[k] - avgs[k - 1] < avgs[drop] - avgs[drop - 1]) drop = k;
     var marks = [[0, one(avgs[0]), 'below'], [peak, one(avgs[peak]) + ' peak', 'above'], [N - 1, one(avgs[N - 1]), 'above']];
     if (avgs[drop] < avgs[drop - 1]) marks.push([drop, one(avgs[drop]) + ' · ' + its[drop].label, 'below']);
@@ -137,14 +128,12 @@
     });
     table.appendChild(tbody);
 
-    // Legend for the squares, drawn with the same scale.
     var legend = el('p', 'aoc-legend'); legend.setAttribute('aria-hidden', 'true');
     legend.appendChild(el('span', null, '0'));
     [2, 4, 6, 8, 10].forEach(function (v) { var q = el('i'); q.style.setProperty('--s', tone(v)); q.title = String(v); legend.appendChild(q); });
     legend.appendChild(el('span', null, '10'));
     table.parentNode.parentNode.insertBefore(legend, table.parentNode);
 
-    // Found vs fixed, per version, under the same columns.
     var tfoot = el('tfoot');
     [['Issues found', 'found'], ['Issues fixed', 'fixed']].forEach(function (r) {
       var tr = el('tr'), th = el('th', null, r[0]); th.scope = 'row'; tr.appendChild(th);
@@ -215,7 +204,6 @@
       });
       detail.appendChild(shots);
       if (window.Lightbox && Lightbox.bind) Lightbox.bind(detail);
-      // Keep the picked version in view inside the strip (sideways only; the page itself doesn't move).
       var p = picks[i].parentNode, sc = strip.parentNode;
       sc.scrollLeft = p.offsetLeft - (sc.clientWidth - p.offsetWidth) / 2;
       if (fromMatrix) {

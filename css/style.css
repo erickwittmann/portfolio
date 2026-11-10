@@ -1,28 +1,21 @@
-/* ==========================================================================
-   Erick Wittmann — site styles
-   The look: white paper, black ink, and the pixel art of the favicon (assets/px-flower.svg).
-   Mono type (IBM Plex Mono), a pixel face for small labels (Silkscreen), stepped "pixel" corners on
-   frames (.px-frame) and dashed pixel underlines on links. The nav, the footer and the media grid
-   stay black. stage.html (the archived 3D stage) uses the dark theme: html.theme-dark.
-   ========================================================================== */
 :root {
   --bg:#fff; --fg:#000;
-  --text:#2b2b2b;                          /* body copy */
+  --text:#2b2b2b;
   --dim:#6f6f6f; --faint:#a3a3a3;
   --line:rgba(0,0,0,.12); --line-strong:rgba(0,0,0,.45);
-  --paper:#f3f3f1;                         /* empty media frames, placeholders */
-  --ink-rgb:0 0 0;                         /* strengths of ink: rgb(var(--ink-rgb) / .3) */
-  --sun:#fff64f;                           /* the portrait's yellow */
-  --font:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
-  --font-display:"Instrument Sans","Helvetica Neue",Helvetica,Arial,sans-serif;   /* the nav's tracked caps */
-  --font-px:"Silkscreen","IBM Plex Mono",ui-monospace,monospace;                 /* small pixel labels */
-  --gutter:9.5vw;                          /* shared left/right edge: nav, sections */
+  --paper:#f3f3f1;
+  --ink-rgb:0 0 0;
+  --sun:#fff64f;
+  --font:"Instrument Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --font-display:"Instrument Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --font-px:"Instrument Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --gutter:9.5vw;
   --nav-h:clamp(56px,5.4vw,88px);
   --ease:cubic-bezier(.22,.61,.36,1);
-  --p:6px;                                 /* one "pixel" of a stepped corner */
+  --p:6px;
 }
 @media (max-width:760px) { :root { --gutter:16px; --nav-h:84px; } }
-/* Ink-on-black areas: the nav, the footer, the reels drawer, and stage.html as a whole. */
 :root.theme-dark, .nav, footer, .reels, .aoc-start, .hover-sound {
   --bg:#000; --fg:#fff; --text:#c9c9c9; --dim:#8c8c8c; --faint:#4a4a4a;
   --line:rgba(255,255,255,.14); --line-strong:rgba(255,255,255,.45); --paper:#0b0b0b; --ink-rgb:255 255 255;
@@ -30,47 +23,41 @@
 
 * { box-sizing:border-box; }
 html { background:var(--bg); scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
-body { margin:0; background:var(--bg); color:var(--fg); font-family:var(--font); font-size:15px; line-height:1.6;
+body { margin:0; background:var(--bg); color:var(--fg); font-family:var(--font); font-size:16px; line-height:1.55;
   -webkit-font-smoothing:antialiased; }
 :root.theme-dark body { font-family:var(--font-display); font-size:16px; line-height:1.5; }
 a { color:inherit; text-decoration:none; }
 button { font:inherit; color:inherit; }
 img, video, canvas { display:block; max-width:100%; }
 ::selection { background:var(--sun); color:#000; }
-.eyebrow { margin:0 0 18px; font-family:var(--font-px); font-size:10px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
+.eyebrow { margin:0 0 18px; font-family:var(--font-px); font-size:11px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
 .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
 
 /* ---------- Pixel kit ---------- */
-/* Stepped corners, two pixels deep (--p each), like the favicon's ring. */
 :root { --px-clip:polygon(
   0 calc(var(--p) * 2), var(--p) calc(var(--p) * 2), var(--p) var(--p), calc(var(--p) * 2) var(--p), calc(var(--p) * 2) 0,
   calc(100% - var(--p) * 2) 0, calc(100% - var(--p) * 2) var(--p), calc(100% - var(--p)) var(--p), calc(100% - var(--p)) calc(var(--p) * 2), 100% calc(var(--p) * 2),
   100% calc(100% - var(--p) * 2), calc(100% - var(--p)) calc(100% - var(--p) * 2), calc(100% - var(--p)) calc(100% - var(--p)), calc(100% - var(--p) * 2) calc(100% - var(--p)), calc(100% - var(--p) * 2) 100%,
   calc(var(--p) * 2) 100%, calc(var(--p) * 2) calc(100% - var(--p)), var(--p) calc(100% - var(--p)), var(--p) calc(100% - var(--p) * 2), 0 calc(100% - var(--p) * 2)); }
 .px-frame, .cover, .cs-hero, .cs-media, .lb-frame { clip-path:var(--px-clip); }
-/* The favicon's flower as a glyph, in the current text colour. */
 .px-flower { display:inline-block; width:1em; height:1em; flex:none; vertical-align:-.12em; background:currentColor;
   -webkit-mask:url(../assets/px-flower.svg) center / contain no-repeat; mask:url(../assets/px-flower.svg) center / contain no-repeat; }
-/* Dashed pixel underline that fills in solid on hover. */
 .px-link { background:linear-gradient(90deg, currentColor 50%, transparent 0) 0 100% / 4px 2px repeat-x; padding-bottom:3px; transition:color .2s; }
 .px-link:hover, .px-link:focus-visible { background-image:linear-gradient(currentColor, currentColor); outline:none; }
-/* A row of pixels as a divider. */
 .px-rule { height:2px; margin:0; border:0; background:linear-gradient(90deg, var(--fg) 50%, transparent 0) 0 0 / 6px 2px repeat-x; }
 .rule { height:1px; margin:0; border:0; background:var(--line); }
 
-/* ---------- Nav: full-width black bar, wide-tracked caps ---------- */
+/* ---------- Nav ---------- */
 .nav { position:fixed; top:0; left:0; right:0; z-index:30; background:#000; color:#fff; display:flex; align-items:center;
   height:calc(var(--nav-h) + env(safe-area-inset-top,0px)); padding:env(safe-area-inset-top,0px) var(--gutter) 0; font-family:var(--font-display); }
 .nav ul { list-style:none; margin:0; padding:0; width:100%; display:flex; justify-content:space-between; align-items:center; gap:24px; }
 .nav a { --track:.62em; position:relative; display:inline-block; font-size:clamp(12px,1.15vw,22px); font-weight:600; line-height:1;
-  letter-spacing:var(--track); margin-right:calc(-1 * var(--track)); /* cancel trailing tracking so the last letter lines up with the edge */
+  letter-spacing:var(--track); margin-right:calc(-1 * var(--track));
   text-transform:uppercase; white-space:nowrap; transition:opacity .2s; }
-/* The name carries the favicon's flower, which turns on hover. */
 .nav .nav-name a::before { content:""; display:inline-block; width:1.15em; height:1.15em; margin:0 .9em 0 0; vertical-align:-.2em; background:currentColor;
   -webkit-mask:url(../assets/px-flower.svg) center / contain no-repeat; mask:url(../assets/px-flower.svg) center / contain no-repeat;
   transition:transform .6s steps(8); }
 .nav .nav-name a:hover::before { transform:rotate(180deg); }
-/* Hover underline: a row of pixels that steps in from the left. Stops short of the trailing tracking. */
 .nav a::after { content:""; position:absolute; left:0; right:var(--track); bottom:-.5em; height:2px;
   background:linear-gradient(90deg, currentColor 50%, transparent 0) 0 0 / 4px 2px repeat-x;
   clip-path:inset(0 100% 0 0); transition:clip-path .4s steps(10); }
@@ -84,19 +71,13 @@ img, video, canvas { display:block; max-width:100%; }
   .nav li:not(.nav-name) { flex:1; text-align:center; }
 }
 
-/* ---------- Homepage: splash grid ---------- */
-/* The media grid fills the first screen under the nav, short of the bottom so the white strip and
-   the top of the portrait show: an invitation to scroll. js/intro.js (splash mode) builds it. */
+/* ---------- Homepage ---------- */
 .splash { position:relative; margin-top:calc(var(--nav-h) + env(safe-area-inset-top,0px));
   height:calc(100vh - var(--nav-h)); height:calc(100svh - var(--nav-h)); min-height:420px; }
 .intro-pin { position:absolute; inset:0; overflow:hidden; background:#000; }
 html.is-gated .intro-pin { cursor:pointer; }
 
-/* ---------- Homepage: hello strip (the about bar from the mock-up, Figma frame 42) ---------- */
-/* A white strip that overlaps the bottom of the grid by --overlap. The portrait's yellow disc is
-   centred on the strip's top edge, half over the grid; the copy sits just under that edge.
-   While the opening screen is up (html.is-gated) the strip waits below, hidden; entering slides it
-   up into place as the bar closes, so the about section only shows once the visitor has clicked in. */
+/* ---------- Homepage ---------- */
 .hello { --overlap:clamp(150px,23vh,260px); --disc:clamp(220px,26vw,480px);
   position:relative; z-index:2; margin-top:calc(-1 * var(--overlap)); background:var(--bg);
   padding:0 var(--gutter) clamp(44px,5vw,90px);
@@ -105,11 +86,16 @@ html.is-gated .hello { transform:translateY(32vh); opacity:0; pointer-events:non
 .hello-in { display:grid; grid-template-columns:var(--disc) minmax(0,1fr); column-gap:clamp(36px,6.5vw,120px); align-items:start; }
 .hello .portrait { width:var(--disc); margin-top:calc(var(--disc) / -2); }
 .hello-copy { padding-top:clamp(28px,3.6vw,60px); }
-.hello h2 { margin:0 0 clamp(22px,2.6vw,42px); font-size:clamp(17px,1.45vw,26px); font-weight:700; line-height:1.2; letter-spacing:.01em; }
-.hello em { font-style:normal; }
-.hello-lead { margin:0 0 clamp(8px,.9vw,14px); font-size:clamp(17px,1.55vw,28px); font-weight:400; line-height:1.35; letter-spacing:.01em; }
-.hello-lead b { font-weight:700; }
-.hello-links { display:flex; flex-wrap:wrap; gap:6px clamp(18px,2.2vw,40px); font-size:clamp(12px,1.05vw,17px); color:var(--dim); }
+.hello h2 { margin:0 0 clamp(20px,2.4vw,40px); font-size:clamp(18px,1.55vw,28px); font-weight:400; line-height:1.2; letter-spacing:-.005em; }
+.hello h2 b, .hello-lead b { font-weight:700; }
+.hello-lead { margin:0 0 clamp(14px,1.6vw,26px); font-size:clamp(18px,1.55vw,28px); font-weight:400; line-height:1.3; letter-spacing:-.005em; }
+.hello-school { display:inline; transition:color .2s; }
+.hello-school::before { content:""; display:block; }
+.nowrap { white-space:nowrap; }
+.hello-arrow { display:inline-block; margin-left:1.4em; transition:transform .45s cubic-bezier(.34,1.56,.64,1); }
+.hello-school:hover .hello-arrow, .hello-school:focus-visible .hello-arrow { transform:translateX(.3em); }
+.hello-school:focus-visible { outline:1px dashed var(--fg); outline-offset:4px; }
+.hello-links { display:flex; flex-wrap:wrap; gap:6px clamp(18px,2.2vw,32px); font-size:clamp(14px,1.05vw,17px); color:var(--dim); }
 .hello-links a { padding-bottom:2px; transition:color .2s; }
 .hello-links a:hover, .hello-links a:focus-visible { color:var(--fg); outline:none;
   background:linear-gradient(90deg, currentColor 50%, transparent 0) 0 100% / 4px 2px repeat-x; }
@@ -121,19 +107,16 @@ html.is-gated .hello { transform:translateY(32vh); opacity:0; pointer-events:non
 }
 @media (prefers-reduced-motion:reduce) { .hello { transition:opacity .3s; } html.is-gated .hello { transform:none; } }
 
-/* ---------- Portrait: yellow disc, cursor pixel trail, cut-out (home + about page) ---------- */
+/* ---------- Portrait ---------- */
 .portrait { position:relative; margin:0; aspect-ratio:1; max-width:560px; width:100%; justify-self:center;
   border-radius:50%; background:var(--sun); touch-action:pan-y; }
 .pixel-trail { position:absolute; inset:0; width:100%; height:100%; border-radius:50%; image-rendering:pixelated; }
-/* Taller than the disc and open at the top: only the bottom is rounded to the circle (radius = half
-   the width, i.e. 50% / (116% height) = 43.1% vertically), so the head can rise past the rim. */
 .portrait .cutout { position:absolute; left:0; right:0; bottom:0; top:-16%; z-index:1; overflow:hidden;
   border-radius:0 0 50% 50% / 0 0 43.1% 43.1%; pointer-events:none; }
 .portrait img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:50% 100%; }
-/* Pixel words (js/pixel-trail.js): a lit letter becomes a solid block of colour the size of its box. */
 .px-ch.is-px { color:transparent; text-shadow:none; }
 
-/* ---------- Homepage: selected works ---------- */
+/* ---------- Homepage ---------- */
 .works { padding:clamp(40px,6vw,96px) var(--gutter) clamp(110px,12vw,200px); }
 .works-head { display:grid; grid-template-columns:1fr auto; align-items:end; gap:10px 24px; margin-bottom:clamp(56px,7vw,120px); }
 .works-head h2 { display:flex; align-items:center; gap:.55em; margin:0; font-size:clamp(22px,2.4vw,40px); font-weight:700; letter-spacing:-.01em; }
@@ -147,9 +130,8 @@ html.is-gated .hello { transform:translateY(32vh); opacity:0; pointer-events:non
 .cover .art, .cover img, .cover video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform 1.1s var(--ease); }
 .cover img, .cover video { z-index:1; }
 .project:hover .cover img, .project:hover .cover video, .project:hover .cover .art { transform:scale(1.035); }
-/* The corner tag: a black pixel block with an arrow that steps in on hover. */
 .cover-tag { position:absolute; z-index:3; right:0; bottom:0; display:flex; align-items:center; gap:10px; padding:10px 14px 9px;
-  background:#000; color:#fff; font-family:var(--font-px); font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+  background:#000; color:#fff; font-family:var(--font-px); font-size:11px; letter-spacing:.12em; text-transform:uppercase;
   transform:translateY(101%); transition:transform .35s steps(5); }
 .project:hover .cover-tag, .project:focus-visible .cover-tag { transform:none; }
 .project-meta { display:grid; grid-template-columns:auto 1fr auto; gap:4px 16px; align-items:baseline; padding-top:16px; }
@@ -161,7 +143,6 @@ html.is-gated .hello { transform:translateY(32vh); opacity:0; pointer-events:non
 .project:hover .p-title > span, .project:focus-visible .p-title > span { background:linear-gradient(currentColor, currentColor) 0 100% / 100% 2px no-repeat; }
 .project:focus-visible { outline:none; }
 .project:focus-visible .cover { outline:2px solid var(--fg); outline-offset:4px; }
-/* Desktop: an asymmetric 12-column spread with plenty of white between the pieces. */
 @media (min-width:900px) {
   .projects { grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:clamp(20px,2.6vw,44px); row-gap:0; }
   .project.p1 { grid-column:1 / span 8; grid-row:1; }
@@ -169,28 +150,25 @@ html.is-gated .hello { transform:translateY(32vh); opacity:0; pointer-events:non
   .project.p3 { grid-column:2 / span 6; grid-row:2; margin-top:clamp(110px,13vw,240px); }
   .project.p4 { grid-column:9 / span 4; grid-row:2; align-self:end; margin-bottom:clamp(40px,6vw,110px); }
 }
-/* Phones and tablets: one column, every other card narrower and stepped to the right. */
 @media (max-width:899px) { .project.p2, .project.p4 { width:74%; margin-left:auto; } }
-/* Placeholder cover art, under the real media (removed if a file is missing). */
 .art-reel { background:repeating-linear-gradient(135deg,#e9e9e6 0 2px,var(--paper) 2px 14px); }
 .tile .art-reel { background:repeating-linear-gradient(135deg,#141414 0 2px,#0a0a0a 2px 14px); }
 
 /* ---------- Footer ---------- */
 footer { position:relative; background:var(--bg); color:var(--dim); padding:clamp(56px,6vw,88px) var(--gutter) calc(48px + env(safe-area-inset-bottom,0px));
   display:flex; flex-wrap:wrap; justify-content:space-between; gap:32px; font-size:13px; }
-footer h4 { margin:0 0 14px; font-family:var(--font-px); font-size:10px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:var(--fg); }
+footer h4 { margin:0 0 14px; font-family:var(--font-px); font-size:11px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:var(--fg); }
 footer a { display:block; margin-bottom:8px; transition:color .2s; }
 footer a:hover { color:var(--fg); }
 footer .brand { font-family:var(--font-display); font-size:13px; font-weight:600; letter-spacing:.3em; text-transform:uppercase; color:var(--fg); }
 footer .credit { display:block; margin-top:10px; font-size:11px; color:var(--faint); max-width:34ch; }
 footer .credit a { display:inline; margin:0; text-decoration:underline; text-underline-offset:2px; }
 
-/* ---------- Easter egg: recent reels (js/reels.js) ----------
-   The flower by the footer's name turns on hover; clicking it opens a drawer of recent Instagram reels. */
+/* ---------- Easter egg ---------- */
 .px-egg { display:inline-flex; align-items:center; gap:12px; margin:0 0 18px; padding:0; border:0; background:none; color:var(--fg); cursor:pointer; }
 .px-egg .px-flower { font-size:34px; transition:transform .9s steps(12); }
 .px-egg:hover .px-flower, .px-egg:focus-visible .px-flower, .px-egg[aria-expanded="true"] .px-flower { transform:rotate(360deg); }
-.px-egg-hint { font-family:var(--font-px); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim);
+.px-egg-hint { font-family:var(--font-px); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim);
   opacity:0; transform:translateX(-6px); transition:opacity .3s, transform .3s steps(3); }
 .px-egg:hover .px-egg-hint, .px-egg:focus-visible .px-egg-hint { opacity:1; transform:none; }
 .px-egg:focus-visible { outline:1px dashed var(--line-strong); outline-offset:6px; }
@@ -202,7 +180,7 @@ footer .credit a { display:inline; margin:0; text-decoration:underline; text-und
 .reels-head { display:flex; flex-wrap:wrap; align-items:baseline; gap:12px 24px; margin-bottom:clamp(24px,3vw,40px); }
 .reels-head h3 { display:flex; align-items:center; gap:.6em; margin:0; font-size:clamp(18px,1.6vw,26px); font-weight:700; }
 .reels-head p { margin:0; color:var(--dim); }
-.reels-close { margin-left:auto; padding:8px 14px; border:0; background:#fff; color:#000; font-family:var(--font-px); font-size:10px; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; }
+.reels-close { margin-left:auto; padding:8px 14px; border:0; background:#fff; color:#000; font-family:var(--font-px); font-size:11px; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; }
 .reels-close:hover, .reels-close:focus-visible { background:var(--sun); outline:none; }
 .reels-track { display:flex; gap:16px; overflow-x:auto; overscroll-behavior-x:contain; padding-bottom:12px; scrollbar-width:thin; }
 .reels-track > * { flex:0 0 auto; }
@@ -213,24 +191,20 @@ footer .credit a { display:inline; margin:0; text-decoration:underline; text-und
 .reels-btn:hover, .reels-btn:focus-visible { background:var(--sun); outline:none; }
 @media (prefers-reduced-motion:reduce) { .reels.is-in { animation:none; } .px-egg .px-flower, .nav .nav-name a::before { transition:none; } }
 
-/* ---------- Case study pages (work/*.html) ---------- */
+/* ---------- Case study pages ---------- */
 .case main { padding-top:calc(var(--nav-h) + env(safe-area-inset-top,0px)); }
 .cs-head { padding:clamp(72px,9vw,140px) var(--gutter) clamp(48px,5vw,72px); text-align:center; }
-.cs-head h1 { margin:0 0 clamp(44px,5vw,76px); font-size:clamp(34px,5.6vw,92px); font-weight:700; line-height:1.02; letter-spacing:-.04em; }
+.cs-head h1 { margin:0 0 clamp(44px,5vw,76px); font-size:clamp(34px,5.6vw,92px); font-weight:700; line-height:1.02; letter-spacing:-.02em; }
 .cs-facts { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:24px; margin:0; padding-top:20px; border-top:1px solid var(--line); text-align:left; }
-.cs-facts dt { margin-bottom:6px; font-family:var(--font-px); font-size:10px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
+.cs-facts dt { margin-bottom:6px; font-family:var(--font-px); font-size:11px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
 .cs-facts dd { margin:0; font-size:15px; }
-/* Media frames hold their aspect ratio (--ar) while loading; until a file exists they show a labelled placeholder. */
 .cs-hero, .cs-media { position:relative; margin:0; aspect-ratio:var(--ar,16 / 9); overflow:hidden;
   background:repeating-linear-gradient(135deg,#ebebe8 0 2px,var(--paper) 2px 14px); }
 .cs-hero { margin:0 var(--gutter) clamp(80px,10vw,150px); }
 .cs-hero img, .cs-hero video, .cs-media img, .cs-media video { position:absolute; inset:0; z-index:1; width:100%; height:100%; object-fit:cover; }
 .cs-media--light { background:#e8e8e6; }
 .cs-media--light img { object-fit:contain; }
-/* A diagram in a photo frame (e.g. a floor plan): shown complete on a light background, not cropped. */
 .cs-media img.is-whole { object-fit:contain; background:#ececec; }
-/* Carousels (js/carousel.js): images crossfade, the visible one drifts in very slightly, and a thin
-   bar along the bottom fills up until the next one arrives. */
 .cs-media.is-carousel { cursor:pointer; }
 .cs-media.is-carousel img, .cs-media.is-carousel video { opacity:0; transition:opacity 1.4s var(--ease); }
 .cs-media.is-carousel img.is-on, .cs-media.is-carousel video.is-on { opacity:1; z-index:2; animation:cs-drift calc(var(--slide,6s) + 1.4s) linear both; }
@@ -243,9 +217,8 @@ footer .credit a { display:inline; margin:0; text-decoration:underline; text-und
 .cs-media--light .cs-progress i { background:rgba(0,0,0,.45); }
 .cs-media.is-paused .cs-progress i, .cs-media.is-paused .is-on { animation-play-state:paused; }
 @media (prefers-reduced-motion:reduce) { .cs-media.is-carousel .is-on { animation:none; } .cs-progress { display:none; } }
-.ph-label { position:absolute; left:16px; bottom:14px; font-family:var(--font-px); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); }
+.ph-label { position:absolute; left:16px; bottom:14px; font-family:var(--font-px); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); }
 .cs-media--light .ph-label { color:#9a9a9a; }
-/* Rows: media bleeds to the left edge, text sits in the right column; hairlines between rows. */
 .cs-row { display:grid; grid-template-columns:minmax(0,7fr) minmax(0,5fr); border-top:1px solid var(--line); }
 .cs-row:last-of-type { border-bottom:1px solid var(--line); }
 .cs-text { align-self:start; padding:clamp(36px,4.5vw,72px) var(--gutter) clamp(40px,4vw,64px) clamp(32px,4.5vw,80px); }
@@ -254,7 +227,7 @@ footer .credit a { display:inline; margin:0; text-decoration:underline; text-und
 .cs-text p { margin:0 0 1em; max-width:40ch; color:var(--text); }
 .next-case { display:block; padding:clamp(88px,11vw,170px) var(--gutter); background:linear-gradient(90deg, var(--fg) 50%, transparent 0) 0 0 / 6px 2px repeat-x; }
 .next-case .eyebrow { display:block; }
-.next-title { display:block; font-size:clamp(30px,5vw,80px); font-weight:700; line-height:1.02; letter-spacing:-.04em; }
+.next-title { display:block; font-size:clamp(30px,5vw,80px); font-weight:700; line-height:1.02; letter-spacing:-.02em; }
 .next-title span { display:inline-block; transition:transform .5s var(--ease); }
 .next-case:hover .next-title span { transform:translateX(.25em); }
 @media (max-width:760px) {
@@ -264,18 +237,12 @@ footer .credit a { display:inline; margin:0; text-decoration:underline; text-und
 }
 
 /* ---------- Scroll reveals ---------- */
-/* Uses the separate `translate` property, so `transform` stays free for the cursor tilt (.tilt). */
 .reveal { opacity:0; translate:0 24px; transition:opacity 1s var(--ease), translate 1s var(--ease); }
 .reveal.is-in { opacity:1; translate:none; }
 
-/* ---------- Intro: modular media grid (js/intro.js; on stage.html also the LED screen) ---------- */
-/* Laid out at the size of the window; js/hero.js warps it onto the 3D screen with a matrix3d
-   transform from its top-left corner. The 6px padding reads as the screen's bezel. */
+/* ---------- Intro ---------- */
 .intro-frame { position:absolute; z-index:1; left:0; top:0; width:100%; height:100%; padding:6px; overflow:hidden;
   background:#000; transform-origin:0 0; will-change:transform; }
-/* will-change: the grid is drawn once at full size and then only scaled while the camera moves.
-   Without it Chrome re-drew every tile at each new size, every frame (measured on a 2x screen:
-   ~45 dropped frames per pull-back). */
 .intro-grid { display:grid; gap:6px; width:100%; height:100%; contain:strict; }
 .tile { position:relative; display:block; min-width:0; min-height:0; overflow:hidden; background:#0b0b0b;
   opacity:0; transform:scale(.97); transition:opacity .9s var(--ease) var(--d,0ms), transform .9s var(--ease) var(--d,0ms); }
@@ -283,13 +250,11 @@ footer .credit a { display:inline; margin:0; text-decoration:underline; text-und
 .tile > img, .tile > video, .tile > canvas, .tile > .art { position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
   transition:transform 1.2s var(--ease); }
 .tile.is-focus > img, .tile.is-focus > video, .tile.is-focus > canvas, .tile.is-focus > .art { transform:scale(1.05); }
-/* A piece whose shape is too far from its tile's (js/intro.js guardFit) is shown whole, not cropped. */
 .tile--fit > img, .tile--fit > video, .tile--fit > canvas { object-fit:contain; }
 .tile-cap { position:absolute; left:12px; bottom:10px; right:12px; font-size:10px; font-weight:500; letter-spacing:.24em; text-transform:uppercase;
   font-family:var(--font-px); letter-spacing:.12em; color:#fff; mix-blend-mode:difference; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   opacity:0; transform:translateY(6px); transition:opacity .4s, transform .4s var(--ease); }
 .tile.is-focus .tile-cap { opacity:1; transform:none; }
-/* The one place the name appears: a quiet tile with socials and (optionally) a portrait. */
 .tile--text { display:flex; flex-direction:column; justify-content:space-between; gap:12px; background:#000;
   padding:clamp(12px,1.3vw,22px); outline:1px solid var(--line); outline-offset:-1px; }
 .tile--text > div { position:relative; z-index:1; }
@@ -299,7 +264,6 @@ footer .credit a { display:inline; margin:0; text-decoration:underline; text-und
 .tile--text.has-photo::before { content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
   background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 38%,rgba(0,0,0,0) 55%,rgba(0,0,0,.7) 100%); }
 .ic-name { font-size:12px; font-weight:600; letter-spacing:.3em; text-transform:uppercase; white-space:nowrap; }
-/* The name tile can land anywhere, at any size: tighten the type when it is narrow. */
 .tile--text { container-type:inline-size; }
 @container (max-width:220px) { .ic-name { font-size:11px; letter-spacing:.14em; } .ic-role, .ic-links, .ic-scroll { letter-spacing:.12em; } }
 .ic-role { margin-top:6px !important; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--dim); }
@@ -309,7 +273,6 @@ footer .credit a { display:inline; margin:0; text-decoration:underline; text-und
 .ic-links a, .ic-scroll { color:var(--dim); transition:color .2s; }
 .ic-links a:hover, .ic-scroll:hover { color:#fff; }
 .ic-scroll { font-size:10px; letter-spacing:.22em; text-transform:uppercase; }
-/* Layout picker badge: local preview only, while no layout is locked (js/intro.js). */
 .seed-badge { position:fixed; z-index:40; right:12px; bottom:12px; padding:7px 11px; border:1px solid var(--line); border-radius:999px;
   background:rgba(0,0,0,.75); color:#fff; font-size:11px; letter-spacing:.06em; cursor:pointer; }
 
@@ -321,23 +284,18 @@ footer .credit a { display:inline; margin:0; text-decoration:underline; text-und
   .project:hover .art, .project:hover .cover img { transform:none; }
 }
 
-/* ---------- Little level bars (now playing, sound-on-hover badge) ---------- */
+/* ---------- Little level bars ---------- */
 .sound-bars { display:flex; align-items:flex-end; gap:2px; height:10px; }
 .sound-bars i { width:2px; height:100%; background:currentColor; transform-origin:bottom; animation:sound-bar .9s ease-in-out infinite alternate; }
 .sound-bars i:nth-child(2) { animation-delay:-.3s; } .sound-bars i:nth-child(3) { animation-delay:-.6s; }
 @keyframes sound-bar { from { transform:scaleY(.25); } to { transform:scaleY(1); } }
 @media (prefers-reduced-motion:reduce) { .sound-bars i { animation:none; transform:scaleY(.6); } }
 
-/* ---------- Cursor tilt below the stage (js/tilt.js) ----------
-   The sections under the stage lean toward the cursor and drift a little, each by its own depth
-   (--d), the same way the stage camera sways, so the page reads as one space. Only a transform:
-   handled by the compositor, no layout. Off for touch screens and reduced motion. */
+/* ---------- Cursor tilt below the stage ---------- */
 .tilt { transform:perspective(1400px) translate3d(calc(var(--tx,0) * 1px), calc(var(--ty,0) * 1px), 0)
   rotateX(calc(var(--rx,0) * 1deg)) rotateY(calc(var(--ry,0) * 1deg)); will-change:transform; }
 
-/* ---------- Case study: format grid + spec sheet (work/boiler-room.html) ---------- */
-/* Format grid: a full-width piece on top, then a row where every piece is the same height
-   whatever its shape (each grows by its width/height ratio --r). Small spec labels, tech-rider style. */
+/* ---------- Case study ---------- */
 .fmt, .cs-spec { padding:clamp(56px,7vw,110px) var(--gutter); border-top:1px solid var(--line); }
 .fmt-head { display:grid; grid-template-columns:auto 1fr; align-items:baseline; column-gap:24px; margin-bottom:clamp(28px,3.5vw,52px); }
 .fmt-head .cs-num { margin:0; }
@@ -353,15 +311,13 @@ footer .credit a { display:inline; margin:0; text-decoration:underline; text-und
 .fmt-cap b { font-weight:600; color:rgba(255,255,255,.55); }
 .fmt-cap span { margin-left:auto; letter-spacing:.14em; color:rgba(255,255,255,.7); white-space:nowrap; }
 
-/* Spec sheet: three columns under one rule */
 .cs-spec-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(24px,3vw,48px); padding-top:22px; border-top:1px solid var(--line); }
-.cs-spec-grid h3 { margin:0 0 14px; font-family:var(--font-px); font-size:10px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
+.cs-spec-grid h3 { margin:0 0 14px; font-family:var(--font-px); font-size:11px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
 .cs-spec-grid p { margin:0 0 1em; max-width:38ch; color:var(--text); }
 .cs-list { list-style:none; margin:0; padding:0; }
 .cs-list li { display:flex; justify-content:space-between; gap:16px; padding:10px 0; border-bottom:1px solid var(--line); }
 .cs-list li:first-child { padding-top:0; }
 .cs-list li span { font-size:13px; color:var(--dim); white-space:nowrap; }
-/* A list whose rows are links (e.g. artists → Spotify): the whole row is the link. */
 .cs-list--links a { display:flex; flex:1; justify-content:space-between; gap:16px; color:inherit; text-decoration:none; }
 .cs-list--links a span { transition:color .3s var(--ease); }
 .cs-list--links a:hover span, .cs-list--links a:focus-visible span { color:var(--fg); }
@@ -372,8 +328,7 @@ footer .credit a { display:inline; margin:0; text-decoration:underline; text-und
   .cs-spec-grid { grid-template-columns:1fr; }
 }
 
-/* ---------- Sound-on-hover badge (js/hover-audio.js) ---------- */
-/* Top-right of each video: quiet until hovered, then says what's happening. */
+/* ---------- Sound-on-hover badge ---------- */
 [data-hover-audio] { cursor:pointer; }
 .hover-sound { position:absolute; z-index:4; top:10px; right:10px; display:flex; align-items:center; gap:8px; padding:6px 10px;
   font-size:9px; font-weight:600; letter-spacing:.24em; text-transform:uppercase; color:#fff; pointer-events:none;
@@ -381,6 +336,7 @@ footer .credit a { display:inline; margin:0; text-decoration:underline; text-und
   opacity:0; transform:translateY(-4px); transition:opacity .3s var(--ease), transform .3s var(--ease); }
 [data-hover-audio]:hover .hover-sound, .has-sound .hover-sound, .needs-click .hover-sound, .is-touch .hover-sound { opacity:1; transform:none; }
 .hover-sound .sound-bars i { animation-play-state:paused; transform:scaleY(.25); }
+[data-hover-audio].hover-wait:hover .hover-sound { opacity:0; }
 .has-sound .hover-sound .sound-bars i { animation-play-state:running; }
 .hover-sound .hs-label::after { content:"Sound on hover"; }
 .has-sound .hover-sound .hs-label::after { content:"Sound on"; }
@@ -390,9 +346,7 @@ footer .credit a { display:inline; margin:0; text-decoration:underline; text-und
 .is-touch.has-sound .hover-sound .hs-label::after { content:"Tap to mute"; }
 .is-touch .hover-sound { opacity:.85; }
 
-/* ---------- Focus view (js/lightbox.js) ----------
-   Click a photo/video on a case page: it grows from its spot to ~78% of the screen, the page fades
-   to paper behind it. The frame's size/position is animated by the script. */
+/* ---------- Focus view ---------- */
 .lb-able { cursor:zoom-in; }
 .lb-able:focus-visible { outline:2px solid var(--fg); outline-offset:4px; }
 .is-lb-source > img { visibility:hidden; }
@@ -407,7 +361,7 @@ html.lb-lock, html.lb-lock body { overflow:hidden; }
 .lb-frame.is-whole { background:#ececec; }
 .lb-frame.is-whole > img { object-fit:contain; }
 .lb-cap { position:fixed; left:0; right:0; bottom:max(14px, 4.5vh); margin:0; padding:0 var(--gutter); text-align:center;
-  font-family:var(--font-px); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim);
+  font-family:var(--font-px); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim);
   opacity:0; transform:translateY(6px); transition:opacity .4s var(--ease), transform .4s var(--ease); }
 .lb-close { position:fixed; top:max(14px, 3vh); right:max(14px, 3vw); width:44px; height:44px; border:0;
   background:var(--fg); color:var(--bg); font-family:var(--font-px); font-size:18px; line-height:1; cursor:pointer;
@@ -417,40 +371,31 @@ html.lb-lock, html.lb-lock body { overflow:hidden; }
 .lb.is-open .lb-cap { opacity:1; transform:none; transition-delay:.25s; }
 @media (prefers-reduced-motion:reduce) { .lb-back, .lb-cap, .lb-close { transition-duration:.01s; } }
 
-/* A large figure under the spec sheet (e.g. the TouchDesigner program). */
 .cs-figure { margin:clamp(40px,5vw,72px) 0 0; }
 .cs-figure .cs-media { background:#000; }
 .cs-figure figcaption { margin-top:14px; font-size:10px; letter-spacing:.24em; text-transform:uppercase; color:var(--dim); }
 
-/* ---------- Opening screen (js/enter.js) ----------
-   The grid shows straight away, a little dimmed, with a white bar across the middle (the about
-   strip's paper and type). Clicking anywhere fades the text, then the bar collapses to a line and
-   closes while the dim lifts. (stage.html: then the camera pulls back to the stage.) */
+/* ---------- Opening screen ---------- */
 .enter { position:absolute; inset:0; z-index:5; pointer-events:none; background:rgba(0,0,0,.42);
   transition:background-color 1s var(--ease) .1s; }
 .enter.is-out { background:rgba(0,0,0,0); }
 .enter-bar { position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); display:flex; flex-direction:column;
   align-items:center; gap:clamp(8px,1vh,14px); padding:clamp(26px,4.6vh,48px) 16px clamp(22px,3.4vh,36px); color:#000; }
-/* The paper is its own layer that scales to nothing about the centre line: a transform, so it stays
-   smooth while the grid keeps playing behind it. Pixel-stepped at both ends. */
 .enter-bar::before { content:""; position:absolute; inset:0; z-index:-1; background:#fff;
   transition:transform .75s cubic-bezier(.65,0,.35,1) .08s; }
 .enter.is-out .enter-bar::before { transform:scaleY(0); }
-/* The cursor's pixel trail (js/pixel-trail.js), over the paper and under the text; it closes with the bar. */
 .enter-bar .pixel-trail { position:absolute; inset:0; width:100%; height:100%; border-radius:0; image-rendering:pixelated; opacity:.9;
   transition:transform .75s cubic-bezier(.65,0,.35,1) .08s; }
 .enter.is-out .enter-bar .pixel-trail { transform:scaleY(0); }
 .enter-box, .enter-go { position:relative; }
 .enter-box, .enter-go { transition:opacity .28s var(--ease); }
 .enter.is-out .enter-box, .enter.is-out .enter-go { opacity:0; }
-/* Between two pixel rules: the address and the tag on the left, the icons on the right. */
 .enter-box { display:flex; align-items:center; justify-content:space-between; gap:clamp(20px,4vw,64px);
   width:min(54.5vw, 820px); padding:clamp(14px,2.2vh,24px) clamp(20px,2.8vw,40px);
   background:
     linear-gradient(180deg, #000 50%, transparent 0) 0 0 / 2px 6px repeat-y,
     linear-gradient(180deg, #000 50%, transparent 0) 100% 0 / 2px 6px repeat-y; }
 .enter-id { display:flex; flex-direction:column; gap:6px; margin:0; color:#000; font-family:var(--font); line-height:1.15; }
-/* The name gets the icons' hover: yellow, a hard pixel shadow, a very small tilt. */
 .enter-name { display:inline-block; align-self:flex-start; font-size:clamp(20px,2.2vw,34px); font-weight:700; letter-spacing:-.01em;
   pointer-events:auto; transform-origin:30% 60%;
   transition:color .3s var(--ease), text-shadow .2s, transform .45s cubic-bezier(.34,1.56,.64,1); }
@@ -466,8 +411,6 @@ html.lb-lock, html.lb-lock body { overflow:hidden; }
   .enter .soc-icons { --si:30px; }
 }
 
-/* Social icons (the opening screen): ink grey; on hover they fill yellow with a hard pixel shadow,
-   grow and tip slightly. Instagram is an outline, LinkedIn a solid tile with the letters cut out. */
 .soc-icons { --si:clamp(34px,3.3vw,50px); --si-cut:var(--bg); display:flex; gap:calc(var(--si) * .42); margin:0; padding:0; list-style:none; flex-shrink:0; }
 .soc-icons a { display:block; width:var(--si); height:var(--si); color:#2b2b2b;
   transition:color .3s var(--ease), transform .45s cubic-bezier(.34,1.56,.64,1), filter .2s; }
@@ -483,15 +426,11 @@ html.lb-lock, html.lb-lock body { overflow:hidden; }
   .soc-icons a:hover, .soc-icons a:focus-visible, .soc-icons li:nth-child(even) a:hover { transform:none; }
 }
 
-/* Lenis smooth scrolling (js/smooth-scroll.js) */
 html.lenis, html.lenis body { height:auto; }
 .lenis.lenis-smooth { scroll-behavior:auto !important; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior:contain; }
-/* (No overflow:hidden while stopped: hiding the scrollbar would shift the stage sideways as the
-   opening screen hands over. Stopped Lenis already swallows the wheel; the focus view locks itself.) */
 
-/* ---------- Nav music player (js/nav-audio.js) ----------
-   Back, a live histogram (click: pause/play), skip. The volume bar drops down on hover. */
+/* ---------- Nav music player ---------- */
 .nav-audio { position:relative; display:flex; align-items:center; gap:clamp(8px,1vw,16px); }
 .na-skip, .na-wave { padding:0; border:0; background:none; color:#fff; cursor:pointer; }
 .na-skip { display:grid; place-items:center; width:22px; height:22px; opacity:.85; transition:opacity .2s; }
@@ -501,7 +440,6 @@ html.lenis, html.lenis body { height:auto; }
 .na-wave { display:block; width:clamp(130px,14vw,280px); height:34px; }
 .na-wave canvas { display:block; width:100%; height:100%; }
 .na-skip:focus-visible, .na-wave:focus-visible { outline:1px dashed rgba(255,255,255,.6); outline-offset:4px; }
-/* Volume: a black bar under the player, slides down while the player is hovered or focused. */
 .na-vol { position:absolute; z-index:2; left:auto; right:-10px; width:max(calc(100% + 20px), 250px); top:100%; padding:14px 0 0; opacity:0; visibility:hidden;
   transform:translateY(-6px); transition:opacity .25s var(--ease), transform .25s var(--ease), visibility 0s .25s; }
 .nav-audio:hover .na-vol, .nav-audio:focus-within .na-vol { opacity:1; visibility:visible; transform:none; transition-delay:0s; }
@@ -513,8 +451,6 @@ html.lenis, html.lenis body { height:auto; }
 .na-vol input::-webkit-slider-thumb { -webkit-appearance:none; width:11px; height:11px; margin-top:-5px; border:0; border-radius:50%; background:#fff; }
 .na-vol input::-moz-range-thumb { width:11px; height:11px; border:0; border-radius:50%; background:#fff; }
 .na-vol input:focus-visible { outline:1px dashed rgba(255,255,255,.6); outline-offset:4px; }
-/* Now playing (js/now-playing.js): the song at the top of the dropdown, linking out to Spotify.
-   It sits inside .nav, so it undoes the nav links' caps, tracking and hover underline. */
 .na-vol.has-song .na-vol-in { padding-top:8px; }
 .nav .na-song { --track:0; display:flex; align-items:center; gap:12px; margin:0; padding:12px 14px 10px; background:#000;
   font-size:13px; font-weight:400; line-height:1.25; letter-spacing:0; text-transform:none; white-space:normal; text-align:left; }
@@ -539,14 +475,12 @@ html.lenis, html.lenis body { height:auto; }
   .nav .nav-name { flex:1 1 auto; flex-basis:auto; text-align:left; }
   .nav-audio { order:1; }
   .nav li:not(.nav-name):not(.nav-audio) { order:2; flex:1 1 33%; }
-  .nav ul::after { content:""; order:1; flex-basis:100%; height:0; }   /* line break after the player */
+  .nav ul::after { content:""; order:1; flex-basis:100%; height:0; }
   .na-wave { width:110px; height:26px; }
   .na-skip { width:18px; }
 }
 
-/* ---------- The Program (work/boiler-room.html, js/td-map.js) ----------
-   Intro text in two columns, then the TouchDesigner network with an outline per stage. The
-   outlines and labels sit in % of the picture; label size follows the picture's width (cqw). */
+/* ---------- The Program ---------- */
 .cs-program { padding:clamp(56px,7vw,110px) var(--gutter); border-top:1px solid var(--line); }
 .program-intro { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(28px,5vw,96px); padding-top:22px;
   border-top:1px solid var(--line); margin-bottom:clamp(36px,5vw,72px); }
@@ -558,8 +492,6 @@ html.lenis, html.lenis body { height:auto; }
 .td-toggle { --p:4px; display:block; margin:0 auto clamp(14px,2vw,24px); padding:10px 18px; border:0; background:var(--fg); clip-path:var(--px-clip);
   color:var(--bg); font:inherit; font-size:13px; letter-spacing:.04em; cursor:pointer; transition:background-color .2s, color .2s; }
 .td-toggle:hover, .td-toggle:focus-visible { background:var(--sun); color:#000; outline:none; }
-/* The network sits on a dark panel, like TouchDesigner's own window: the stage colours (white,
-   yellow, neon green) were picked for dark and disappear on paper. Pixel-stepped corners. */
 .td-scroll { --p:6px; overflow-x:auto; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;
   padding:clamp(18px,2.4vw,40px) clamp(14px,2vw,32px); background:#0d0d0d; clip-path:var(--px-clip);
   background-image:radial-gradient(rgba(255,255,255,.07) 1px, transparent 1.2px); background-size:16px 16px; }
@@ -570,7 +502,6 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 .td-label { position:absolute; padding:0; border:0; background:none; font:inherit; font-size:1.85cqw; line-height:1.15; white-space:nowrap;
   color:var(--c); cursor:pointer; opacity:1; transition:opacity .35s var(--ease), text-shadow .35s var(--ease); }
 .td-label:focus-visible { outline:1px dashed var(--c); outline-offset:4px; }
-/* States: all outlines, none, or just one stage. */
 .td-map[data-show="all"] .td-box { opacity:1; }
 .td-map[data-show="none"] .td-label { opacity:.75; }
 .td-map:where(:not([data-show="all"]):not([data-show="none"])) .td-net { opacity:.75; }
@@ -583,13 +514,11 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 .td-map[data-show="feedback"] .td-label[data-stage="feedback"], .td-map[data-show="colors"] .td-label[data-stage="colors"],
 .td-map[data-show="mirrors"] .td-label[data-stage="mirrors"], .td-map[data-show="composite"] .td-label[data-stage="composite"] {
   text-shadow:0 0 18px var(--c); }
-/* The stages in order, under the map; the highlighted one stands out. */
 .td-steps { list-style:none; counter-reset:step; margin:clamp(24px,3vw,40px) 0 0; padding:0;
   display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px clamp(20px,3vw,48px); }
 .td-steps li { counter-increment:step; position:relative; padding:12px 0 0 0; border-top:1px solid var(--line); color:var(--dim);
   font-size:14px; cursor:default; transition:color .3s var(--ease), border-color .3s var(--ease); }
-.td-steps li::before { content:counter(step,decimal-leading-zero); display:block; margin-bottom:6px; font-family:var(--font-px); font-size:10px; letter-spacing:.12em; color:var(--faint); }
-/* Ink titles with the stage's colour as a pixel swatch (outlined, so white and yellow still read). */
+.td-steps li::before { content:counter(step,decimal-leading-zero); display:block; margin-bottom:6px; font-family:var(--font-px); font-size:11px; letter-spacing:.12em; color:var(--faint); }
 .td-steps b { display:flex; align-items:flex-start; gap:9px; margin-bottom:4px; font-weight:600; color:var(--fg); }
 .td-steps b::before { content:""; flex:none; width:10px; height:10px; margin-top:.4em; background:var(--c); box-shadow:inset 0 0 0 1px #000, 2px 2px 0 #000; }
 .td-map:where(:not([data-show="all"]):not([data-show="none"])) .td-steps li { color:var(--faint); }
@@ -606,19 +535,16 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
   .td-steps { grid-template-columns:1fr 1fr; }
 }
 
-/* Text-only lead-in section (Boiler Room overview): the formats' header style, with a larger paragraph. */
 .cs-overview { padding:clamp(48px,6vw,96px) var(--gutter) clamp(40px,5vw,72px); border-top:1px solid var(--line); }
 .cs-overview .fmt-head { margin-bottom:0; }
 .cs-overview .fmt-head p { max-width:58ch; margin-top:16px; font-size:clamp(17px,1.45vw,22px); line-height:1.45; color:var(--text); }
-.cs-hero + .cs-overview { border-top:0; padding-top:0; }   /* right under the title video: no extra gap or divider */
+.cs-hero + .cs-overview { border-top:0; padding-top:0; }
 
-/* A 2 x 2 grid of frames (e.g. Black Mirror's final frames), and a row of verticals under it. */
 .fmt-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
 .fmt-row--verts { margin-top:12px; }
 .cs-overview .fmt-head p + p { margin-top:14px; }
 @media (max-width:760px) { .fmt-grid { gap:8px; } .fmt-row--verts { margin-top:8px; } }
 
-/* Project01: links under the identity text, the big concept line, and the storyboard grid. */
 .p01-links { display:flex; flex-wrap:wrap; gap:10px 28px; font-size:12px !important; letter-spacing:.2em; text-transform:uppercase; }
 .p01-links a { border-bottom:1px solid currentColor; padding-bottom:4px; }
 .p01-statement { margin:clamp(40px,6vw,96px) 0 0; font-size:clamp(40px,7.6vw,128px); line-height:1; letter-spacing:-.02em; font-weight:400; }
@@ -630,21 +556,19 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 @media (max-width:900px) { .sb-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 .program-intro > div > p + p { margin-top:1em; }
 
-/* Ambient videos (data-ambient-audio): the badge says the sound is already on, hover for full. */
 [data-ambient-audio] .hover-sound .hs-label::after { content:"Hover for full sound"; }
 [data-ambient-audio].has-sound .hover-sound .hs-label::after { content:"Sound on"; }
 [data-ambient-audio].needs-click .hover-sound .hs-label::after { content:"Click for sound"; }
 
-/* Compact sections (sketches, mockups): the media sits smaller, aligned with the section text. */
 .fmt--compact .fmt-item--wide, .fmt--compact .fmt-row, .fmt--compact .fmt-grid { max-width:880px; margin-left:clamp(0px,3.2vw,42px); }
 .fmt--compact .fmt-row--verts { max-width:560px; }
 @media (max-width:760px) { .fmt--compact .fmt-item--wide, .fmt--compact .fmt-row, .fmt--compact .fmt-grid { max-width:none; margin-left:0; } }
 
-/* ---------- About page (about.html) ---------- */
+/* ---------- About page ---------- */
 .about-page { padding-top:var(--nav-h); }
 .ab-hero { display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:clamp(40px,7vw,120px); align-items:center;
   padding:clamp(64px,8vw,130px) var(--gutter) clamp(56px,7vw,110px); }
-.ab-hero h1 { margin:0 0 28px; font-size:clamp(36px,5vw,80px); font-weight:700; line-height:1; letter-spacing:-.04em; }
+.ab-hero h1 { margin:0 0 28px; font-size:clamp(36px,5vw,80px); font-weight:700; line-height:1; letter-spacing:-.02em; }
 .ab-hero .lead { margin:0 0 20px; font-size:clamp(19px,1.7vw,26px); line-height:1.3; max-width:36ch; }
 .ab-hero p:not(.lead):not(.eyebrow) { margin:0 0 1em; max-width:50ch; color:var(--text); }
 .ab-hero b { color:var(--fg); font-weight:600; }
@@ -652,18 +576,17 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 .ab-gallery { columns:3 300px; column-gap:12px; }
 .ab-item { break-inside:avoid; margin:0 0 12px; }
 .ab-cta { border-top:1px solid var(--line); }
-/* Experience (about.html): date | role + organisation + notes | place, one hairline row each. */
 .xp { list-style:none; margin:0; padding:0; border-bottom:1px solid var(--line); }
 .xp-row { display:grid; grid-template-columns:minmax(120px,2fr) minmax(0,7fr) minmax(0,2fr); gap:clamp(16px,3vw,48px);
   padding:clamp(18px,2vw,28px) 0; border-top:1px solid var(--line); }
-.xp-when, .xp-where { padding-top:.35em; font-family:var(--font-px); font-size:10px; font-weight:400; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); }
+.xp-when, .xp-where { padding-top:.35em; font-family:var(--font-px); font-size:11px; font-weight:400; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); }
 .xp-where { text-align:right; }
 .xp-what h3 { margin:0; font-size:clamp(17px,1.5vw,23px); font-weight:700; line-height:1.2; }
 .xp-org { margin:4px 0 0; color:var(--dim); }
 .xp-notes { margin:14px 0 0; padding:0; list-style:none; max-width:62ch; color:var(--text); font-size:15px; }
 .xp-notes li { position:relative; padding-left:18px; margin-bottom:6px; }
 .xp-notes li::before { content:""; position:absolute; left:0; top:.62em; width:6px; height:6px; background:var(--fg); }
-.xp-sub { margin:clamp(40px,4.5vw,64px) 0 clamp(14px,1.5vw,20px); font-family:var(--font-px); font-size:10px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
+.xp-sub { margin:clamp(40px,4.5vw,64px) 0 clamp(14px,1.5vw,20px); font-family:var(--font-px); font-size:11px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
 .xp-more { color:var(--fg); white-space:nowrap; background:linear-gradient(90deg, currentColor 50%, transparent 0) 0 100% / 4px 2px repeat-x; padding-bottom:3px; }
 .xp-more:hover, .xp-more:focus-visible { background-image:linear-gradient(currentColor, currentColor); outline:none; }
 @media (max-width:760px) {
@@ -673,8 +596,6 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 }
 @media (max-width:760px) { .ab-hero { grid-template-columns:1fr; } .ab-hero .portrait { max-width:78%; } }
 
-/* Anatomy of a Computer: extra text grids under the research / visual direction media, and the
-   "Four Concepts" heading that sits on top of its cs-rows. */
 .aoc-research, .aoc-principles { margin-top:clamp(28px,3.5vw,52px); }
 .aoc-research + .aoc-research { margin-top:clamp(20px,2.4vw,36px); }
 .aoc-principles { grid-template-columns:repeat(4,minmax(0,1fr)); }
@@ -682,14 +603,11 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 .aoc-concepts-head .fmt-head { margin-bottom:0; }
 @media (max-width:900px) { .aoc-principles { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media (max-width:760px) { .aoc-principles { grid-template-columns:1fr; } }
-/* Recent Updates: the four views, then the workshop pair, each under its text row. */
 .aoc-views, .aoc-pair { margin-top:clamp(28px,3.5vw,52px); }
 .aoc-pair { grid-template-columns:repeat(2,minmax(0,1fr)); }
 @media (max-width:760px) { .aoc-pair { grid-template-columns:1fr; } }
 
-/* ---------- Anatomy of a Computer: the playable site (js/aoc-player.js) ----------
-   A 16:9 screen that holds anatomy/ in an iframe once Play is pressed; tabs pick the build. Taller on
-   phones, where the experience lays itself out in portrait. Fullscreen fills the display. */
+/* ---------- Anatomy of a Computer ---------- */
 .aoc-jump { --p:4px; display:inline-flex; gap:.6em; margin-top:clamp(28px,3vw,44px); padding:13px 22px; border:0; background:var(--paper); clip-path:var(--px-clip);
   font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; transition:background .3s var(--ease), color .3s var(--ease); }
 .aoc-jump:hover, .aoc-jump:focus-visible { background:var(--fg); color:var(--bg); border-color:var(--fg); }
@@ -702,7 +620,6 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 .aoc-screen { position:relative; aspect-ratio:16 / 9; overflow:hidden; background:#000; outline:1px solid var(--line); outline-offset:-1px; }
 .aoc-made { font-size:14px; color:var(--dim); }
 .aoc-poster { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.72; transition:opacity .5s var(--ease); }
-/* The Play call to action: a solid white disc that pulses slowly, over a solid label pill. */
 .aoc-start { position:absolute; inset:0; z-index:1; display:grid; place-content:center; justify-items:center; gap:22px; width:100%; border:0; cursor:pointer;
   background:radial-gradient(ellipse at center, rgba(0,0,0,.05) 0%, rgba(0,0,0,.55) 100%); color:var(--fg); }
 .aoc-start-icon { position:relative; display:grid; place-items:center; width:clamp(84px,9vw,136px); aspect-ratio:1; border-radius:50%;
@@ -728,8 +645,7 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 @media (max-width:760px) { .aoc-screen { aspect-ratio:auto; height:min(78svh, 700px); } .aoc-actions { gap:20px; } }
 @media (prefers-reduced-motion:reduce) { .aoc-start-icon, .aoc-start-label, .aoc-poster, .aoc-jump { transition:none; animation:none; } }
 
-/* ---------- Anatomy of a Computer: Play extras and the build record (js/aoc-process.js) ----------
-   Only the site's own tokens: white at different strengths for scores, var(--dim) and var(--line) for the rest. */
+/* ---------- Anatomy of a Computer ---------- */
 .aoc-made a { text-decoration:underline; text-underline-offset:3px; }
 .aoc-made a:hover { color:var(--fg); }
 .aoc-below { margin-top:clamp(28px,3.5vw,52px); }
@@ -746,7 +662,6 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 .aoc-scroll { position:relative; overflow-x:auto; overscroll-behavior-x:contain; scrollbar-width:thin; }
 .aoc-scroll:focus-visible { outline:1px solid var(--fg); outline-offset:4px; }
 
-/* the score matrix, with the average line in its first row */
 .aoc-matrix { width:100%; min-width:780px; border-collapse:collapse; table-layout:fixed; font-variant-numeric:tabular-nums; }
 .aoc-col-head { width:150px; }
 .aoc-matrix th { padding:0 12px 0 0; font-size:12px; font-weight:400; text-align:left; color:var(--dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -779,7 +694,6 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 .aoc-note-head { display:block; margin-bottom:6px; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--dim); }
 .aoc-note-body { display:block; color:var(--text); }
 
-/* versions: a strip to pick from, then the picked one */
 .aoc-strip { display:flex; gap:10px; margin:0; padding:0 0 12px; list-style:none; }
 .aoc-strip li { flex:0 0 clamp(140px,13vw,180px); }
 .aoc-vpick { display:grid; gap:6px; width:100%; padding:0; border:0; background:none; cursor:pointer; font:inherit; text-align:left; color:var(--dim); }
@@ -801,7 +715,6 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 .aoc-ver-list b::first-letter { text-transform:uppercase; }
 .aoc-ver-shots { margin-top:28px; }
 
-/* issues */
 .aoc-ledger { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:28px clamp(24px,3vw,48px); }
 .aoc-sev h3, .aoc-open-head { margin:0; font-size:10px; font-weight:500; letter-spacing:.3em; text-transform:uppercase; }
 .aoc-sev h3 span { color:var(--dim); }
@@ -813,7 +726,6 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 .aoc-open { grid-column:1 / -1; display:grid; gap:8px; max-width:80ch; margin:0; padding:0; list-style:none; font-size:14px; color:var(--text); }
 .aoc-open b { margin-right:.4em; font-weight:500; color:var(--fg); }
 
-/* after the record */
 .aoc-after { display:grid; gap:10px; margin:0; padding:0; list-style:none; color:var(--text); }
 .aoc-after li { display:grid; grid-template-columns:140px 1fr; gap:16px; }
 .aoc-after span { font-size:13px; color:var(--dim); }
@@ -825,21 +737,17 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 }
 @media (prefers-reduced-motion:reduce) { .aoc-vpick img { transition:none; } }
 
-/* ---------- Small labels in the pixel face ----------
-   The tracked caps used for labels across the case studies, set in Silkscreen like the rest of the
-   site's small type. (Kept here, last, so it wins over each section's own letter-spacing.) */
+/* ---------- Small labels in the pixel face ---------- */
 .aoc-stats dt, .aoc-sub, .aoc-note-head, .aoc-sev h3, .aoc-open-head, .aoc-tabs button, .aoc-jump,
 .aoc-actions button, .aoc-actions a, .aoc-start-label, .cs-figure figcaption, .p01-links, .fmt-cap, .hover-sound,
 .na-song-label, .aoc-vpick b {
   font-family:var(--font-px); font-weight:400; letter-spacing:.12em; }
 
-/* ---------- Backstage (js/backstage.js, backstage.html, js/backstage-code.js) ----------
-   The easter egg: a counter on the case studies, a floating "go backstage" card once all four are
-   seen, a footer link after that, and the backstage page with its code window. */
+/* ---------- Backstage ---------- */
 .bs-tally { display:inline-block; margin-left:14px; padding-left:14px; color:var(--faint);
   background:linear-gradient(180deg, currentColor 50%, transparent 0) 0 0 / 2px 4px repeat-y; }
 .bs-tally.is-full { color:var(--fg); }
-footer .bs-foot { display:inline-flex; align-items:center; gap:8px; margin:14px 0 0; font-family:var(--font-px); font-size:10px;
+footer .bs-foot { display:inline-flex; align-items:center; gap:8px; margin:14px 0 0; font-family:var(--font-px); font-size:11px;
   letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
 footer .bs-foot:hover, footer .bs-foot:focus-visible { color:var(--fg); }
 .bs-dot { width:8px; height:8px; background:var(--sun); box-shadow:2px 2px 0 var(--fg); }
@@ -850,7 +758,7 @@ footer .bs-foot:hover, footer .bs-foot:focus-visible { color:var(--fg); }
   opacity:0; transform:translateY(24px); transition:opacity .35s steps(4), transform .35s steps(4); }
 .bs-card.is-in { opacity:1; transform:none; }
 .bs-card-head { grid-column:1 / -1; display:flex; align-items:center; gap:10px; margin:0; padding-right:28px;
-  font-family:var(--font-px); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.7); }
+  font-family:var(--font-px); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.7); }
 .bs-card-head .px-flower { font-size:18px; color:var(--sun); }
 .bs-card.is-new .bs-card-head .px-flower { animation:bs-spin 1.2s steps(12) 3; }
 @keyframes bs-spin { to { transform:rotate(360deg); } }
@@ -861,7 +769,6 @@ footer .bs-foot:hover, footer .bs-foot:focus-visible { color:var(--fg); }
   font:400 18px/1 var(--font-px); cursor:pointer; }
 .bs-x:hover, .bs-x:focus-visible { color:var(--sun); outline:none; }
 
-/* The page */
 .bs-badge { display:inline-block; margin-right:10px; padding:3px 7px 2px; background:var(--sun); color:#000; box-shadow:2px 2px 0 #000; }
 .bs-hero { background:#000; }
 .bs-hero img { z-index:1; }
@@ -873,14 +780,14 @@ footer .bs-foot:hover, footer .bs-foot:focus-visible { color:var(--fg); }
 .backstage .cs-overview .fmt-head p b { color:var(--fg); font-weight:700; }
 .cs-spec-grid.bs-tests h3 { display:flex; flex-direction:column; gap:12px; font-family:var(--font); font-size:17px; font-weight:700;
   letter-spacing:-.01em; text-transform:none; color:var(--fg); }
-.bs-chip { align-self:flex-start; padding:3px 7px 2px; background:var(--fg); color:var(--bg); font-family:var(--font-px); font-size:10px; font-weight:400; letter-spacing:.14em; }
+.bs-chip { align-self:flex-start; padding:3px 7px 2px; background:var(--fg); color:var(--bg); font-family:var(--font-px); font-size:11px; font-weight:400; letter-spacing:.14em; }
+code { font-family:var(--font-mono); }
 .bs-tests code { padding:0 4px; background:var(--paper); font-size:.92em; }
-.bs-sub { margin:clamp(48px,5vw,80px) 0 18px; font-family:var(--font-px); font-size:10px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
+.bs-sub { margin:clamp(48px,5vw,80px) 0 18px; font-family:var(--font-px); font-size:11px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
 .bs-open { max-width:880px; }
 .bs-open li { align-items:baseline; color:var(--text); }
-.bs-open li span { font-family:var(--font-px); font-size:10px; letter-spacing:.14em; text-transform:uppercase; }
+.bs-open li span { font-family:var(--font-px); font-size:11px; letter-spacing:.14em; text-transform:uppercase; }
 
-/* Code window: file list on the left, a dark editor on the right (dark like the stage itself). */
 .bs-code { display:grid; grid-template-columns:minmax(220px,300px) minmax(0,1fr); gap:clamp(16px,2vw,28px); align-items:start; }
 .bs-files { display:flex; flex-direction:column; border-top:1px solid var(--line); }
 .bs-files button { position:relative; display:block; width:100%; padding:14px 12px 14px 20px; border:0; border-bottom:1px solid var(--line); background:none;
@@ -894,7 +801,7 @@ footer .bs-foot:hover, footer .bs-foot:focus-visible { color:var(--fg); }
 .bs-files button:focus-visible { outline:1px dashed var(--fg); outline-offset:-3px; }
 .bs-win { --p:6px; min-width:0; background:#0d0d0d; color:#d8d8d8; clip-path:var(--px-clip); }
 .bs-win-bar { display:flex; align-items:center; gap:14px; padding:12px 16px; border-bottom:1px solid rgba(255,255,255,.1);
-  font-family:var(--font-px); font-size:10px; letter-spacing:.12em; color:rgba(255,255,255,.55); }
+  font-family:var(--font-px); font-size:11px; letter-spacing:.12em; color:rgba(255,255,255,.55); }
 .bs-win-dots { display:flex; gap:6px; }
 .bs-win-dots i { width:8px; height:8px; background:rgba(255,255,255,.22); }
 .bs-win-dots i:first-child { background:var(--sun); }
@@ -902,7 +809,7 @@ footer .bs-foot:hover, footer .bs-foot:focus-visible { color:var(--fg); }
 .bs-win-meta { margin-left:auto; white-space:nowrap; }
 .bs-win-raw { color:rgba(255,255,255,.75); white-space:nowrap; }
 .bs-win-raw:hover, .bs-win-raw:focus-visible { color:var(--sun); outline:none; }
-.bs-win-body { display:flex; height:min(70vh, 640px); overflow:auto; overscroll-behavior:contain; font-size:12.5px; line-height:1.6; tab-size:2; }
+.bs-win-body { display:flex; font-family:var(--font-mono); height:min(70vh, 640px); overflow:auto; overscroll-behavior:contain; font-size:12.5px; line-height:1.6; tab-size:2; }
 .bs-win-body:focus-visible { outline:1px dashed var(--sun); outline-offset:-4px; }
 .bs-win-body pre { margin:0; padding:16px 0; font:inherit; }
 .bs-win-body .bs-gutter { position:sticky; left:0; z-index:1; flex:none; align-self:flex-start; min-height:100%; padding:16px 12px 16px 16px;
@@ -932,4 +839,57 @@ footer .bs-foot:hover, footer .bs-foot:focus-visible { color:var(--fg); }
   .bs-card { transition:opacity .01s; transform:none; }
   .bs-card.is-new .bs-card-head .px-flower { animation:none; }
   .bs-go:hover, .bs-enter:hover { transform:none; }
+}
+
+/* ---------- Motion reel ---------- */
+.reel { position:relative; z-index:2; padding:0 var(--gutter) clamp(72px,8vw,140px); background:var(--bg); }
+html.is-gated .reel { opacity:0; }
+.reel { transition:opacity .6s var(--ease) .45s; }
+.reel-bar { display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:12px; font-size:clamp(14px,1.05vw,17px); }
+.reel-song { display:inline-flex; align-items:center; gap:6px; padding-bottom:2px; transition:color .2s; }
+.reel-song svg { width:1.05em; height:1.05em; fill:currentColor; }
+.reel-song:hover, .reel-song:focus-visible { outline:none; background:linear-gradient(90deg, currentColor 50%, transparent 0) 0 100% / 4px 2px repeat-x; }
+.reel-label span { display:inline-block; margin-left:.35em; animation:reel-nudge 2.4s var(--ease) infinite; }
+@keyframes reel-nudge { 0%, 60%, 100% { transform:none; } 30% { transform:translateY(3px); } }
+.reel-frame { --p:6px; position:relative; display:block; width:100%; aspect-ratio:6 / 1; padding:0; border:0; overflow:hidden;
+  background:#0b0b0b url("../assets/reel/motion-reel-band.webp") 50% 44% / cover; clip-path:var(--px-clip); cursor:none; }
+.reel-frame video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 44%;
+  transition:transform 1.2s var(--ease), filter .4s; }
+.reel-frame:hover video, .reel-frame:focus-visible video { transform:scale(1.02); }
+.reel-frame:focus-visible { outline:none; }
+.reel-frame:focus-visible::after { content:""; position:absolute; inset:6px; border:2px dashed #fff; pointer-events:none; }
+.reel-hint { --x:50%; --y:50%; position:absolute; left:var(--x); top:var(--y); z-index:2; display:inline-flex; align-items:center; gap:8px;
+  padding:10px 16px 10px 14px; border-radius:999px; background:#fff; color:#000; font-size:14px; font-weight:600; white-space:nowrap;
+  box-shadow:2px 2px 0 #000; pointer-events:none; opacity:0; transform:translate(-50%,-50%) scale(.85);
+  transition:opacity .2s, transform .35s cubic-bezier(.34,1.56,.64,1); }
+.reel-hint svg { width:11px; height:11px; fill:currentColor; }
+.reel-frame:hover .reel-hint, .reel-frame:focus-visible .reel-hint { opacity:1; transform:translate(-50%,-50%) scale(1) rotate(-2deg); }
+.reel-frame:active .reel-hint { background:var(--sun); }
+@media (hover:none) {
+  .reel-frame { cursor:pointer; }
+  .reel-hint { opacity:1; transform:translate(-50%,-50%) scale(1); left:50%; top:50%; }
+}
+@media (max-width:760px) {
+  .reel-frame { aspect-ratio:3 / 1; }
+  .reel-bar { font-size:14px; }
+}
+
+.reel-lb { position:fixed; inset:0; z-index:220; }
+.reel-lb[hidden] { display:none; }
+.reel-lb-back { position:absolute; inset:0; background:rgba(0,0,0,.94); opacity:0; transition:opacity .5s var(--ease); cursor:zoom-out; }
+.reel-lb-frame { position:fixed; overflow:hidden; background:#000; }
+.reel-lb-frame video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 44%; }
+.reel-lb.is-full .reel-lb-frame video { object-position:50% 50%; }
+.reel-lb-bar { position:fixed; left:0; right:0; bottom:max(14px,3vh); display:flex; justify-content:center; align-items:center; gap:18px;
+  padding:0 var(--gutter); color:rgba(255,255,255,.75); font-size:13px; opacity:0; transition:opacity .4s var(--ease) .2s; }
+.reel-lb-bar a { color:#fff; padding-bottom:2px; }
+.reel-lb-bar a:hover, .reel-lb-bar a:focus-visible { outline:none; background:linear-gradient(90deg, currentColor 50%, transparent 0) 0 100% / 4px 2px repeat-x; }
+.reel-lb-close { --p:4px; position:fixed; top:max(14px,3vh); right:max(14px,3vw); width:44px; height:44px; border:0; background:#fff; color:#000;
+  font:400 22px/1 var(--font); cursor:pointer; clip-path:var(--px-clip); opacity:0; transition:opacity .4s var(--ease), background-color .2s; }
+.reel-lb-close:hover, .reel-lb-close:focus-visible { background:var(--sun); outline:none; }
+.reel-lb.is-open .reel-lb-back, .reel-lb.is-open .reel-lb-close, .reel-lb.is-open .reel-lb-bar { opacity:1; }
+html.reel-lock, html.reel-lock body { overflow:hidden; }
+@media (prefers-reduced-motion:reduce) {
+  .reel-label span { animation:none; }
+  .reel-frame:hover video { transform:none; }
 }

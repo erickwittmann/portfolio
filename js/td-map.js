@@ -1,9 +1,4 @@
-// The Program map (work/boiler-room.html): the TouchDesigner network with an outline per stage.
-// - Hover (or keyboard-focus) a stage's label or outline: only that stage stays outlined, its label
-//   lights up and its line in the list below is picked out.
-// - Click/tap a stage to keep it highlighted; click it again to go back.
-// - "Hide all" / "See all" turns every outline off / on (the states from the Figma variants).
-// The state lives in data-show on .td-map: "all", "none" or a stage name; the CSS does the rest.
+// Boiler Room: interactive TouchDesigner network map.
 (function () {
   document.querySelectorAll('.td-map').forEach(function (map) {
     var toggle = map.querySelector('.td-toggle');

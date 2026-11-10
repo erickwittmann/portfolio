@@ -1,18 +1,14 @@
-// Cursor tilt for the page's sections. Each element leans slightly toward the cursor and drifts
-// against it, scaled by its depth, so nearer things move more than farther ones. It's a CSS transform only (see .tilt in css/style.css): compositor work, no layout.
-// - Only elements on screen are updated, and nothing runs once the cursor has stopped and settled.
-// - Off on touch screens and with reduced motion.
-// Add or tune elements in PARTS: [selector, depth]. Depth 1 = the strongest tilt and drift.
+// Subtle cursor tilt for sections.
 (function () {
   if (!window.matchMedia || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var MAX_TILT = 3.2;    // degrees at depth 1, cursor at the edge of the window
+  var MAX_TILT = 3.2;
   var MAX_DRIFT = 14;    // px at depth 1
   var PARTS = [
     ['.hello .portrait', 1],
     ['.hello-copy', 0.6],
     ['.works-head', 0.35],
-    ['.project', 0.55],                 // big cards: less, so the edges don't swing too far
+    ['.project', 0.55],
     ['footer .col', 0.3],
     ['.case .cs-head, .case .cs-hero', 0.45],      // case study pages
     ['.case .cs-row .cs-media', 0.6], ['.case .cs-text', 0.35], ['.case .next-case', 0.4],

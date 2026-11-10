@@ -1,19 +1,10 @@
-// The homepage's music: the playlist in js/tracks.js, run from the nav player (js/nav-audio.js):
-// play/pause, back, skip and volume. Songs crossfade into each other (on skip, and when one ends).
-// - Browsers only allow sound after a click/tap/key; the music starts on the first one (on the
-//   homepage that's usually "click to enter").
-// - Everything goes through the site's audio hub (js/page-audio.js), so the nav histogram and the
-//   now-playing panel (js/now-playing.js) follow it, and leaving for another page fades it out.
-// - Volume = the nav fader x LEVEL.stage (js/page-audio.js) x the song's own `gain` (js/tracks.js).
-// Load after js/page-audio.js and js/tracks.js. (The archived 3D stage, stage.html, has its own
-// player in js/stage/hero.js.)
+// Homepage playlist with crossfades, driven by the nav player.
 (function () {
   var PA = window.PageAudio, TRACKS = window.TRACKS || [];
   if (!PA || !TRACKS.length) return;
   var XFADE = 1.6, FADE_IN = 1.5, LEAVE = 0.7;   // seconds
   var LEVEL = PA.LEVEL ? PA.LEVEL.stage : 0.5;
 
-  // Two players take turns: the next song loads into the idle one and fades up while the other fades down.
   function make() {
     var el = new Audio();
     el.preload = 'auto';
@@ -26,7 +17,6 @@
   function load(k, i) { P[k].el.src = TRACKS[i].src; gains[k] = gain(i); }
   load(0, 0);
 
-  // Volumes ease toward their targets in one small loop that only runs while something is moving.
   function level() { return PA.prefs.muted ? 0 : PA.prefs.volume * LEVEL * duck; }
   function apply() {
     var L = level();
@@ -71,7 +61,6 @@
     play(P[to].el); kick();
     setTimeout(function () { if (cur !== from) P[from].el.pause(); }, XFADE * 1000 + 200);
   }
-  // Near the end of a song, blend into the next one.
   P.forEach(function (p, k) {
     p.el.addEventListener('timeupdate', function () {
       var el = p.el;

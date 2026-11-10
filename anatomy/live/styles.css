@@ -1,6 +1,3 @@
-/* Anatomy of a Computer — live build.
-   Same type, colour and HUD vocabulary as the Figma record; responsive instead of a scaled artboard. */
-
 :root {
   --power: #fff200;
   --data: #ff53e2;
@@ -41,7 +38,6 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 img { display: block; }
 :focus-visible { outline: 1px solid var(--accent, #fff); outline-offset: 3px; }
 
-/* ================= Intro ================= */
 .intro {
   position: fixed; inset: 0; z-index: 30; display: grid; place-items: center;
   background: #dcdcdc; color: #0a0a0a;
@@ -74,7 +70,6 @@ img { display: block; }
 body.started .intro { opacity: 0; visibility: hidden; }
 body.no-intro-anim .intro { transition: none; }
 
-/* ================= App ================= */
 .app { position: fixed; inset: 0; overflow: hidden; opacity: 0; transition: opacity 1s .15s var(--ease); }
 body.started .app { opacity: 1; }
 .bg { position: absolute; inset: 0; background: var(--bg); transition: background .5s; }
@@ -155,7 +150,7 @@ body[data-mode="overview"] .callout.is-over { --panel-bg: #f2f2f2; }
 .side-nav--prev:hover { transform: translateX(-3px); } .side-nav--next:hover { transform: translateX(3px); }
 .model-note { position: absolute; right: clamp(16px, 4.5vw, 64px); bottom: calc(var(--panel-h) + 14px); margin: 0; font: italic 300 11px/1 var(--font); color: var(--ink-top-dim); }
 
-/* ---------- flash + wipe (video transitions) ---------- */
+/* ---------- flash + wipe ---------- */
 .flash { position: fixed; inset: 0; z-index: 25; pointer-events: none; animation: flash .55s ease-out forwards; }
 .flash--in { background: #e8e8e8; }
 .flash--out { background: #0a0a0a; }
@@ -244,9 +239,8 @@ body[data-mode="overview"] .callout.is-over { --panel-bg: #f2f2f2; }
 .index__help p { margin: 0; }
 kbd { display: inline-block; min-width: 18px; padding: 2px 4px; margin-right: 3px; border: 1px solid #444; border-radius: 3px; font: 11px var(--mono); text-align: center; color: #ccc; }
 
-/* ================= Compact (phones / portrait) ================= */
 body.is-compact { overflow-y: auto; }
-.is-compact .app { position: relative; min-height: 100vh; overflow: visible; padding-top: 58vh; }   /* padding, not panel margin: margins collapse through .app */
+.is-compact .app { position: relative; min-height: 100vh; overflow: visible; padding-top: 58vh; }
 .is-compact .bg { position: fixed; }
 .is-compact .stage { position: absolute; left: 0; right: 0; top: 0; height: 58vh; inset: 0 0 auto 0; }
 .is-compact .ghost { top: 10vh; font-size: 40vw; }
@@ -281,7 +275,6 @@ body.is-compact { overflow-y: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
 
-/* ================= v2: discoverability + plain language ================= */
 .hotspot__n {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
   font: 700 11px/1 var(--font); color: #111; pointer-events: none;
@@ -350,7 +343,6 @@ body.is-focus .hotspot__label { display: none; }
 .is-compact .help { bottom: 12px; right: 16px; }
 .is-compact .model-note { bottom: 52px; }
 
-/* ================= v3: discoveries, sound, size ================= */
 .sr-only { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .header__right { position: absolute; right: clamp(16px, 4.5vw, 64px); top: 26px; display: flex; align-items: center; gap: 14px; }
 .header__right .header__menu { position: relative; right: auto; top: auto; }
@@ -405,7 +397,6 @@ body[data-mode="overview"] .found__bar { stroke: #11a85f; }
 .is-compact .found span { display: none; }
 .is-compact .found { padding: 0 4px; }
 
-/* ================= v4: exploded view + calmer layout ================= */
 .explode {
   position: absolute; left: clamp(16px, 4.5vw, 64px); bottom: calc(var(--panel-h) + 28px); z-index: 3;
   display: flex; align-items: center; gap: 8px; padding: 8px 14px 8px 10px; border-radius: 999px;
@@ -419,7 +410,6 @@ body[data-mode="overview"] .found__bar { stroke: #11a85f; }
 .explode[aria-pressed="true"] svg { transform: scaleY(1.35); }
 .explode:disabled { opacity: .35; cursor: not-allowed; }
 
-/* power / data component labels: small tags above each dot, bus names centred on their trace */
 .flowlabels { position: absolute; inset: 0; pointer-events: none; opacity: 0; --flow: #fff200; }
 body[data-mode="data"] .flowlabels { --flow: #ff53e2; }
 .flowlabel {
@@ -445,12 +435,10 @@ body[data-mode="overview"] .exlabel { --panel-bg: #f4f4f4; }
 .celebrate__fx { position: absolute; inset: 0; width: 100%; height: 100%; }
 .celebrate__card { position: relative; padding: 28px 24px !important; background: rgba(220,220,220,.86); border-radius: 18px; }
 
-/* calmer layout: drop the connection web where space is tight, give the copy room */
 @media (max-width: 1280px) { .panel { grid-template-columns: minmax(120px, 1fr) minmax(0, 520px) minmax(150px, 200px) minmax(0, .3fr); } .web { display: none; } }
 .is-compact .explode { left: 16px; bottom: 12px; padding: 7px 12px 7px 9px; font-size: 12px; }
 .is-compact .exlabel { font-size: 10px; }
 
-/* ================= v5: guided build ================= */
 .build-btn {
   margin-left: 10px; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(61,255,154,.6);
   font: 600 12px/1 var(--font); color: #3dff9a; transition: background .2s, color .2s;
@@ -462,7 +450,6 @@ body[data-mode="overview"] .exlabel { --panel-bg: #f4f4f4; }
 .is-compact .parts { flex-wrap: wrap; }
 @keyframes shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
 
-/* ================= v6: polish ================= */
 .exlabel { pointer-events: auto; cursor: pointer; text-align: left; border: 1px solid transparent; transition: border-color .2s, background .2s; }
 .exlabel:hover { border-color: #3dff9a; }
 .exlabel__tip {
@@ -477,17 +464,14 @@ body[data-mode="overview"] .exlabel { --panel-bg: #f4f4f4; }
 .glitch i { position: absolute; left: -10%; right: -10%; background: #fff; opacity: 0; animation: glitchBar .5s steps(3) both; }
 @keyframes glitchBar { 0% { opacity: 0; } 20% { opacity: 1; } 50% { opacity: .2; margin-left: 4%; } 70% { opacity: .9; margin-left: -3%; } 100% { opacity: 0; } }
 
-/* phones: model note out of the way */
 .is-compact .header__meta span { display: none; }
 
-/* ================= v7 ================= */
 .intro__build { display: block; margin: 14px auto 0; font: 400 13px/1 var(--font); color: #333; text-decoration: underline; text-underline-offset: 4px; animation: fadeIn .6s 2.6s both; }
 .intro__build:disabled { opacity: 0; pointer-events: none; }
 .intro__build:not(:disabled):hover { color: #000; }
 .toast__go { margin-left: 12px; padding: 5px 12px; border-radius: 999px; background: #04130b; color: #3dff9a; font: 700 12px var(--font); }
 .toast { pointer-events: auto; }
 
-/* ================= v8: calm pass ================= */
 :root { --panel-h: clamp(220px, 28vh, 260px); }
 .panel { padding-bottom: 24px; }
 .spec .lang { margin-top: 12px; }
@@ -496,7 +480,6 @@ body[data-mode="overview"] .exlabel { --panel-bg: #f4f4f4; }
 .header__meta span { opacity: .65; font-weight: 400; }
 .is-compact .spec .lang { margin-top: 10px; }
 
-/* ================= v9: glossary + full-screen 3D ================= */
 .term { font: inherit; color: inherit; padding: 0; border-bottom: 1px dotted currentColor; cursor: help; }
 .term:hover { color: #fff; border-bottom-style: solid; }
 body[data-mode="overview"] .callout .term:hover { color: #000; }
@@ -544,10 +527,8 @@ body[data-mode="overview"] .callout .term:hover { color: #000; }
 .is-compact.is-full .panel, .is-compact.is-full .header { display: none; }
 .is-compact.is-full .full-btn { opacity: 1; background: color-mix(in srgb, var(--ink-top) 12%, transparent); }
 
-/* QA: phone tour card docks full-width */
 @media (max-width: 559px) { .coach__card { width: calc(100vw - 24px); } .coach__icon { display: none; } .coach__text { font-size: 13.5px; margin-bottom: 8px; } }
 
-/* ================= v11: size line-up ================= */
 .lineup-btn { margin-left: 6px; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.25); font: 600 12px/1 var(--font); color: #ddd; }
 .lineup-btn:hover { border-color: #fff; color: #fff; }
 .linelabels { position: absolute; inset: 0; pointer-events: none; }
@@ -569,7 +550,6 @@ body.is-lineup .lineup-btn { background: #e8e8e8; color: #111; border-color: #e8
 .is-compact .lineup-btn { margin: 0; }
 .build-btn, .lineup-btn { white-space: nowrap; flex: none; }
 
-/* ================= v12: build-a-PC workshop ================= */
 .ws-bench, .ws-spec { display: none; }
 body.is-ws .ws-bench:not([hidden]) { display: flex; }
 body.is-ws .ws-spec:not([hidden]) { display: block; }
@@ -579,7 +559,6 @@ body.is-ws .hotspots, body.is-ws .callout, body.is-ws .callout-line, body.is-ws 
 body.is-ws .side-nav, body.is-ws .explode, body.is-ws .help, body.is-ws .model-note, body.is-ws .ghost,
 body.is-ws .full-btn, body.is-ws .m-callout { display: none !important; }
 
-/* bench: the parts waiting to go in */
 .ws-bench { flex-direction: column; gap: 12px; height: 100%; }
 .ws-bench__head { display: flex; align-items: center; gap: 18px; min-width: 0; }
 .ws-bench__title { margin: 0; font: 200 22px/1 var(--font); color: #c4c4c4; white-space: nowrap; }
@@ -628,7 +607,6 @@ body.is-ws .full-btn, body.is-ws .m-callout { display: none !important; }
 body.ws-dragging .panel { opacity: .55; transition: opacity .2s; }
 body.ws-dragging .gl, body.ws-dragging { cursor: grabbing; }
 
-/* spec panel: the PC so far */
 .ws-spec {
   position: absolute; right: clamp(16px, 3vw, 44px); top: 96px; z-index: 5; width: 272px;
   max-height: calc(100% - var(--panel-h) - 110px); overflow: auto;
@@ -670,7 +648,6 @@ body.ws-dragging .gl, body.ws-dragging { cursor: grabbing; }
 .ws-power.is-on span { animation: wsBlink 1.2s steps(2) infinite; }
 @keyframes wsBlink { 50% { opacity: .2; } }
 
-/* the part's name follows the pointer while it's over the bench */
 .ws-chip {
   position: fixed; left: 0; top: 0; z-index: 30; pointer-events: none; display: flex; align-items: center; gap: 8px;
   margin: -46px 0 0 -18px; padding: 5px 12px 5px 5px; border-radius: 999px; background: #3dff9a; color: #04130b;
@@ -679,7 +656,6 @@ body.ws-dragging .gl, body.ws-dragging { cursor: grabbing; }
 .ws-chip[hidden] { display: none; }
 .ws-chip img { width: 24px; height: 24px; border-radius: 50%; background: #04130b; }
 
-/* option list */
 .ws-pop { position: fixed; z-index: 30; padding: 8px; border-radius: 14px; background: rgba(10,12,14,.97); border: 1px solid rgba(255,255,255,.14); box-shadow: 0 18px 50px rgba(0,0,0,.5); animation: fadeIn .18s var(--ease); }
 .ws-pop[hidden] { display: none; }
 .ws-pop__title { margin: 4px 8px 8px; font: 400 11px/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: #8d8d8d; }
@@ -695,7 +671,6 @@ body.ws-dragging .gl, body.ws-dragging { cursor: grabbing; }
 
 @media (max-width: 1100px) { .ws-presets { display: none; } }
 
-/* phones: case on top, bench docked underneath, the spec panel folds into a strip */
 body.is-ws.is-compact { overflow: hidden; }
 .is-compact.is-ws .app { position: fixed; inset: 0; padding: 0; min-height: 0; overflow: hidden; }
 .is-compact.is-ws .stage { height: 60vh; height: 60dvh; }
@@ -723,14 +698,12 @@ body.is-ws.is-compact { overflow: hidden; }
 .is-compact .ws-spec:not(.is-open) .ws-stat__top { flex-direction: column; align-items: flex-start; gap: 3px; font-size: 10.5px; }
 .is-compact .ws-spec:not(.is-open) .ws-stat__val { margin: 0; font-size: 12px; }
 .is-compact .ws-spec.is-open { max-height: calc(60dvh - 72px); overflow: auto; }
-/* folded: the total and the Details button share one line, so the case keeps more of the screen */
 .is-compact .ws-spec:not(.is-open) .ws-spec__eyebrow { position: absolute; right: 12px; top: 10px; font-size: 0; letter-spacing: 0; }
 .is-compact .ws-spec:not(.is-open) .ws-total { margin: 0; }
 .is-compact .ws-warn { margin-top: 8px; }
 .is-compact .ws-warn li { padding: 6px 8px; font-size: 11.5px; }
 .is-compact .ws-power { margin-top: 8px; padding: 9px; font-size: 14px; }
 
-/* where the dragged part goes, and the price it adds */
 .ws-target {
   position: absolute; left: 0; top: 0; z-index: 4; pointer-events: none; margin: -46px 0 0; translate: -50% 0;
   padding: 5px 10px; border-radius: 999px; background: rgba(4,19,11,.86); color: #3dff9a; border: 1px solid rgba(61,255,154,.6);

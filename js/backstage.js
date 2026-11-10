@@ -1,16 +1,8 @@
-// Easter egg: "go backstage". It remembers which case studies a visitor has opened (in this
-// browser only), and once all four are seen a small button steps in at the bottom left that leads
-// to backstage.html: the archived 3D stage, written up as an ongoing experiment.
-//  - Case study pages show a quiet "seen 2 / 4" next to "Next case study".
-//  - After unlocking, the footer keeps a "backstage" link on every page, even once the floating
-//    button has been closed.
-// To change which pages count, edit PROJECTS (the file names in work/, without .html).
-// Test: ?backstage=reset clears it, ?backstage=unlock unlocks straight away.
+// Backstage unlock: tracks visited case studies and reveals the backstage link at 4/4.
 (function () {
   var PROJECTS = ['beyond-fashion', 'boiler-room', 'anatomy-of-a-computer', 'project01'];
   var KEY = 'ew-backstage';
 
-  // Where the site's root is from this page ("" or "../"), read off the stylesheet link.
   var css = document.querySelector('link[href$="css/style.css"]');
   var ROOT = css ? css.getAttribute('href').replace(/css\/style\.css$/, '') : '';
   var HREF = ROOT + 'backstage.html';
@@ -26,7 +18,6 @@
   if (test === 'reset') state = { seen: [], closed: false };
   if (test === 'unlock') state = { seen: PROJECTS.slice(), closed: false };
 
-  // This page a case study? Cloudflare serves both /work/x.html and /work/x.
   var m = location.pathname.match(/\/work\/([\w-]+?)(?:\.html)?\/?$/);
   var here = m && PROJECTS.indexOf(m[1]) > -1 ? m[1] : null;
   var before = count();
@@ -51,7 +42,7 @@
 
   if (!unlocked || /backstage\.html?$|\/backstage\/?$/.test(location.pathname)) return;
 
-  // ---------- Footer link (stays once unlocked) ----------
+  // ---------- Footer link ----------
   var brand = document.querySelector('footer .brand');
   if (brand) {
     var link = document.createElement('a');

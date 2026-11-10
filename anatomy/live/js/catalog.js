@@ -1,7 +1,3 @@
-/* Build-a-PC workshop: the parts you can pick, what they cost, and how they change the finished computer.
-   Prices are rounded example prices in US dollars, not live quotes. Each option reuses its category's 3D model,
-   shown at that option's real size (`mm` is the longest side). */
-
 export const CASE = { name: "Corsair 4000D Airflow", price: 105, gpuMax: 360, coolerMax: 170 };
 
 export const CATEGORIES = [
@@ -64,7 +60,6 @@ export const CATEGORIES = [
 ];
 export const CAT = Object.fromEntries(CATEGORIES.map((c) => [c.id, c]));
 
-// the order the hints suggest; anything whose `needs` are in can go in at any time
 export const ORDER = ["mthr", "cpu", "cooler", "ram", "storage", "gpu", "psu"];
 
 export const PRESETS = {
@@ -75,19 +70,15 @@ export const PRESETS = {
 
 export const option = (cat, sel) => CAT[cat].options.find((o) => o.id === sel[cat]) || CAT[cat].options[0];
 
-/* What a build can do. `has` is the set of categories in the case; missing parts count as nothing. */
 export function stats(sel, has) {
   const o = (c) => (has.has(c) ? option(c, sel) : null);
   const mb = o("mthr"), cpu = o("cpu"), cool = o("cooler"), ram = o("ram"), ssd = o("storage"), gpu = o("gpu"), psu = o("psu");
   const price = CASE.price + [...has].reduce((a, c) => a + option(c, sel).price, 0);
-  // CPU heat against what the cooler can carry away; no cooler at all means it overheats straight away
   const temp = cpu ? Math.min(100, Math.round(30 + 55 * (cpu.watts / (cool ? cool.cools : 40)))) : 0;
   const throttle = temp >= 90 ? 0.82 : 1;
   const ramK = ram ? (ram.gb >= 32 ? 1 : 0.94) : 0;
-  // games run as fast as the slower of the two chips allows (the bottleneck)
   const fps = cpu && gpu && ram ? Math.round(Math.min(gpu.fps, cpu.cap) * ramK * throttle) : 0;
   const multi = cpu && ram ? Math.round(cpu.multi * (ram.gb >= 64 ? 1.08 : ram.gb >= 32 ? 1 : 0.85) * throttle) : 0;
-  // graphics cards spike about 10% above their rated power for a split second; the PSU has to ride that out
   const draw = Math.round((mb ? 45 : 0) + (cpu ? cpu.watts : 0) + (gpu ? gpu.watts * 1.1 : 0) + (ram ? ram.sticks * 4 : 0) + (ssd ? 6 : 0) + 15);   // + case fans
   const speed = ssd ? Math.min(ssd.speed, mb ? mb.m2 : ssd.speed) : 0;
   return {
@@ -97,7 +88,6 @@ export function stats(sel, has) {
   };
 }
 
-/* Problems worth telling the builder about, worst first. */
 export function warnings(sel, has, s, simple) {
   const out = [];
   if (has.has("psu") && has.has("gpu") && s.draw > s.psu * 0.95) out.push({ level: "bad", cat: "psu", text: simple ? `The power supply is too small! This PC needs about ${s.draw} W.` : `PSU overloaded: ~${s.draw} W peak on a ${s.psu} W unit. It will shut off under load.` });

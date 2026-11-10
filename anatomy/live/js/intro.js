@@ -1,6 +1,3 @@
-/* Intro from the prototype video (0:00–0:03):
-   a 1-bit circuit board resolves from big pixels to fine detail, then dissolves away and leaves the title. */
-
 const INK = [12, 12, 12], PAPER = [220, 220, 220];
 
 export function createIntro(canvas, src) {
@@ -19,11 +16,9 @@ export function createIntro(canvas, src) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  // draw the circuit as 1-bit pixels of size p, threshold th
   function mosaic(p, th) {
     const cw = Math.max(2, Math.ceil(w / p)), ch = Math.max(2, Math.ceil(h / p));
     small.width = cw; small.height = ch;
-    // cover-fit the source
     const s = Math.max(cw / img.width, ch / img.height);
     const iw = img.width * s, ih = img.height * s;
     sctx.drawImage(img, (cw - iw) / 2, (ch - ih) / 2, iw, ih);
@@ -40,7 +35,6 @@ export function createIntro(canvas, src) {
   }
 
   function specks(time) {
-    // the sparse dotted texture that lingers under the title
     ctx.fillStyle = "rgb(220,220,220)";
     ctx.fillRect(0, 0, w, h);
     ctx.fillStyle = "#0c0c0c";
@@ -58,12 +52,10 @@ export function createIntro(canvas, src) {
     const t = (now - t0) / 1000;
     if (!img.complete || !img.width) { raf = requestAnimationFrame(frame); return; }
     if (t < 1.7) {
-      // pixels shrink 64 → 3, threshold sweeps so the board "develops"
       const k = t / 1.7;
       const p = Math.max(3, Math.round(64 * Math.pow(1 - k, 2.2)));
       mosaic(p, 120 - 50 * k);
     } else if (t < 2.7) {
-      // dissolve: blocks drop out to paper in random order
       const k = (t - 1.7) / 1.0;
       mosaic(3, 70);
       const bs = 24;

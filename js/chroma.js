@@ -1,19 +1,10 @@
-// Chromatic glow on interactive elements, like looking at a light through thick glass: when the
-// cursor comes near a link, button or dial, a soft cyan-blue glow slides out from behind one side
-// of it and a warm amber glow from the opposite side, spreading further the longer the cursor
-// stays, pushed away from the cursor. Leaving lets it ease back into place.
-//
-// Each lit element gets its own SVG filter: its silhouette is blurred twice (a tight halo and a
-// wide bloom), each blur is offset both ways and tinted blue or amber, and the glow sits behind
-// the original. JS moves the offsets, blur radii and opacity every frame; elements at rest have
-// no filter at all.
+// Chromatic glow on interactive elements.
 (function () {
   if (!window.matchMedia || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
   var SELECTOR = '.nav a, .links a, footer a, .ico, .knob, .project, .next-case, .tile--text a';
-  var RADIUS = 80;          // px from the element's edge where the effect starts
-  var GROW = 1.1;           // s, time constant while near: colour shows fast, spread keeps creeping
-  var FADE = 0.75;          // s, time constant to ease back after the cursor leaves
-  // [colour, opacity, share of the offset]. Blue leans toward the cursor, amber is pushed away.
+  var RADIUS = 80;
+  var GROW = 1.1;
+  var FADE = 0.75;
   var SIDES = [['#1aa8ff', 1, -0.5], ['#f5a11c', 0.9, 1]];
   var NS = 'http://www.w3.org/2000/svg';
 
@@ -32,7 +23,6 @@
   function buildFilter() {
     var id = 'chroma-' + (nextId++);
     var f = node('filter', { id: id, x: '-60%', y: '-120%', width: '220%', height: '340%', 'color-interpolation-filters': 'sRGB' }, defs);
-    // Blur once per radius, then offset the blurred copies (cheaper than blurring each copy).
     var tight = node('feGaussianBlur', { in: 'SourceAlpha', stdDeviation: 0, result: 'bt' }, f);
     var wide = node('feGaussianBlur', { in: 'SourceAlpha', stdDeviation: 0, result: 'bw' }, f);
     var offsets = [];
@@ -44,7 +34,6 @@
         node('feComposite', { in: 'f' + k, in2: 'o' + r, operator: 'in', result: 'c' + r }, f);
       });
     });
-    // Wide blooms underneath, tight halos on top, blue last so it reads brightest near the edges.
     var merge = node('feMerge', { result: 'glow' }, f);
     ['bw1', 'bw0', 'bt1', 'bt0'].forEach(function (r) { node('feMergeNode', { in: 'c' + r }, merge); });
     var fade = node('feComponentTransfer', { in: 'glow', result: 'faded' }, f);
@@ -56,7 +45,6 @@
   }
 
   var items = Array.prototype.map.call(document.querySelectorAll(SELECTOR), function (el) {
-    // Filter the visible artwork, not the whole box: an icon's svg, a project's title block.
     var target = el.matches('.project') ? el.querySelector('.cover-title') : (el.querySelector('svg') || el);
     if (!target) return null;
     var px = parseFloat(getComputedStyle(target).fontSize) || 16;
@@ -73,8 +61,7 @@
 
   function tick(now) {
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
-    // Read every rect first, then write, so the browser never has to re-layout mid-frame.
-    if (rectsDirty || now - rectsAt > 500) {   // also refresh periodically: reveals and layout shifts move things
+    if (rectsDirty || now - rectsAt > 500) {
       items.forEach(function (it) { it.rect = it.el.getBoundingClientRect(); });
       rectsDirty = false; rectsAt = now;
     }
@@ -84,7 +71,6 @@
       var dx = Math.max(r.left - mouse.x, 0, mouse.x - r.right), dy = Math.max(r.top - mouse.y, 0, mouse.y - r.bottom);
       var near = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / RADIUS);
       if (near > 0) {
-        // Push the colour away from the cursor (from the element's centre when the cursor is on it).
         var ax = (r.left + r.right) / 2 - mouse.x, ay = (r.top + r.bottom) / 2 - mouse.y, len = Math.sqrt(ax * ax + ay * ay) || 1;
         it.cx += (ax / len - it.cx) * 0.15; it.cy += (ay / len - it.cy) * 0.15;
       }
@@ -106,7 +92,6 @@
       it.filter.alpha.setAttribute('slope', Math.min(1, it.v * 1.6).toFixed(3));
       it.target.style.filter = 'url(#' + it.filter.id + ')';
     });
-    // Keep going while anything is lit or the cursor just moved; otherwise sleep until it moves.
     if (busy || now - lastMove < 250) requestAnimationFrame(tick); else running = false;
   }
 })();

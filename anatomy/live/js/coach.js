@@ -1,9 +1,7 @@
-/* First-visit tour: a pulsing ring on the thing to try, a short instruction, and it moves on as soon as you do it. */
-
 const KEY = "aoc-coach-v4";
 const store = {
   get() { try { return localStorage.getItem(KEY) === "done"; } catch { return false; } },
-  set() { try { localStorage.setItem(KEY, "done"); } catch { /* private mode */ } },
+  set() { try { localStorage.setItem(KEY, "done"); } catch { } },
 };
 
 export function createCoach(steps, { onFinish } = {}) {
@@ -53,7 +51,6 @@ export function createCoach(steps, { onFinish } = {}) {
       if (x < 12) x = Math.min(W - cw - 12, p.x + 40);
       y = Math.max(80, Math.min(H - ch - 12, y));
       if (W < 560) {
-        // phones: dock the card full-width at whichever edge is away from the target, so it never covers the part
         x = 12;
         const stage = document.querySelector(".stage")?.getBoundingClientRect();
         const bottom = stage ? Math.min(stage.bottom, H) : H;
@@ -82,10 +79,9 @@ export function createCoach(steps, { onFinish } = {}) {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(place);
     },
-    // the tour advances when you actually do the thing
     event(name) {
       if (!active || steps[i]?.on !== name) return;
-      const at = i;   // many drag events can arrive; only advance once per step
+      const at = i;
       setTimeout(() => { if (active && i === at) show(at + 1); }, 450);
     },
     get active() { return active; },

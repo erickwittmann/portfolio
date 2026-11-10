@@ -1,9 +1,4 @@
-// Lightweight stand-in for the 3D stage (js/hero.js) until the final model is ready: one cube with
-// the reel on every face, unlit (MeshBasicMaterial, so no lights, shadows or reflections to pay for).
-// It exposes the same window.Stage API, so the deck, dials and waveform work unchanged:
-//   colour -> edge + backdrop tint   strobe -> backdrop flash (max 3/s)
-//   pyro   -> spin kick on the beat  haze   -> backdrop glow
-// To go back to the full stage, swap this script for hero.js (+ GLTFLoader) in index.html.
+// Stage: lightweight single-cube fallback with the same API.
 (function () {
   var statusEl = document.getElementById('status');
   var SFX = window.SFX;
@@ -12,18 +7,15 @@
   var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var DEVICE_DPR = window.devicePixelRatio || 1;
 
-  // Playlist for the deck. Add { artist, title, src } entries and prev/next step through them.
   var TRACKS = [
     { artist: 'Feng', title: 'J*b', src: 'assets/hero.mp4' }
   ];
 
-  // Everything the deck controls. Values are 0..1.
   var show = { hue: 0.36, strobe: 0, pyro: 0.35, haze: 0.45, level: 0, kick: 0 };
 
   // ---------- Renderer / scene / camera ----------
   var wrap = document.getElementById('wrap');
   var renderer;
-  // One unlit mesh is cheap even at full resolution; MSAA only on standard-density screens.
   try { renderer = new THREE.WebGLRenderer({ antialias: DEVICE_DPR < 2, powerPreference: 'low-power' }); }
   catch (e) { fail('WebGL is not available in this browser.'); return; }
   renderer.setPixelRatio(Math.min(DEVICE_DPR, 2));
@@ -37,7 +29,6 @@
   function resize() {
     var w = wrap.clientWidth || window.innerWidth || 800, h = wrap.clientHeight || window.innerHeight || 600;
     renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
-    // Keep the cube (its corner-to-corner span) at about 70% of the shorter side of the canvas.
     var t = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     baseDist = (CUBE * 1.75) / (2 * t * Math.min(1, camera.aspect)) / 0.72;
   }
@@ -57,7 +48,7 @@
   function on(ev, cb) { (handlers[ev] = handlers[ev] || []).push(cb); }
   function emit(ev) { (handlers[ev] || []).forEach(function (cb) { cb(); }); }
 
-  // ---------- Video + audio (same behaviour as hero.js) ----------
+  // ---------- Video + audio ----------
   var video = document.createElement('video');
   video.loop = true; video.muted = true; video.playsInline = true; video.setAttribute('playsinline', '');
   video.preload = 'auto';
@@ -80,9 +71,6 @@
     if (autoplay) playSafe();
   }
 
-  // Audio graph: video -> analyser -> gain -> speakers. Built on the first click/tap/key press
-  // (browsers block audio until then); that same gesture unmutes the reel with a fade-in,
-  // unless the visitor has muted it themselves.
   var audio = { analyser: null, gain: null, freq: null, volume: 0.7, userMuted: false, unlockedAt: -1e9 };
   SFX.onUnlock(function () {
     var ctx = SFX.ctx;
@@ -110,10 +98,8 @@
   function mute() { audio.userMuted = true; video.muted = true; }
 
   // ---------- The cube ----------
-  // One VideoTexture shared by all six faces, so the reel uploads once per new video frame.
   var vtex = new THREE.VideoTexture(video);
   vtex.minFilter = THREE.LinearFilter; vtex.magFilter = THREE.LinearFilter; vtex.generateMipmaps = false; vtex.encoding = THREE.sRGBEncoding;
-  // Faces are square: centre-crop the reel instead of squashing it.
   function cropToSquare() {
     var a = video.videoWidth / (video.videoHeight || 1);
     if (a >= 1) { vtex.repeat.set(1 / a, 1); vtex.offset.set((1 - 1 / a) / 2, 0); }
@@ -127,7 +113,7 @@
   scene.add(cube);
   loadTrack(0, false);
 
-  // ---------- Strobe (capped at 3 flashes/second, the WCAG limit for flashing content) ----------
+  // ---------- Strobe ----------
   var strobePhase = 0, strobeFlash = 0;
   function updateStrobe(dt) {
     if (show.strobe > 0.03) {
@@ -140,7 +126,7 @@
     return strobeFlash > 0;
   }
 
-  // ---------- Audio analysis (or an idle 120 BPM pulse while muted/locked) ----------
+  // ---------- Audio analysis ----------
   var avgBass = 0.2, lastKick = -1, lastBeatIdx = -1;
   function updateAudio(dt, t) {
     var lvl = 0, kick = false;
@@ -165,7 +151,6 @@
   }
 
   // ---------- Per-frame update ----------
-  // Pyro has no sparks here: it throws the cube into a quick extra spin.
   var spin = 0, lastPyro = -10, edgeColor = new THREE.Color(), white = new THREE.Color(1, 1, 1);
   function firePyro(power) {
     spin += (reduced ? 1.2 : 4.5) * (power || 1);
@@ -181,7 +166,6 @@
     edgeColor.setHSL(show.hue, 0.9, 0.6);
     edgeMat.color.copy(strobing ? white : edgeColor);
     edgeMat.opacity = fade * (0.35 + show.level * 0.65);
-    // Backdrop: a hue-tinted glow that haze raises, or a near-white flash on a strobe hit.
     if (strobing) scene.background.setRGB(reduced ? 0.25 : 0.85, reduced ? 0.25 : 0.85, reduced ? 0.25 : 0.85);
     else scene.background.setHSL(show.hue, 0.6, fade * show.haze * (0.05 + show.level * 0.04));
     if (kick && show.pyro > 0.04 && t - lastPyro > 3.4 - show.pyro * 2.6 && Math.random() < 0.25 + show.pyro * 0.6) firePyro(0.45 + show.pyro * 0.5);
@@ -209,8 +193,6 @@
   })();
 
   // ---------- Render loop ----------
-  // Nothing renders before the reveal, while the stage is scrolled away or fully covered by the
-  // intro grid, or in a hidden tab. Mid-morph it drops to every other frame (js/intro.js reports).
   var heroVisible = true, stageCovered = false, morphUntil = 0, frameNo = 0;
   window.__setHeroVisible = function (v) { heroVisible = v; };
   window.__stageCovered = function (covered, morphing) {
@@ -242,7 +224,6 @@
     track: function () { return TRACKS[trackIndex]; },
     togglePlay: function () { if (video.paused) playSafe(); else video.pause(); },
     toggleMute: function () {
-      // The click that unlocked audio has already unmuted; don't immediately re-mute.
       if (performance.now() - audio.unlockedAt < 400 && !video.muted) return;
       if (video.muted) unmute(0.3); else mute();
     },
@@ -257,7 +238,6 @@
       if (TRACKS.length > 1 && video.currentTime < 3) loadTrack(trackIndex - 1, true);
       else { video.currentTime = 0; playSafe(); }
     },
-    // Fills `buf` with the live waveform; returns false while there's no audible signal.
     getWaveform: function (buf) {
       if (!audio.analyser || video.muted || video.paused) return false;
       audio.analyser.getByteTimeDomainData(buf);

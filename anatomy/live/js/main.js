@@ -1,5 +1,3 @@
-/* Anatomy of a Computer — live build.
-   Real-time 3D parts in the Figma layout, with the motion language of the EIII P2 prototype video. */
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
@@ -17,7 +15,7 @@ import { loadModel } from "./models.js";
 
 const ICON = "../assets/icons/";
 const MODEL = "../assets/models/";
-const MODEL_V = "5";   // bump when a GLB is re-exported so browsers drop the cached copy
+const MODEL_V = "5";
 const $ = (id) => document.getElementById(id);
 const STILL = new URLSearchParams(location.search).has("still");   // for automated screenshots
 window.__aocStill = STILL;
@@ -25,17 +23,15 @@ const reduceMotion = () => STILL || matchMedia("(prefers-reduced-motion: reduce)
 const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const damp = (a, b, lambda, dt) => THREE.MathUtils.lerp(a, b, 1 - Math.exp(-lambda * dt));
 
-// wording preference: plain language by default, detailed copy one tap away
 const prefs = { simple: true };
-try { prefs.simple = localStorage.getItem("aoc-words") !== "detailed"; } catch { /* storage blocked */ }
+try { prefs.simple = localStorage.getItem("aoc-words") !== "detailed"; } catch { }
 const modeText = (part, mode) => (prefs.simple ? SIMPLE[part.id]?.modes[mode] : null) || part.modes[mode] || part.modes.overview;
 const hotText = (part, h) => (prefs.simple ? SIMPLE[part.id]?.hotspots[h.id] : null) || h.text;
 
-// discoveries: every hotspot you open is remembered and counted
 const TOTAL = PARTS.reduce((n, p) => n + p.hotspots.length, 0);
 let found = new Set();
-try { found = new Set(JSON.parse(localStorage.getItem("aoc-found") || "[]")); } catch { /* storage blocked */ }
-const saveFound = () => { try { localStorage.setItem("aoc-found", JSON.stringify([...found])); } catch { /* storage blocked */ } };
+try { found = new Set(JSON.parse(localStorage.getItem("aoc-found") || "[]")); } catch { }
+const saveFound = () => { try { localStorage.setItem("aoc-found", JSON.stringify([...found])); } catch { } };
 
 const MODE_STYLE = {
   overview:  { xray: false },
@@ -62,7 +58,6 @@ const keyLight = new THREE.DirectionalLight("#ffffff", 1.4);
 keyLight.position.set(4, 8, 6);
 scene.add(keyLight, new THREE.AmbientLight("#ffffff", 0.25));
 
-// scan clipping: PBR keeps what's below the line, x-ray keeps what's above
 const planePBR = new THREE.Plane(new THREE.Vector3(0, -1, 0), 100);
 const planeXR = new THREE.Plane(new THREE.Vector3(0, 1, 0), 100);
 let scanY = 100;
@@ -83,7 +78,6 @@ xrayMat.onBeforeCompile = (sh) => {
       totalEmissiveRadiance = uTint * (fres * uRim + uFill);`);
 };
 xrayMat.customProgramCacheKey = () => "aoc-xray";
-// dense geometry (heatsink fins, vent grids) would stack into a white wall under additive blending
 const xrayDim = xrayMat.clone();
 xrayDim.opacity = 0.07;
 xrayDim.clippingPlanes = [planeXR];   // clone() copies planes; share the live one
@@ -96,7 +90,6 @@ const scanLine = new THREE.Mesh(new THREE.PlaneGeometry(14, 0.025), new THREE.Me
 scanLine.renderOrder = 10;
 scene.add(scanLine);
 
-// soft contact shadow under each part
 const shadowTex = (() => {
   const c = document.createElement("canvas"); c.width = c.height = 128;
   const g = c.getContext("2d"); const grd = g.createRadialGradient(64, 64, 0, 64, 64, 64);
@@ -105,7 +98,7 @@ const shadowTex = (() => {
   return new THREE.CanvasTexture(c);
 })();
 
-// ---------- flows (power / data wiring, built by flowmap.js) ----------
+// ---------- flows ----------
 const flowUniforms = { uTime: { value: 0 }, uOpacity: { value: 0 }, uGrow: { value: 0 } };
 // ---------- airflow particles ----------
 const airUniforms = { uTime: { value: 0 }, uOpacity: { value: 0 }, uColor: { value: new THREE.Color("#2fb4ff") }, uSize: { value: 30 } };
@@ -145,7 +138,6 @@ function buildAir(rig, def) {
   return pts;
 }
 
-// basis: where the model's own x, y, z axes should point, e.g. ["z", "x", "y"] or ["-x", "y", "-z"]
 function basisMatrix(basis = ["x", "y", "z"]) {
   const v = (s) => {
     const sign = s.startsWith("-") ? -1 : 1;
@@ -155,8 +147,6 @@ function basisMatrix(basis = ["x", "y", "z"]) {
   return new THREE.Matrix4().makeBasis(v(basis[0]), v(basis[1]), v(basis[2]));
 }
 
-// fans in GLBs aren't always modelled around their hub: give each named node a pivot at its centre,
-// turned so the pivot's z is the node's thinnest axis, and spin that instead
 function wrapSpin(root, names) {
   const pivots = [];
   root.updateMatrixWorld(true);
@@ -228,7 +218,6 @@ class Rig {
     this.box = size.multiplyScalar(s);
     norm.updateMatrixWorld(true);
 
-    // materials → clip below scan; twins → x-ray above scan
     const meshes = [];
     obj.traverse((o) => { if (o.isMesh) meshes.push(o); });
     if (part.dense) obj.traverse((o) => { if (part.dense.test(o.name)) o.traverse((m) => { m.userData.dense = true; }); });
@@ -262,7 +251,6 @@ class Rig {
       }
     }
 
-    // named nodes → anchor points (GLB parts)
     this.inner.updateMatrixWorld(true);
     const tmpBox = new THREE.Box3();
     const matBoxes = {};
@@ -273,7 +261,7 @@ class Rig {
       for (const mat of mats) if (mat.name) (matBoxes[mat.name] ||= new THREE.Box3()).union(tmpBox);
     }
     this.matPoints = {};
-    this.matBoxes = matBoxes;   // inner space == world space at load (pivot is still at the origin)
+    this.matBoxes = matBoxes;
     for (const [k, b] of Object.entries(matBoxes)) this.matPoints[k] = this.inner.worldToLocal(b.getCenter(new THREE.Vector3()));
     obj.traverse((o) => {
       if (!o.name || this.nodePoints[o.name]) return;
@@ -287,15 +275,13 @@ class Rig {
       else if (h.mat && this.matPoints[h.mat]) { p = this.matPoints[h.mat].clone(); p.z = Math.max(p.z, this.box.z * 0.5 * (h.front ?? 0.6)); }
       else p = new THREE.Vector3((h.at?.[0] ?? 0) * this.box.x, (h.at?.[1] ?? 0) * this.box.y, (h.at?.[2] ?? 0.5) * this.box.z);
       const n = new THREE.Vector3(p.x / (this.box.x / 2), p.y / (this.box.y / 2), p.z / (this.box.z / 2));
-      // outward normal: favour the dominant face, lean toward the front
       const ax = Math.abs(n.x), ay = Math.abs(n.y), az = Math.abs(n.z);
       const normal = h.n ? new THREE.Vector3(...h.n)
-        : h.node ? new THREE.Vector3(0, 0, 1)   // named parts sit inside the model; assume they read from the front
+        : h.node ? new THREE.Vector3(0, 0, 1)
         : ax > ay && ax > az ? new THREE.Vector3(Math.sign(n.x), 0, 0.4) : ay > az ? new THREE.Vector3(0, Math.sign(n.y), 0.4) : new THREE.Vector3(0, 0, Math.sign(n.z) || 1);
       return { h, p, n: normal.normalize() };
     });
 
-    // fans
     if (animations.length) {
       this.mixer = new THREE.AnimationMixer(obj);
       for (const clip of animations) this.mixer.clipAction(clip).play();
@@ -303,7 +289,6 @@ class Rig {
     if (obj.userData.fans) this.fans = obj.userData.fans;
     if (part.spin) this.fans.push(...wrapSpin(obj, part.spin));
 
-    // overlays
     this.flows.power = buildFlowGraph(THREE, this, part.flows, "power", { color: MODE_STYLE.power.flow, uniforms: flowUniforms });
     this.flows.data = buildFlowGraph(THREE, this, part.flows, "data", { color: MODE_STYLE.data.flow, uniforms: flowUniforms });
     for (const g of Object.values(this.flows)) { g.visible = false; this.inner.add(g); }
@@ -319,7 +304,6 @@ class Rig {
     this.ready = true;
   }
 
-  // exploded view: every piece gets a resting position and an offset (computed in part space, stored in its parent's space)
   setupExplode(obj, meshes) {
     const spec = this.part.explode || {};
     const S = this.part.size;
@@ -351,7 +335,6 @@ class Rig {
       let oI;
       if (it.dir) oI = new THREE.Vector3(...it.dir).multiplyScalar(S);
       else {
-        // auto: peel layers apart along the part's thickness, spread a little sideways
         const k = THREE.MathUtils.clamp(cI.z / half.z, -1, 1);
         oI = new THREE.Vector3((cI.x / half.x) * 0.05 * S, (cI.y / half.y) * 0.04 * S, (k * 0.3 + Math.sign(k) * 0.03) * S);
       }
@@ -387,7 +370,7 @@ class Rig {
     this.shadow.material.opacity = st.xray ? 0.15 : 0.8;
   }
 
-  settle(mode) {   // after the scan finishes, stop drawing the hidden half
+  settle(mode) {
     const xr = MODE_STYLE[mode].xray;
     for (const t of this.twins) t.visible = xr;
     for (const e of this.edges) e.visible = xr;
@@ -405,9 +388,7 @@ const loadState = { done: 0, total: 0 };
 function loadAll() {
   const glbs = rigs.filter((r) => r.part.glb);
   loadState.total = glbs.length;
-  // procedural parts are instant
   for (const r of rigs) if (r.part.proc) r.setModel(PROCEDURAL[r.part.proc]());
-  // hero first
   const order = [...glbs].sort((a, b) => (a.part.id === state.partId() ? -1 : b.part.id === state.partId() ? 1 : 0));
   const perFile = new Map();
   return order.reduce((p, r) => p.then(() => new Promise((resolve) => {
@@ -473,7 +454,6 @@ PARTS.forEach((p, i) => {
   els.indexList.appendChild(li);
 });
 
-// connection web: the Figma "Group 37" diagram, now live
 (function buildWeb() {
   const R = 50, C = 62;
   const pos = PARTS.map((p, i) => { const a = -Math.PI / 2 + (i / PARTS.length) * Math.PI * 2; return [C + Math.cos(a) * R, C + Math.sin(a) * R]; });
@@ -503,10 +483,9 @@ function buildHotspots() {
     b.addEventListener("mouseenter", () => { if (!state.focus) setHotspot(i); });
     b.addEventListener("focus", () => { if (!state.focus) setHotspot(i); });
     b.addEventListener("pointerdown", beginDrag);
-    b.addEventListener("click", (e) => { e.stopPropagation(); if (e.detail !== 0 && drag.moved > 6) return; focusHotspot(i); });   // a drag that began on the ring is not a tap (keyboard clicks have detail 0)
+    b.addEventListener("click", (e) => { e.stopPropagation(); if (e.detail !== 0 && drag.moved > 6) return; focusHotspot(i); });
     els.hotspots.appendChild(b);
   });
-  // start on the feature that faces the viewer most in the part's resting pose
   if (state.hotspot < 0 || state.hotspot >= rig.anchors.length) state.hotspot = bestHotspot(rig);
   setHotspot(state.hotspot, true);
 }
@@ -585,7 +564,6 @@ function updateHotspots() {
   });
   if (graph && flowUniforms.uOpacity.value > 0.02) placeFlowLabels(THREE, els.flowLabels, graph, rig.inner, camera, w, h, prefs.simple, rings);
   if (!active || els.callout.hidden) { els.line.querySelector("path").setAttribute("d", ""); return; }
-  // keep the callout off the part: park it just outside the model's on-screen bounds, like the Figma comps
   let minX = Infinity, maxX = -Infinity;
   for (let k = 0; k < 8; k++) {
     v3.set((k & 1 ? 0.5 : -0.5) * rig.box.x, (k & 2 ? 0.5 : -0.5) * rig.box.y, (k & 4 ? 0.5 : -0.5) * rig.box.z);
@@ -599,7 +577,6 @@ function updateHotspots() {
   const dx = Math.min(150, w * 0.12);
   let cx = right ? Math.max(active.x + dx, maxX + 28) : Math.min(active.x - dx - cw, minX - 28 - cw);
   let cy = active.y - 58;
-  // stay clear of the side arrows
   const nav = document.body.classList.contains("is-compact") ? 12 : $("prev").getBoundingClientRect().right - canvas.getBoundingClientRect().left + 14;
   cx = Math.max(nav, Math.min(w - cw - nav, cx));
   cy = Math.max(70, Math.min(h - ch - 12, cy));
@@ -649,7 +626,7 @@ function syncHash() {
   if (location.hash !== h) history.replaceState(null, "", h);
 }
 
-// ---------- theme (with the video's flash between light and dark) ----------
+// ---------- theme ----------
 function applyTheme(mode, flash = true) {
   const wasDark = MODE_STYLE[document.body.dataset.mode]?.xray;
   document.body.dataset.mode = mode;
@@ -674,7 +651,6 @@ function setMode(mode, opts = {}) {
   if (rig.ready) {
     rig.applyMode(mode);
     const wasX = MODE_STYLE[from].xray, isX = MODE_STYLE[mode].xray;
-    // a shoosh only when the scan crosses between photograph and x-ray; between x-ray views the score just changes colour
     if (wasX !== isX) sfx.scan(isX); else sfx.tick();
     sfx.mood(mode);
     flowUniforms.uGrow.value = 0;
@@ -727,7 +703,7 @@ function toggleIndex(open = els.index.hidden) {
   $("menuBtn").setAttribute("aria-expanded", open);
   if (open) els.indexList.querySelector(".is-active")?.focus();
 }
-function pulseSound() { /* sounds are played by the actions themselves */ }
+function pulseSound() { }
 
 // ---------- size line-up ----------
 let lineup = null;
@@ -860,7 +836,6 @@ function updateExLabels(rig) {
   });
   const cx = pos.reduce((a, p) => a + p.x, 0) / Math.max(pos.length, 1), cy = pos.reduce((a, p) => a + p.y, 0) / Math.max(pos.length, 1);
   for (const p of pos) { const dx = p.x - cx, dy = p.y - cy, d = Math.hypot(dx, dy) || 1; p.x += (dx / d) * 34; p.y += (dy / d) * 22; }
-  // nudge overlapping labels apart vertically (a few relaxation passes is plenty for ≤ 12 labels)
   for (let pass = 0; pass < 6; pass++) {
     for (let i = 0; i < pos.length; i++) for (let j = i + 1; j < pos.length; j++) {
       const A = pos[i], B = pos[j];
@@ -901,7 +876,6 @@ function termFor(word) {
   for (const { m, gi } of TERM_RE.alts) if (new RegExp(`^(?:${m})$`, "i").test(word)) return gi;
   return -1;
 }
-// link the first mention of each glossary term in a block of copy
 function linkTerms(el, text) {
   if (el._typeToken && el.textContent !== text && el.querySelector(".type-caret")) return;   // still typing
   const used = new Set();
@@ -1044,7 +1018,6 @@ $("menuBtn").addEventListener("click", () => toggleIndex());
 els.index.addEventListener("click", (e) => { if (e.target === els.index) toggleIndex(false); });
 document.querySelectorAll("[data-mode-link]").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.modeLink)));
 
-// drags can start on the canvas or on a hotspot ring (rings cover a lot of a small part on phones)
 function beginDrag(e) { if (ws.active) return; drag.active = true; drag.x = e.clientX; drag.y = e.clientY; drag.moved = 0; drag.from = e.currentTarget; }
 canvas.addEventListener("pointerdown", beginDrag);
 addEventListener("pointermove", (e) => {
@@ -1092,7 +1065,7 @@ document.addEventListener("keydown", (e) => {
   else if (e.key === "ArrowUp") { e.preventDefault(); stepMode(-1); }
   else if (/^[1-5]$/.test(e.key)) setMode(MODES[+e.key - 1].id);
   else if (e.key === "e" || e.key === "E") toggleExplode();
-  else if ("aAdD".includes(e.key) && e.key.length === 1) { drag.vYaw = (e.key.toLowerCase() === "a" ? -1 : 1) * 0.014; /* inertia carries ~0.23 rad per press */ drag.lastMove = performance.now(); coach.event("drag"); }
+  else if ("aAdD".includes(e.key) && e.key.length === 1) { drag.vYaw = (e.key.toLowerCase() === "a" ? -1 : 1) * 0.014; drag.lastMove = performance.now(); coach.event("drag"); }
   else if ("wWsS".includes(e.key) && e.key.length === 1) { drag.pitch = THREE.MathUtils.clamp(drag.pitch + (e.key.toLowerCase() === "w" ? -0.12 : 0.12), -0.7, 0.9); drag.lastMove = performance.now(); }
   else if (e.key === "+" || e.key === "=") zoomTarget = THREE.MathUtils.clamp(zoomTarget * 0.88, 0.55, 1.5);
   else if (e.key === "-" || e.key === "_") zoomTarget = THREE.MathUtils.clamp(zoomTarget * 1.12, 0.55, 1.5);
@@ -1112,7 +1085,6 @@ function fit() {
   const w = canvas.clientWidth, h = canvas.clientHeight;
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
-  // keep the part above the bottom panel: shift the projection centre up on desktop
   if (!compact) camera.setViewOffset(w, h, 0, h * 0.13, w, h); else camera.clearViewOffset();
   camera.updateProjectionMatrix();
   intro.resize();
@@ -1144,7 +1116,7 @@ function renderLang() {
 }
 document.querySelectorAll("[data-lang]").forEach((b) => b.addEventListener("click", () => {
   prefs.simple = b.dataset.lang === "simple";
-  try { localStorage.setItem("aoc-words", prefs.simple ? "simple" : "detailed"); } catch { /* storage blocked */ }
+  try { localStorage.setItem("aoc-words", prefs.simple ? "simple" : "detailed"); } catch { }
   renderLang();
   renderText(1, true);
   if (rigs[state.part].ready) setHotspot(state.hotspot, false);
@@ -1163,7 +1135,6 @@ function start() {
   $("app").setAttribute("aria-hidden", "false");
   const rig = rigs[state.part];
   setTimeout(() => intro.stop(), 1200);
-  // first part sweeps in from the right, like the PSU in the video
   if (rig.ready) {
     rig.pivot.visible = true; rig.applyMode(state.mode); rig.settle(state.mode);
     setScan(MODE_STYLE[state.mode].xray ? -100 : 100);
@@ -1174,7 +1145,7 @@ function start() {
   buildHotspots();
   canvas.focus({ preventScroll: true });
   sfx.mood(state.mode);
-  sfx.boot();   // the score fades in under the first part's entrance
+  sfx.boot();
   if (!STILL) setTimeout(() => { if (!ws.active) coach.start(); }, 1900);
 }
 $("start").addEventListener("click", start);
@@ -1184,7 +1155,6 @@ $("startBuild").addEventListener("click", () => {
   const wait = setInterval(() => { if (rigs.every((r) => r.ready)) { clearInterval(wait); enterBuild(); } }, 150);
 });
 $("home").addEventListener("click", () => {
-  // band wipe out (video 0:18), then back to the title
   if (ws.active) exitBuild();
   const glitch = document.createElement("div");
   glitch.className = "glitch";
@@ -1213,7 +1183,6 @@ const clock = new THREE.Clock();
 let lastInput = performance.now(), skip = false;
 for (const ev of ["pointerdown", "pointermove", "wheel", "keydown", "touchstart"]) addEventListener(ev, () => { lastInput = performance.now(); }, { passive: true });
 function frame() {
-  // idle with nothing transitioning: drop to ~30fps; paused entirely behind the parts index
   const idle = performance.now() - lastInput > 6000 && !slide && !scan && state.focus == null;
   if (idle && (skip = !skip)) { requestAnimationFrame(frame); return; }
   if (!els.index.hidden || (!started && document.body.classList.contains("intro-settled"))) { clock.getDelta(); requestAnimationFrame(frame); return; }
@@ -1228,7 +1197,6 @@ function frame() {
   flowUniforms.uGrow.value = STILL ? 99 : flowTo ? flowUniforms.uGrow.value + dt : 0;
   airUniforms.uOpacity.value = STILL ? airTo : damp(airUniforms.uOpacity.value, airTo, 5, dt);
 
-  // carousel
   const W = Math.max(5.5, camera.aspect * 4.2);
   if (slide) {
     const k = ease(Math.min(1, Math.max(0, (performance.now() - slide.t0) / slide.dur)));
@@ -1241,17 +1209,15 @@ function frame() {
     }
   }
 
-  // drag inertia + idle sway
   if (!drag.active) {
     drag.vYaw *= 0.94; drag.yaw += drag.vYaw;
     drag.vPitch = 0;
   }
-  // close-ups zoom less on small parts so they don't swamp the screen
   const focusZoom = THREE.MathUtils.clamp(0.5 + (4.6 - PARTS[state.part].size) * 0.12, 0.6, 0.82);
   zoom = damp(zoom, state.focus != null ? Math.min(zoomTarget, focusZoom) : zoomTarget, 5, dt);
   const cur = rigs[state.part];
   camera.position.z = CAM_Z * zoom * Math.max(1, 1.0 / camera.aspect) * (1 + 0.16 * (cur.ex || 0)) * (lineup ? lineup.dist : 1);
-  if (lineup) updateLineupLabels();   // portrait screens + exploded parts back the camera off
+  if (lineup) updateLineupLabels();
 
   for (const r of rigs) {
     if (!r.ready || !r.pivot.visible) continue;
@@ -1266,7 +1232,6 @@ function frame() {
       yaw += drag.yaw + r.sway;
       pitch += drag.pitch;
       if (state.focus != null && r.anchors[state.focus]) {
-        // turn the chosen feature toward the camera and bring it to centre
         const a = r.anchors[state.focus];
         const nq = a.n.clone().applyQuaternion(r.inner.quaternion);
         yaw = -Math.atan2(nq.x, nq.z) * 0.85 + baseYaw * 0.15;
@@ -1290,7 +1255,6 @@ function frame() {
     for (const f of r.fans) f.rotation.z += dt * (state.mode === "airflow" ? 14 : 3.5);
   }
 
-  // scan transition between photo-real and x-ray
   if (scan) {
     const k = Math.min(1, (performance.now() - scan.t0) / scan.dur);
     const e = ease(k);
@@ -1320,11 +1284,9 @@ function frame() {
   if (pi >= 0) {           // deep links skip the intro once the part is ready
     const wait = setInterval(() => { if (rigs[state.part].ready) { clearInterval(wait); document.body.classList.add("no-intro-anim"); start(); } }, 100);
   }
-  // ?lineup opens the size line-up once every part has loaded
   if (new URLSearchParams(location.search).has("lineup")) {
     const wait = setInterval(() => { if (started && rigs.every((r) => r.ready)) { clearInterval(wait); enterLineup(); } }, 150);
   }
-  // ?build=N opens the workshop with the first N parts already in; &preset=dream picks a set, &on powers it up (screenshots)
   const q = new URLSearchParams(location.search);
   if (q.has("build")) {
     const wait = setInterval(() => {

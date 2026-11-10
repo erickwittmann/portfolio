@@ -1,11 +1,4 @@
-// Pixel trail, three places:
-// - The about portrait's yellow disc: the cursor's path across the circle lights up grid cells in
-//   flat RGB/CMY colours, each one blinking off after a random beat. The canvas is only GRID x GRID
-//   pixels; CSS scales it to the disc with image-rendering:pixelated, so a frame is a handful of 1px
-//   fillRects. The loop runs only while some cell is lit.
-// - The opening screen's bar (js/enter.js): the same trail across the whole bar.
-// - Key words in the copy (class="px-word"): same idea, one pixel per letter. Each letter the cursor
-//   crosses turns into a solid block of colour, then the letter comes back.
+// Pixel trail on the portrait and key words.
 (function () {
   var LIFE = [0.45, 1.1];              // s, how long a pixel stays lit (random in range)
   var COLOURS = ['#ffffff', '#ff1f1f', '#12b4f4', '#000000', '#ff1ff0', '#1ff01f'];
@@ -14,12 +7,9 @@
   function life() { return LIFE[0] + Math.random() * (LIFE[1] - LIFE[0]); }
 
   // ---------- Words ----------
-  // On white paper (the site) white would vanish, so words and the opening bar swap it for the disc's
-  // yellow; on the dark stage page it's black that swaps.
   var WORD_COLOURS = COLOURS.map(function (c) { return c === (DARK ? '#000000' : '#ffffff') ? '#fff64f' : c; });
   Array.prototype.forEach.call(document.querySelectorAll('.px-word'), function (el) {
     var text = el.textContent;
-    // Screen readers get the plain word; the letter spans are visual only.
     el.textContent = '';
     var sr = document.createElement('span'); sr.className = 'sr-only'; sr.textContent = text;
     var vis = document.createElement('span'); vis.setAttribute('aria-hidden', 'true');
@@ -42,7 +32,6 @@
       if (!t) return;
       var i = +t.dataset.i;
       if (i === lastI) return;
-      // Light every letter between the last one and this one so a fast swipe leaves no gaps.
       var from = lastI < 0 ? i : lastI, step = i > from ? 1 : -1;
       for (var k = from; k !== i + step; k += step) if (k !== lastI) light(letters[k]);
       lastI = i;
@@ -53,9 +42,7 @@
   });
 
   // ---------- Canvas trails ----------
-  // trail(canvas, opts): lights cells of a cols x rows canvas along the pointer's path. opts.inside(x, y)
-  // limits the shape, opts.colours the palette. The loop runs only while some cell is lit.
-  var SPARK = 0.35;                    // chance a lit cell also lights a neighbour, for a ragged edge
+  var SPARK = 0.35;
   function trail(canvas, opts) {
     var g = canvas.getContext('2d'), cols, rows;
     var cells = {}, count = 0, last = null, running = false, prev = 0;
@@ -77,7 +64,6 @@
       var r = rect && rect.width ? rect : canvas.getBoundingClientRect();
       var p = { x: Math.floor((e.clientX - r.left) / r.width * cols), y: Math.floor((e.clientY - r.top) / r.height * rows) };
       if (last && (last.x !== p.x || last.y !== p.y)) {
-        // Walk every cell between the last and current position so fast swipes leave no gaps.
         var n = Math.max(Math.abs(p.x - last.x), Math.abs(p.y - last.y));
         for (var i = 1; i <= n; i++) visit(Math.round(last.x + (p.x - last.x) * i / n), Math.round(last.y + (p.y - last.y) * i / n));
       } else if (!last) visit(p.x, p.y);
@@ -100,7 +86,6 @@
     return { move: move, leave: function () { last = null; }, size: size };
   }
 
-  // The about portrait's disc: 24 cells across, clipped to the circle.
   var fig = document.querySelector('.portrait');
   var disc = fig && fig.querySelector('.pixel-trail');
   if (disc && disc.getContext) {
@@ -114,15 +99,10 @@
     fig.addEventListener('pointerleave', d.leave);
   }
 
-  // The opening screen's black bar (js/enter.js): cells about as big as the disc's, across the whole
-  // bar. The bar lets the pointer through to the grid (so the grid still flexes), so this listens on
-  // the page and checks whether the pointer is over the bar. Black swaps for yellow, as on the words.
   var bar = document.querySelector('.enter-bar');
   var barCanvas = bar && bar.querySelector('.pixel-trail');
   if (barCanvas && barCanvas.getContext) {
     var CELL = 18;                     // CSS px per cell
-    // The page can't scroll while the opening screen is up, so the bar is measured once and on resize
-    // (reading it on every move would force a layout after the grid's own pointer updates).
     var box = bar.getBoundingClientRect();
     function grid() { return [Math.max(1, Math.round(box.width / CELL)), Math.max(1, Math.round(box.height / CELL))]; }
     var gs = grid(), b = trail(barCanvas, { cols: gs[0], rows: gs[1], colours: WORD_COLOURS }), over = false;
@@ -130,7 +110,7 @@
       if (!bar.isConnected) { document.removeEventListener('pointermove', onMove); document.removeEventListener('pointerdown', onMove); removeEventListener('resize', onSize); return; }
       var r = box;
       var hit = e.clientX >= r.left && e.clientX < r.right && e.clientY >= r.top && e.clientY < r.bottom;
-      if (hit) b.move(e, box); else if (over) b.leave();   // the canvas fills the bar, so its box is the bar's
+      if (hit) b.move(e, box); else if (over) b.leave();
       over = hit;
     }
     function onSize() { box = bar.getBoundingClientRect(); var n = grid(); b.size(n[0], n[1]); }

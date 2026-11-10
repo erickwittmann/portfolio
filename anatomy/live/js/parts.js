@@ -1,7 +1,3 @@
-/* Content + model setup for every part.
-   Anchors and flow paths are in "box space": fractions of the part's oriented bounding box, each axis -0.5…0.5
-   (x = left→right, y = bottom→top, z = back→front as the part first faces the camera). */
-
 export const MODES = [
   { id: "overview",  label: "Overview",  key: "1" },
   { id: "framework", label: "Framework", key: "2" },
@@ -10,9 +6,7 @@ export const MODES = [
   { id: "airflow",   label: "Airflow",   key: "5" },
 ];
 
-// the case's 24-pin cable: out of the PSU, behind the motherboard tray, through the grommet beside the board
 const ROUTE_24 = [[-0.08, -0.36, -0.46], [0.17, -0.22, -0.46], [0.18, 0.17, -0.46], [0.17, 0.19, -0.36]];
-// the cooler's fan cable: out of the hub along a strut to the frame's corner, then down to the board
 const FAN_ROUTE = [[0.42, -0.36, 0.38], [0.36, -0.12, 0.42]];
 
 export const PARTS = [
@@ -44,7 +38,6 @@ export const PARTS = [
       { id: "cmos",   mat: "BatteryM", title: "CMOS Battery", text: "A coin battery, like the one in a watch, keeps the clock ticking and your settings saved while the PC is unplugged." },
       { id: "io",     mat: "I_O_Cover", title: "Rear I/O", text: "USB 3.1 Gen 2 Type-A and Type-C (from two ASMedia chips), Gen 1 and USB 2.0 ports, Intel Gigabit Ethernet, Wi-Fi antennas, audio with optical S/PDIF, and HDMI, DisplayPort and DVI-D for the CPU's graphics." },
     ],
-    // positions: the model's own parts where it names them; slot and header spots read off the board's layout
     flows: {
       plane: -0.46,   // just above the PCB
       nodes: {
@@ -109,7 +102,6 @@ export const PARTS = [
       { id: "fan",   node: "fan", n: [0, 0, 1], title: "Axial Fan", text: "Fans pull air through the heatsink fins, carrying heat away from the GPU die and out of the card." },
       { id: "core",  node: "coldplate", n: [0, 0, 1], title: "GPU Die & Vapour Chamber", text: "The GA102 chip sits under a vapour chamber that spreads its heat into four heat pipes and the fins." },
     ],
-    // the die is under the cold plate; the memory ring and power stages surround it (not modelled, so placed beside it)
     flows: {
       plane: -0.3,   // the circuit board, under the shroud
       nodes: {
@@ -149,7 +141,6 @@ export const PARTS = [
       { id: "ihs",  at: [0.05, 0.05, 0.5], title: "Heat Spreader", text: "The metal lid protects the silicon and spreads its heat evenly into the cooler above it." },
       { id: "pins", at: [0.47, -0.3, -0.2], title: "Pins", text: "1,331 tiny gold pins on the underside drop into matching holes in the motherboard socket." },
     ],
-    // dies are hidden under the heat spreader: their placement is schematic, the connections are not
     flows: {
       nodes: {
         vcore: { at: [-0.46, 0.3], label: "Core rail", simple: "Power in", note: "VDDCR_CPU" },
@@ -225,7 +216,6 @@ export const PARTS = [
       { id: "nand",  at: [-0.25, 0.0, 0.5], title: "Flash Memory", text: "Samsung V-NAND stores 3 bits in every cell (TLC), in layers stacked like the floors of a building. It keeps your data with no power at all." },
       { id: "key",   at: [0.49, 0.0, 0.3], n: [1, 0, 0.4], title: "M-Key Connector", text: "These gold fingers slide into the M.2 slot on the motherboard. The notch tells it which way round to go." },
     ],
-    // chip layout from teardowns of the 1 TB drive (single-sided): controller by the connector, then cache, then flash
     flows: {
       nodes: {
         keyP:  { at: [0.49, 0.22], label: "3.3 V pins", simple: "Power in", note: "M.2 connector" },
@@ -267,7 +257,6 @@ export const PARTS = [
       { id: "pipes", at: [0.5, 0.5, -0.05], n: [0.3, 1, 0.3], title: "Heat Pipes", text: "Sealed copper tubes with a little liquid inside that boils and condenses, moving heat fast." },
       { id: "base",  node: "Object_5", n: [0, -1, 0.4], title: "Copper Base", text: "A flat copper block that presses on the CPU and soaks up its heat." },
     ],
-    // the 4-wire fan pinout from Intel's PWM fan specification; the header itself is on the motherboard, off the model
     flows: {
       inside: true, normal: [0, 1, 0],   // the motherboard is below the copper base
       nodes: {
@@ -301,7 +290,6 @@ export const PARTS = [
       { id: "socket", node: "power_port_3", n: [0, 0, 1], title: "Wall Socket & Switch", text: "Where the power cable from the wall plugs in, next to the on/off switch." },
       { id: "cables", node: "modular_ports_7", n: [0, 0, -1], title: "Modular Ports", text: "The 24-pin motherboard, 8-pin CPU (EPS), PCIe and SATA cables plug in here — only the ones you need." },
     ],
-    // the stages of a typical ATX supply in the order power passes through them (the model is a closed box: placement is schematic)
     flows: {
       inside: true, normal: [0, 1, 0],
       boards: [{ at: [0, -0.18, 0.06], size: [0.84, 0.74] }],
@@ -319,7 +307,6 @@ export const PARTS = [
       },
       power: [
         ["inlet", "emi", 0, { kind: "cable", harness: "acin", via: [[0.36, 0.0, 0.3]], label: "mains" }],
-        // the transformer is the isolation gap: power crosses it magnetically, no copper joins the two sides
         ["emi", "pfc", 3], ["pfc", "bulk", 3], ["bulk", "llc", 3], ["llc", "sr", 3, { kind: "field", label: "transformer · no copper crosses" }],
         ["sr", "ports", 3, { label: "12 V" }], ["sr", "dcdc", 2], ["dcdc", "ports", 2, { label: "5 V · 3.3 V" }],
         ["bulk", "sb", 1], ["sb", "ports", 1, { label: "5VSB" }],
@@ -358,7 +345,6 @@ export const PARTS = [
       { id: "buttons", node: "buttons", n: [0, 1, 0.3], title: "Front I/O", text: "Power and reset buttons, USB-C, USB 3.0 and a headset jack, each wired to its own header on the motherboard." },
       { id: "shroud",  at: [-0.2, -0.36, 0.5], title: "PSU Shroud", text: "A cover that hides the power supply and its spare cables, keeping the build tidy." },
     ],
-    // where an ATX board's plugs and headers land once it's on the tray (305 × 244 mm board, rear I/O at the back)
     flows: {
       plane: -0.3,   // the motherboard's depth, in front of the tray
       nodes: {
@@ -391,18 +377,16 @@ export const PARTS = [
   },
 ];
 
-// the story order ("Follow the Power"): energy (PSU, board), information (CPU, RAM, SSD, GPU), heat (cooler, case)
 const STORY = ["psu", "mthr", "cpu", "ram", "storage", "gpu", "cooler", "case"];
 PARTS.sort((a, b) => STORY.indexOf(a.id) - STORY.indexOf(b.id));
 
-export const WEB = [  // the connection web from the Figma comps, as real links
+export const WEB = [
   ["mthr", "gpu", "data"], ["mthr", "cpu", "data"], ["mthr", "ram", "data"], ["mthr", "storage", "data"],
   ["psu", "mthr", "power"], ["psu", "gpu", "power"], ["psu", "cpu", "power"],
   ["cooler", "cpu", "airflow"], ["gpu", "cooler", "airflow"],
   ["case", "gpu", "airflow"], ["case", "cooler", "airflow"], ["case", "mthr", "data"],
 ];
 
-/* Plain-language layer (the default). Written for roughly 8–12 year olds; the detailed copy above is one tap away. */
 export const SIMPLE = {
   mthr: {
     modes: {
@@ -520,7 +504,6 @@ export const SIMPLE = {
   },
 };
 
-/* Real-world size, as a comparison (simple) or as numbers (detailed). */
 export const SIZE = {
   mthr:    { simple: "About as big as a sheet of paper", detailed: "ATX: 305 × 244 mm" },
   gpu:     { simple: "About as long as a school ruler", detailed: "285 × 112 mm, two slots thick" },
@@ -532,7 +515,6 @@ export const SIZE = {
   case:    { simple: "About as big as a small suitcase", detailed: "Mid-tower: 466 × 230 × 453 mm" },
 };
 
-/* Build-a-PC workshop: where each part goes, what to say while it's being dragged, and what to say once it's in. */
 export const BUILD_TEXT = {
   mthr:    { slot: "Motherboard tray", where: "into the case", ask: "Drag the motherboard into the case — everything else plugs into it.",
              done: "The motherboard is screwed onto the tray. Now it needs a brain." },
@@ -550,7 +532,6 @@ export const BUILD_TEXT = {
              done: "The power supply slides under the shroud, fan facing down to breathe." },
 };
 
-/* What each exploded layer does (tap a label in "Take it apart"). */
 export const LAYERS = {
   "Shroud": "The outer shell that guides air through the card and protects the insides.",
   "Cover plate": "A metal plate over the fans that also makes the card stiff.",
@@ -602,7 +583,6 @@ export const LAYERS = {
   "Rear fan": "Blows the warm air out of the back.",
 };
 
-/* Quick Reference glossary (the Figma sitemap's last branch). `match` lists the words that get linked in the copy. */
 export const GLOSSARY = [
   { term: "CPU", match: ["CPU", "processor"], parts: ["cpu"], simple: "The computer's brain. It follows the instructions in every app and game.", detailed: "Central Processing Unit: executes program instructions across several cores, each running billions of cycles per second." },
   { term: "GPU", match: ["GPU", "graphics card"], parts: ["gpu"], simple: "The part that draws everything you see on the screen.", detailed: "Graphics Processing Unit: thousands of small cores working in parallel, ideal for rendering, video and AI." },
@@ -645,5 +625,4 @@ export const GLOSSARY = [
   { term: "Bottleneck", match: ["bottleneck"], parts: ["cpu", "gpu"], simple: "When one slow part holds the fast parts back, like a narrow door at a busy party.", detailed: "The component that limits overall throughput; upgrading anything else won't raise performance." },
 ];
 
-/* Size line-up (the Figma sitemap's "Compare Specs"): each part's longest side in millimetres. */
 export const REAL_MM = { mthr: 305, gpu: 285, cpu: 40, ram: 133, storage: 80, cooler: 155, psu: 150, case: 466 };

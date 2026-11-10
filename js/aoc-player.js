@@ -1,8 +1,4 @@
-// The playable Anatomy of a Computer on its case study (work/anatomy-of-a-computer.html).
-// - The site itself lives in anatomy/ (its own HTML, JS, 3D models and sound); it loads into the
-//   page only when the visitor presses Play, so the case study stays light until then.
-// - Two builds: the full live build and the motion-mockup prototype, switched with the tabs.
-// - While it runs, this page's music dips (PageAudio.duck) so the experience's own score is heard.
+// Anatomy of a Computer: embedded playable build on the case study.
 (function () {
   var player = document.querySelector('.aoc-player');
   if (!player) return;
@@ -30,7 +26,6 @@
     frame.title = BUILDS[build].title;
     frame.allow = 'fullscreen; autoplay';
     frame.setAttribute('allowfullscreen', '');
-    // hand the keyboard to the experience once it's loaded, so the arrow keys work straight away
     frame.addEventListener('load', function () { try { frame.contentWindow.focus(); } catch (e) {} });
     screen.appendChild(frame);
     player.classList.add('is-playing');

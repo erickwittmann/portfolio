@@ -573,8 +573,11 @@ span.td-box { border:1.4px solid var(--c); background:color-mix(in srgb, var(--c
 .ab-hero p:not(.lead):not(.eyebrow) { margin:0 0 1em; max-width:50ch; color:var(--text); }
 .ab-hero b { color:var(--fg); font-weight:600; }
 .ab-hero { overflow-x:clip; padding-bottom:clamp(104px,10vw,150px); }
-.ab-hero > div { position:relative; }
-.ab-sigil { position:absolute; z-index:2; max-width:none; height:auto; mix-blend-mode:exclusion; pointer-events:none; user-select:none; }
+.ab-copy { position:relative; }
+.ab-sigil { position:absolute; z-index:2; max-width:none; height:auto; mix-blend-mode:exclusion; pointer-events:none; user-select:none;
+  opacity:.72; animation:ab-sigil-in 1s var(--ease) .35s backwards; }
+@keyframes ab-sigil-in { from { opacity:0; } }
+@media (prefers-reduced-motion:reduce) { .ab-sigil { animation:none; } }
 .ab-sigil--lines { left:4.03%; top:0; width:106.67%; translate:0 -16.37%; }
 .ab-sigil--text { left:-18.3%; top:calc(100% - 2px); width:52.1%; }
 .ab-sub { margin-top:28px !important; }

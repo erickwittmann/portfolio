@@ -41,24 +41,23 @@
   size(); addEventListener('resize', size);
 
   var BINS = 48, SPAN = 0.72;
-  var OUTER = [[0, [88, 201, 166]], [0.42, [228, 132, 230]], [0.72, [156, 92, 255]], [1, [128, 40, 245]]];
-  var INNER = [[0, [104, 214, 180]], [0.35, [255, 120, 90]], [0.75, [255, 100, 150]], [1, [170, 70, 255]]];
-  function mix(stops, t) {
-    for (var i = 1; i < stops.length; i++) if (t <= stops[i][0]) {
-      var a = stops[i - 1], b = stops[i], k = (t - a[0]) / (b[0] - a[0]);
-      return [a[1][0] + (b[1][0] - a[1][0]) * k, a[1][1] + (b[1][1] - a[1][1]) * k, a[1][2] + (b[1][2] - a[1][2]) * k];
-    }
-    return stops[stops.length - 1][1];
-  }
-  function rgba(c, a) { return 'rgba(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ',' + a + ')'; }
+  // Posterized: a few flat, fully saturated colours in hard steps across the row, and three
+  // flat tones per capsule (dark rim, colour, hot core) instead of gradients.
+  var POSTER = [[0, 255, 170], [0, 210, 255], [30, 70, 255], [255, 0, 200], [255, 20, 60], [255, 0, 200], [150, 0, 255]];
+  var HOT = [[255, 255, 255], [255, 246, 79], [255, 246, 79], [255, 246, 79], [255, 255, 255]];
+  function css(c) { return 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')'; }
+  function shade(c, k) { return [Math.round(c[0] * k), Math.round(c[1] * k), Math.round(c[2] * k)]; }
 
   var bars = 0, outerH, innerH, palette = [];
   function layout() {
     bars = Math.max(12, Math.round(W / 7));
     outerH = new Float32Array(bars); innerH = new Float32Array(bars); palette = [];
     for (var i = 0; i < bars; i++) {
-      var t = i / (bars - 1);
-      palette.push({ o: mix(OUTER, t), c: mix(INNER, t), env: Math.pow(Math.sin(Math.PI * Math.pow(t, 0.8)), 0.9), core: Math.max(0, Math.sin(Math.PI * (t - 0.18) / 0.78)) });
+      var t = i / (bars - 1), c = POSTER[Math.min(POSTER.length - 1, Math.floor(t * POSTER.length))];
+      palette.push({
+        rim: css(shade(c, 0.42)), body: css(c), hot: css(HOT[Math.min(HOT.length - 1, Math.floor(t * HOT.length))]),
+        env: Math.pow(Math.sin(Math.PI * Math.pow(t, 0.8)), 0.9), core: Math.max(0, Math.sin(Math.PI * (t - 0.18) / 0.78))
+      });
     }
   }
 
@@ -87,10 +86,10 @@
     var v = row[b0] + (row[b1] - row[b0]) * (f - b0);
     return Math.min(1, v / Math.max(PEAK[b0], 0.08));
   }
-  function capsule(x, mid, w, h, c, alpha) {
-    var g = ctx.createLinearGradient(0, mid - h / 2, 0, mid + h / 2);
-    g.addColorStop(0, rgba(c, alpha * 0.3)); g.addColorStop(0.5, rgba(c, alpha)); g.addColorStop(1, rgba(c, alpha * 0.3));
-    ctx.fillStyle = g;
+  var STEP = 3;
+  function snap(h) { return Math.round(h / STEP) * STEP; }
+  function blob(x, mid, w, h, fill) {
+    ctx.fillStyle = fill;
     ctx.beginPath(); ctx.ellipse(x, mid, w / 2, h / 2, 0, 0, Math.PI * 2); ctx.fill();
   }
 
@@ -121,10 +120,12 @@
       var p = palette[i], t = i / (bars - 1);
       var o = (0.18 + 0.82 * band(top, t)) * p.env * live, n = band(slow, t) * p.core * live;
       outerH[i] += (o - outerH[i]) * ease; innerH[i] += (n - innerH[i]) * ease;
-      var x = step * (i + 0.5), oh = Math.max(dot, outerH[i] * H), ih = innerH[i] * H * 0.62;
-      var dim = 1 - live;
-      capsule(x, mid, bw, oh, [p.o[0] + (255 - p.o[0]) * dim, p.o[1] + (255 - p.o[1]) * dim, p.o[2] + (255 - p.o[2]) * dim], 0.9);
-      if (ih > 2) capsule(x, mid, bw * 0.8, ih, p.c, 0.95);
+      var x = step * (i + 0.5);
+      if (live < 0.05) { blob(x, mid, dot, dot, 'rgba(255,255,255,' + (0.85 - live * 8).toFixed(2) + ')'); continue; }
+      var oh = Math.max(dot, snap(outerH[i] * H)), bh = snap(oh * 0.66), ch = snap(Math.max(innerH[i] * H * 0.62, oh * 0.18));
+      blob(x, mid, bw, oh, p.rim);
+      if (bh >= STEP) blob(x, mid, bw * 0.82, bh, p.body);
+      if (ch >= STEP) blob(x, mid, bw * 0.55, Math.min(ch, bh), p.hot);
     }
   })(last);
 })();
